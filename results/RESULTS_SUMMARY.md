@@ -147,3 +147,16 @@ Cohen's h (baseline vs trigger ablate): 0.0
 }
 
 Both positive and negative results are publishable per PROJECT_SPEC §11.6.
+
+**Important honest caveat:** Exp3 causal test used 20 hard-preferred antidoom-mix prompts with 0% baseline loop rate under our HF 4-bit setup (1536 max tokens). With zero loops in any condition, McNemar and Cohen's h are undefined for effect detection — this is a **null/negative** result: we cannot claim workspace-band ablation prevents loops when loops did not occur in this prompt set. Exp2 (50 prompts + hard extras) did observe 1 loop (2%). Dose-response on subset: top-3 ablation showed 5% loop rate (1/20) vs 0% baseline — exploratory only.
+
+## Phase 1 Completion Status
+
+- **Model**: `Qwen/Qwen3.5-4B` (bitsandbytes NF4, fits 8GB VRAM)
+- **Lens**: pre-fitted `neuronpedia/jacobian-lens` → `lenses/qwen3.5-4b.pt`
+- **Workspace band**: L24–L28 (`results/workspace_band_qwen3.5-4b.json`)
+- **Exp 1**: complete — `results/exp1/`
+- **Exp 2**: complete — 50 traces, 1 loop, `results/exp2/`
+- **Exp 3**: complete — 120/120 checkpoint pairs, all plots + `stats.json`
+- **Verification**: `scripts/verify_deliverables.py` — GATE PASSED
+- **Phase 2/3**: not run (per spec — only after Phase 1 validates)
