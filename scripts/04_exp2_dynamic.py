@@ -395,7 +395,7 @@ pre {{ white-space: pre-wrap; word-break: break-word; }}
 
     status = f"""# Experiment 2 — Dynamic Monitoring
 
-- Prompts: {len(prompts)}, loops: {n_loop}, non-loops: {n_non}, rate: {summary['loop_rate']:.1%}
+- Prompts: {n_traces}, loops: {n_loop}, non-loops: {n_non}, rate: {summary['loop_rate']:.1%}
 - Workspace layers cached (Tier-2): {ws_layers}
 - Mean trigger alignment (−1): loop={summary['mean_loop_align']}, non={summary['mean_non_align']}
 

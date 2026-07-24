@@ -61,6 +61,28 @@ python scripts/05_exp3_causal.py
 
 Resume from step N: `python scripts/run_phase1.py 2` (0-based index into the pipeline).
 
+### Checkpoints
+
+Long runs save JSON checkpoints under `results/checkpoints/` (Exp3 resumes automatically).
+Create a git safety commit anytime:
+
+```powershell
+python scripts/save_checkpoint.py
+```
+
+Re-analyze Exp2 traces without re-generating:
+
+```powershell
+$env:JLENS_EXP2_ANALYZE_ONLY = "1"
+python scripts/04_exp2_dynamic.py
+```
+
+Merge empirical trigger tokens from all logs:
+
+```powershell
+python scripts/merge_trigger_tables.py
+```
+
 ## Package layout
 
 ```

@@ -197,10 +197,9 @@ def main() -> int:
                 "n_tokens": len(gen["generated_ids"]),
                 "trigger_decoded": loop.trigger_decoded,
             }
+            persist_ckpt()  # save after every prompt for crash safety
             if (i + 1) % 5 == 0:
                 logger.info("  %s %d/%d", cname, i + 1, len(prompts))
-            if (i + 1) % 2 == 0 or i + 1 == len(prompts):
-                persist_ckpt()
             clear_cuda()
 
     git_checkpoint("exp3 main conditions complete")
@@ -415,4 +414,15 @@ Both positive and negative results are publishable per PROJECT_SPEC §11.6.
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from jspace.run_lock import acquire_lock, release_lock
+
+    if not acquire_lock("exp3"):
+        logger.error(
+            "Another Exp3 GPU process is already running (results/.exp3.lock). "
+            "Kill duplicates before starting a new run."
+        )
+        raise SystemExit(3)
+    try:
+        raise SystemExit(main())
+    finally:
+        release_lock()

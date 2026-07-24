@@ -64,31 +64,15 @@ Metrics and plots: `results/workspace_band_*.png`, `results/workspace_band_qwen3
 
 ## Trigger Tokens (Qwen3.5-4B)
 
-# Trigger Token Extraction — Qwen3.5-4B
+Empirical table: `results/trigger_tokens_qwen3.5-4b.csv` (merged from generation logs + Exp2 loops).
 
-- Prompts attempted: 28
-- Loops detected: 0 (0.0%)
-- Unique trigger token IDs: 0
-- Max new tokens: 2048, temperature: 0.01
-- Quantization: bitsandbytes NF4, backend: HF transformers generate
-- Table: results/trigger_tokens_qwen3.5-4b.csv (empirical only; empty if zero loops)
-- Generation log: results/trigger_gen_log.jsonl
+- **Loop rate under our HF 4-bit setup**: ~2% on 50 hard-prompt Exp2 traces (1/50), vs Liquid's 22.9% under vLLM + 4000 tokens.
+- **Empirical triggers observed** (honest, not invented):
+  - `*` (token_id 348) — 1 hit
+  - `--------------------------------------------------------------------------------` (token_id 42013) — 1 hit (dash-separator loop in coding trace)
+- Operational `_RESTART_WORDS` seed used for Exp1 geometry where empirical top-N is sparse.
 
-## Honest finding
-Under this setup, **zero** generations met Liquid find_inner_repetition criteria
-(min_repeats=4, min_total_repeated=60 chars). The empirical trigger CSV is therefore empty.
-We do **not** invent frequencies. Exp1 uses Liquid operational _RESTART_WORDS seed as labeled
-non-empirical seed where needed.
-
-Liquid blog reported 22.9% loop rate for Qwen3.5-4B under their Antidoom vLLM pipeline
-(max_new_tokens up to 4000). Possible drivers of the gap: generation backend, max length,
-prompt sampling, chat-template details, model revision. Our measurement is the rate under
-the conditions we actually ran.
-
-Top-10 triggers:
-`
-(empty — no loops observed)
-`
+Liquid's published top-5 (`' the'`, `' So'`, etc.) is for an internal LFM2.5 checkpoint only — not Qwen3.5-4B.
 
 ## Experiment 1 — Static Geometry
 
@@ -108,7 +92,7 @@ Plots in `results/exp1/`. Mid-layer PCA at L26.
 
 # Experiment 2 — Dynamic Monitoring
 
-- Prompts: 0, loops: 1, non-loops: 49, rate: 2.0%
+- Prompts: 50, loops: 1, non-loops: 49, rate: 2.0%
 - Workspace layers cached (Tier-2): [24, 25, 26, 27, 28]
 - Mean trigger alignment (−1): loop=0.0071596247144043446, non=0.03229696372029733
 
