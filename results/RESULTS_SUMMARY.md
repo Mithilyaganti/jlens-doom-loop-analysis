@@ -98,3 +98,52 @@ Plots in `results/exp1/`. Mid-layer PCA at L26.
 
 Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
 `trigger_alignment_pre_onset.png`, `example_looping_trace.html`.
+
+## Experiment 3 — Causal Interventions
+
+# Experiment 3 — Causal Interventions
+
+## Loop rates
+{
+  "baseline": 0.0,
+  "ablate_trigger": 0.0,
+  "ablate_random": 0.0,
+  "ablate_control": 0.0,
+  "ablate_trigger_sensory": 0.0,
+  "ablate_trigger_motor": 0.0
+}
+
+## Interpretation
+- Result type: **negative**
+- Baseline loop rate: 0.000
+- Ablate trigger (workspace): 0.000
+- Ablate random: 0.000
+- Ablate control token: 0.000
+- Ablate trigger sensory: 0.000
+- Ablate trigger motor: 0.000
+
+## Stats
+{
+  "chi2": 0.0,
+  "p_value": 1.0,
+  "b": 0,
+  "c": 0
+}
+Cohen's h (baseline vs trigger ablate): 0.0
+
+## Dose-response
+{
+  "top-1": 0.0,
+  "top-3": 0.05,
+  "top-5": 0.0
+}
+
+## Eval quality (tiny set)
+{
+  "baseline": 0.2,
+  "ablate_trigger": 0.2,
+  "ablate_random": 0.2,
+  "ablate_control": 0.2
+}
+
+Both positive and negative results are publishable per PROJECT_SPEC §11.6.

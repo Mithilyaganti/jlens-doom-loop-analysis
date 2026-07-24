@@ -1,0 +1,36 @@
+{
+  "mcnemar_baseline_vs_trigger": {
+    "chi2": 0.0,
+    "p_value": 1.0,
+    "b": 0,
+    "c": 0
+  },
+  "cohens_h_baseline_vs_trigger": 0.0,
+  "loop_rates": {
+    "baseline": 0.0,
+    "ablate_trigger": 0.0,
+    "ablate_random": 0.0,
+    "ablate_control": 0.0,
+    "ablate_trigger_sensory": 0.0,
+    "ablate_trigger_motor": 0.0
+  },
+  "mean_gen_lengths": {
+    "baseline": 1391.05,
+    "ablate_trigger": 1345.4,
+    "ablate_random": 1340.85,
+    "ablate_control": 1333.4,
+    "ablate_trigger_sensory": 1391.4,
+    "ablate_trigger_motor": 1382.3
+  },
+  "eval_acc": {
+    "baseline": 0.2,
+    "ablate_trigger": 0.2,
+    "ablate_random": 0.2,
+    "ablate_control": 0.2
+  },
+  "dose_rates": {
+    "top-1": 0.0,
+    "top-3": 0.05,
+    "top-5": 0.0
+  }
+}
