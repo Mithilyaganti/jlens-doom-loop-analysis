@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Looping trace example</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 960px; margin: 2rem auto; }
+.loop { background: #ffe0e0; }
+.meta { background: #f4f4f4; padding: 1rem; border-radius: 8px; }
+pre { white-space: pre-wrap; word-break: break-word; }
+</style></head><body>
+<h1>Example looping trace</h1>
+<div class="meta">
+<p><b>prompt_id</b>: 201004</p>
+<p><b>trigger</b>: '--------------------------------------------------------------------------------' (id=42013)</p>
+<p><b>period</b>: 16 chars, repeats=4</p>
+<p><b>snippet</b>: '----------------'</p>
+</div>
+<h2>Generated text</h2>
+<pre>This is a classic concurrency problem. I need to design a thread-safe LRU (Least Recently Used) cache and reason about potential race conditions.
+
+Let me think through this step by step:
+
+1. **LRU Cache Requirements:**
+   - Store key-value pairs
+   - Support get(key) - returns value or null if not found
+   - Support put(key, value) - adds/updates entry
+   - Maintain LRU order (most recently used at front, least recently used at back)
+   - Limit to maximum capacity
+   - Be thread-safe
+
+2. **Data Structures Needed:**
+   - A hash map for O(1) lookups
+   - A doubly-linked list to maintain LRU order
+   - A counter for cache size
+
+3. **Common Race Conditions:**
+   - Multiple threads accessing the same key simultaneously
+   - Cache size limit being exceeded
+   - LRU order being corrupted
+   - Concurrent modifications to the hash map and linked list
+
+4. **Thread-Safety Solutions:**
+   - Use synchronized blocks or locks
+   - Use concurrent data structures (ConcurrentHashMap, etc.)
+   - Use atomic operations where possible
+   - Consider using a lock-free approach with atomic references
+
+Let me design a comprehensive solution:
+
+```python
+import threading
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = OrderedDict()  # OrderedDict maintains insertion order
+        self.lock = threading.Lock()
+    
+    def get(self, key: int) -&gt; int:
+        with self.lock:
+            if key in self.cache:
+                self.cache.move_to_end(key)  # Move to end (most recently used)
+                return self.cache[key]
+            return -1
+    
+    def put(self, key: int, value: int) -&gt; None:
+        with self.lock:
+            if key in self.cache:
+                self.cache[key] = value
+                self.cache.move_to_end(key)
+            else:
+                if len(self.cache) &gt;= self.capacity:
+                    self.cache.popitem(last=False)  # Remove least recently used
+                self.cache[key] = value
+```
+
+I'll focus on the core design challenges and potential race conditions. The main concern is ensuring thread-safe access to the cache while maintaining LRU ordering. The synchronized lock approach provides a straightforward way to prevent concurrent modifications that could corrupt the cache's internal state.
+
+The key considerations are:
+- Preventing simultaneous access to the cache
+- Maintaining LRU order correctly
+- Handling cache size limits efficiently
+- Ensuring thread-safe operations for both get and put methods
+
+The solution uses Python's built-in OrderedDict and threading.Lock to create a thread-safe LRU cache implementation.
+&lt;/think&gt;
+
+Answer: A thread-safe LRU cache can be designed using a combination of a hash map and a doubly-linked list (or an OrderedDict in Python) to maintain insertion order, with a lock to ensure thread safety.
+
+### Step-by-Step Design and Race Condition Analysis
+
+#### 1. Data Structures
+- **Hash Map (`cache`)**: For O(1) key lookups.
+- **Doubly-Linked List (`LRUList`)**: Maintains LRU order (most recently used at the front).
+- **Lock (`lock`)**: Ensures mutual exclusion during concurrent access.
+
+#### 2. Thread-Safety Mechanism
+- Use a `threading.Lock()` to protect all shared state.
+- All operations (`get`, `put`) must acquire the lock before accessing or modifying the cache.
+
+#### 3. Race Condition Analysis
+
+| Operation     | Potential Race Condition                                                                 | Prevention Strategy                                                                 |
+|---------------|------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `get(key)`    | Multiple threads read the same key simultaneously; one may see stale data               | Lock ensures only one thread accesses the cache at a time                          |
+| `put(key, val)` | Concurrent updates to the same key; one may overwrite another's value                   | Lock ensures atomic updates; only one thread modifies the cache at a time          |
+| `put()`       | Cache size limit exceeded; multiple threads may add entries before size is checked      | Lock ensures size check and eviction happen atomically                             |
+| `put()`       | LRU order corrupted; multiple threads may modify list simultaneously                    | Lock ensures list modifications are serialized                                     |
+| `put()`       | Hash map and list out of sync; one thread may update hash but not list                  | Lock ensures both hash and list are updated together                               |
+
+#### 4. Implementation (Python)
+
+```python
+import threading
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache = OrderedDict()
+        self.lock = threading.Lock()
+
+    def get(self, key: int) -&gt; int:
+        with self.lock:
+            if key in self.cache:
+                self.cache.move_to_end(key)
+                return self.cache[key]
+            return -1
+
+    def put(self, key: int, value: int) -&gt; None:
+        with self.lock:
+            if key in self.cache:
+                self.cache[key] = value
+                self.cache.move_to_end(key)
+            else:
+                if len(self.cache) &gt;= self.capacity:
+                    self.cache.popitem(last=False)
+                self.cache[key] = value
+```
+
+#### 5. Alternative: Lock-Free Approach (Advanced)
+For high-performance scenarios, consider:
+- `ConcurrentHashMap` for the hash map
+- `AtomicReference` for list head/tail
+- Use CAS (Compare-And-Swap) operations to avoid locks
+
+However, this increases complexity and is not recommended for general use.
+
+#### 6. Summary of Thread-Safety Guarantees
+- ✅ All shared state is protected by a lock
+- ✅ No race conditions in `get` or `put`
+- ✅ LRU order is preserved
+- ✅ Cache size limit is enforced
+- ✅ Thread-safe for concurrent reads and writes
+
+This design ensures correctness under concurrent access while maintaining LRU behavior.
+
+Answer: A thread-safe LRU cache can be implemented using a hash map and a doubly-linked list (or OrderedDict) with a lock to ensure thread safety. All operations must acquire the lock to prevent race conditions. The implementation ensures O(1) access, maintains LRU order, and enforces a maximum cache size.</pre>
+<p>Full residual Tier-3 visualization can be regenerated with JLENS_TIER3=1 for selected traces.</p>
+</body></html>

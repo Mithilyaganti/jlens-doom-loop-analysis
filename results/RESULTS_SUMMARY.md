@@ -103,3 +103,14 @@ across all layers.
 - Success criterion (higher clustering and/or alignment): **True**
 
 Plots in `results/exp1/`. Mid-layer PCA at L26.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 0, loops: 1, non-loops: 49, rate: 2.0%
+- Workspace layers cached (Tier-2): [24, 25, 26, 27, 28]
+- Mean trigger alignment (−1): loop=0.0071596247144043446, non=0.03229696372029733
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `example_looping_trace.html`.

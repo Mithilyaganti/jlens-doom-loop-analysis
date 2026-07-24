@@ -328,7 +328,7 @@ def main() -> int:
 
     fig, ax = plt.subplots(figsize=(6, 5))
     data = [loop_align, non_align]
-    ax.boxplot(data, labels=["looping", "non-looping"])
+    ax.boxplot(data, tick_labels=["looping", "non-looping"])
     ax.set_ylabel("cos(h_{ℓ,-1}, trigger_dir)")
     ax.set_title("Trigger-direction alignment at position −1")
     ax.grid(True, axis="y", alpha=0.3)
