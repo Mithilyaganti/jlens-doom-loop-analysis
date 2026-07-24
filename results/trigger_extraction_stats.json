@@ -1,0 +1,17 @@
+{
+  "n_attempt": 28,
+  "n_loop": 0,
+  "loop_rate": 0.0,
+  "unique_triggers": 0,
+  "empirical_table_empty": true,
+  "max_new_tokens": 2048,
+  "temperature": 0.01,
+  "note": "Honest partial run: hard-preferred antidoom-mix + hard extras. Zero Liquid-criterion loops observed under 4-bit NF4 HF generate. Liquid reported 22.9% under their vLLM pipeline \u2014 discrepancy documented, not filled with fake triggers.",
+  "sources": [
+    "DigitalLearningGmbH/MATH-lighteval",
+    "allenai/math_qa",
+    "meta-math/MetaMathQA",
+    "openai/gsm8k",
+    "theblackcat102/evol-codealpaca-v1"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "workspace_start": 24,
+  "workspace_end": 28,
+  "workspace_layers": [
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "key_workspace_layers": [
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "mid_workspace_layer": 26,
+  "sensory_layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "motor_layers": [
+    29,
+    30
+  ],
+  "score_threshold": 0.8351311935328714,
+  "notes": "Band from combined kurtosis + NTP top-1 + effective dimensionality. Peeled last 2 source layers as motor (end was last fitted layer 30). Verify against plots before interpreting Exp 1–3."
+}

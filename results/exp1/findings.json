@@ -1,0 +1,8 @@
+{
+  "mid_layer": 26,
+  "workspace_mean_pairwise_sim_trigger": 0.1585739642381668,
+  "workspace_mean_pairwise_sim_controls": 0.13359664405385652,
+  "workspace_mean_align_trigger": 0.052620869129896164,
+  "workspace_mean_align_controls": 0.05448851957917214,
+  "success_criterion_met": true
+}
