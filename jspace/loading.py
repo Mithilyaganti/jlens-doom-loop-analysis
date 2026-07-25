@@ -206,8 +206,11 @@ def _vllm_tokenizer_only_mode(require_lens: bool, lens_path: Path) -> bool:
     """vLLM generates; HF model load is redundant and breaks on hybrid LFM layouts."""
     import os
 
+    from jspace.vllm_backend import vllm_available
+
     return (
         os.environ.get("JLENS_BACKEND", "").lower() == "vllm"
+        and vllm_available()
         and not require_lens
         and not lens_path.is_file()
     )

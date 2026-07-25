@@ -118,19 +118,26 @@ class VLLMGenerator:
 
 
 def make_generator(model_id: str):
-    """Factory: vLLM if JLENS_BACKEND=vllm (or auto+available), else None (use HF)."""
+    """Factory: vLLM if requested and installed, else None (use HF).
+
+    Never hard-crash when JLENS_BACKEND=vllm but vllm is missing — fall back to HF
+    so Colab runs can continue after a failed/skipped pip install.
+    """
     backend = os.environ.get("JLENS_BACKEND", "auto").strip().lower()
     if backend == "hf":
         return None
-    if backend == "vllm" or (backend == "auto" and vllm_available()):
-        if not vllm_available():
-            raise RuntimeError(
-                "JLENS_BACKEND=vllm but vllm is not installed. "
-                "On Colab: pip install vllm. On Windows laptop prefer JLENS_BACKEND=hf."
-            )
-        return VLLMGenerator(
-            model_id,
-            max_model_len=int(os.environ.get("JLENS_MAX_MODEL_LEN", "6000")),
-            gpu_memory_utilization=float(os.environ.get("JLENS_GPU_UTIL", "0.85")),
+    want_vllm = backend == "vllm" or (backend == "auto" and vllm_available())
+    if not want_vllm:
+        return None
+    if not vllm_available():
+        logger.warning(
+            "JLENS_BACKEND=%s but vllm is not installed — falling back to HuggingFace. "
+            "On Colab run: %%pip install -q vllm",
+            backend,
         )
-    return None
+        return None
+    return VLLMGenerator(
+        model_id,
+        max_model_len=int(os.environ.get("JLENS_MAX_MODEL_LEN", "6000")),
+        gpu_memory_utilization=float(os.environ.get("JLENS_GPU_UTIL", "0.85")),
+    )
