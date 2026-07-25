@@ -106,8 +106,10 @@ def main() -> int:
         for pid in sorted(done_ids):
             _ingest_saved_trace(pid)
         logger.info("Resuming baseline pass: %d/%d already done", len(done_ids), len(prompts))
-    stack = load_stack(require_lens=False)
+
+    # vLLM first — then tokenizer-only stack (avoids loading HF LFM2 for layout)
     vllm_gen = make_generator(cfg.model_id)
+    stack = load_stack(require_lens=False)
     if vllm_gen is not None:
         logger.info("Using vLLM backend dtype=%s", getattr(vllm_gen, "dtype", "?"))
         stack.generation_backend = "vllm"
