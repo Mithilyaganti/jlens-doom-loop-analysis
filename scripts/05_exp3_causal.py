@@ -18,20 +18,35 @@ sys.path.insert(0, str(ROOT))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("exp3")
 
-MAX_PROMPTS = int(os.environ.get("JLENS_EXP3_PROMPTS", "40"))
-MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "1536"))
+MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "4000"))
 EVAL_N = int(os.environ.get("JLENS_EVAL_N", "30"))
 
 
-def load_prompts(max_n: int) -> list[dict]:
-    """Load real antidoom-mix prompts only. Fail hard if unavailable."""
-    from jspace.prompts import load_antidoom_mix
+def load_looping_prompts() -> list[dict]:
+    """Load only prompts that looped in the baseline pass (condition 1)."""
+    from jspace.model_config import artifact_paths
+    from jspace.prompts import load_prompt_sample
 
-    return load_antidoom_mix(max_n)
+    paths = artifact_paths()
+    summary_path = paths["baseline_summary"]
+    if not summary_path.is_file():
+        raise FileNotFoundError(
+            "Missing results/baseline_pass_summary.json — run scripts/02_baseline_pass.py first."
+        )
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    loop_ids = {int(x) for x in summary.get("looping_prompt_ids", [])}
+    if not loop_ids:
+        logger.warning("Baseline pass recorded zero looping prompts — Exp3 will be empty.")
+        return []
+    all_prompts = load_prompt_sample(paths["prompt_sample"])
+    prompts = [p for p in all_prompts if int(p["prompt_id"]) in loop_ids]
+    logger.info("Exp3 looping-only subset: %d prompts", len(prompts))
+    return prompts
 
 
 def main() -> int:
     from jspace.loading import load_stack, clear_cuda
+    from jspace.model_config import get_active_model, artifact_paths
     from jspace.generation import apply_chat_template, generate_greedy
     from jspace.detection import detect_loop
     from jspace.token_sets import build_trigger_set, build_frequency_matched_content, estimate_unigram_from_wikitext
@@ -49,7 +64,9 @@ def main() -> int:
     )
     from jspace.checkpoint import save_checkpoint, load_checkpoint, git_checkpoint
 
-    out = ensure_dir(ROOT / "results" / "exp3")
+    cfg = get_active_model()
+    paths = artifact_paths(cfg)
+    out = ensure_dir(paths["exp3"])
     ckpt_name = "exp3_main"
 
     # Pre-register analysis plan
@@ -71,7 +88,7 @@ def main() -> int:
     (out / "analysis_plan.md").write_text(plan, encoding="utf-8")
 
     stack = load_stack()
-    band_path = ROOT / "results" / "workspace_band_qwen3.5-4b.json"
+    band_path = paths["workspace_band"]
     if not band_path.is_file():
         raise FileNotFoundError(
             f"Missing {band_path}. Run scripts/01_workspace_band.py first."
@@ -87,7 +104,7 @@ def main() -> int:
         if key not in band:
             raise ValueError(f"workspace band file missing required key: {key}")
 
-    trigger_csv = ROOT / "results" / "trigger_tokens_qwen3.5-4b.csv"
+    trigger_csv = paths["trigger_csv"]
     if not trigger_csv.is_file():
         raise FileNotFoundError(
             f"Missing {trigger_csv}. Run scripts/02_trigger_tokens.py first."
@@ -128,8 +145,19 @@ def main() -> int:
         ("ablate_trigger_motor", motor, "ablate_trigger_motor"),
     ]
 
-    prompts = load_prompts(MAX_PROMPTS)
-    logger.info("Exp3: %d prompts, %d conditions", len(prompts), len(conditions))
+    prompts = load_looping_prompts()
+    logger.info("Exp3: %d looping prompts, %d conditions", len(prompts), len(conditions))
+    if not prompts:
+        stats = {
+            "loop_rates": {c[0]: 0.0 for c in conditions},
+            "note": "No baseline loops — causal ablation skipped (null by design).",
+        }
+        save_json(stats, out / "stats.json")
+        status = "# Experiment 3 — Causal Interventions\n\nNo looping prompts in baseline pass; Exp3 skipped.\n"
+        write_status("05_exp3", status)
+        append_results_summary("Experiment 3 — Causal Interventions", status)
+        clear_cuda()
+        return 0
 
     # per_prompt[prompt_id][condition] = {is_loop, n_tokens}
     per_prompt: dict[int, dict[str, dict]] = {}
@@ -144,7 +172,7 @@ def main() -> int:
             {
                 "per_prompt": per_prompt,
                 "conditions": [c[0] for c in conditions],
-                "max_prompts": MAX_PROMPTS,
+                "n_looping_prompts": len(prompts),
             },
         )
 

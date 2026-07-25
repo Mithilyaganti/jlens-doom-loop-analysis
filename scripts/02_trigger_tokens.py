@@ -26,15 +26,15 @@ import os
 MAX_PROMPTS = int(os.environ.get("JLENS_MAX_PROMPTS", "120"))
 # Liquid default.yaml uses max_new_tokens=4000; 2048 is the laptop-feasible floor
 # that still produces loops on hard math/code. Override with JLENS_MAX_NEW_TOKENS.
-MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "2048"))
+MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "4000"))
 TEMPERATURE = float(os.environ.get("JLENS_TEMPERATURE", "0.01"))
 
 
 def load_prompts(max_prompts: int) -> list[dict]:
-    """Load real antidoom-mix + hard math/coding supplements (ShareGPT schema)."""
-    from jspace.prompts import load_antidoom_mix, with_hard_extras
+    """Load stratified antidoom-mix reasoning subset (no external prompts)."""
+    from jspace.prompts import get_or_create_prompt_sample
 
-    return with_hard_extras(load_antidoom_mix(max_prompts))
+    return get_or_create_prompt_sample(total=max_prompts)
 
 
 def main() -> int:
@@ -45,6 +45,23 @@ def main() -> int:
     import pandas as pd
 
     out = ensure_dir(ROOT / "results")
+    summary_path = out / "baseline_pass_summary.json"
+    if summary_path.is_file():
+        logger.info(
+            "Baseline pass already complete — rebuilding status from %s", summary_path
+        )
+        stats = json.loads(summary_path.read_text(encoding="utf-8"))
+        status = f"""# Trigger Token Extraction — Qwen3.5-4B (from baseline pass)
+
+- Prompts: {stats.get('n_prompts')}
+- Loops detected: {stats.get('n_loop')} ({stats.get('loop_rate', 0):.1%})
+- Table: `results/trigger_tokens_qwen3.5-4b.csv`
+- Source: unified baseline pass (`scripts/02_baseline_pass.py`)
+"""
+        write_status("02_trigger_tokens", status)
+        append_results_summary("Trigger Tokens (Qwen3.5-4B)", status)
+        return 0 if stats.get("n_loop", 0) > 0 else 2
+
     generations_path = out / "trigger_gen_log.jsonl"
     stack = load_stack()
     prompts = load_prompts(MAX_PROMPTS)

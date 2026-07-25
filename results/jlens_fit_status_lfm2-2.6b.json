@@ -1,0 +1,14 @@
+{
+  "model_id": "LiquidAI/LFM2-2.6B",
+  "hybrid": true,
+  "lens_path": "C:\\Users\\mithi\\Desktop\\mithil\\projects\\j-lens\\lenses\\lfm2-2.6b.pt",
+  "fitted": false,
+  "blocker": "No pre-fitted J-lens for LFM2-2.6B. Fitting requires adapting open-jlens (vendor/open-jlens-data) to skip LIV conv blocks and fit Jacobians only on attention layers. Prefer Colab A100/L4 with bf16 for the fit. Until then: run baseline generation+detection; defer Exp1/Exp2 geometry/Exp3 ablation.",
+  "next_steps": [
+    "On Colab: install open-jlens deps, load LiquidAI/LFM2-2.6B bf16",
+    "Enumerate layers; mark conv vs attn via module class names",
+    "Fit JacobianLens on attn layers only (wikitext ~200–1000 prompts)",
+    "Save to C:\\Users\\mithi\\Desktop\\mithil\\projects\\j-lens\\lenses\\lfm2-2.6b.pt",
+    "Run scripts/01_workspace_band.py then Exp1–3"
+  ]
+}

@@ -2,10 +2,36 @@
 
 from __future__ import annotations
 
+import json
 import logging
+import random
+from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+# Component source tags live in row id: antidoom:<component>:<idx>
+REASONING_COMPONENT_SOURCES: tuple[str, ...] = (
+    "gsm8k_train",
+    "math_lighteval_train",
+    "math_qa_train",
+    "apps_train",
+    "open_perfectblend_ultrainteract",
+    "open_perfectblend_metamathqa",
+    "open_perfectblend_evol_codealpaca",
+)
+
+SKIPPED_COMPONENT_SOURCES: tuple[str, ...] = (
+    "mmlu_auxiliary_train",
+    "commonsense_qa_train",
+    "pubmedqa_artificial_train",
+    "open_perfectblend_ultrachat200k",
+    "open_perfectblend_autoif",
+    "open_perfectblend_lmsys_arena",
+    "ifstruct_train_generated",
+)
+
+DEFAULT_SAMPLE_PATH = Path("results/prompt_sample_ids.json")
 
 
 def extract_user_text_from_conversations(conversations: Any) -> str | None:
@@ -43,145 +69,153 @@ def extract_user_text_from_conversations(conversations: Any) -> str | None:
         if role_l in ("human", "user", "prompter"):
             last_human = text
         elif last_human is None and role_l not in ("gpt", "assistant", "bot", "model"):
-            # Unknown role but has text — keep as candidate only if nothing else
             last_human = text
     return last_human
 
 
-# Source substrings that Liquid's mix treats as harder (loops more often).
-# Used only to *prefer* order, not to invent prompts.
-_HARD_SOURCE_HINTS = (
-    "math",
-    "gsm",
-    "code",
-    "humaneval",
-    "mbpp",
-    "livecode",
-    "competition",
-    "olympiad",
-    "aime",
-    "aops",
-    "theorem",
-    "proof",
-    "leetcode",
-    "reasoning",
-    "think",
-)
+def component_source_from_row(row: dict[str, Any]) -> str | None:
+    """Return antidoom component tag from row id (antidoom:<component>:<idx>)."""
+    rid = row.get("id")
+    if not rid:
+        return None
+    parts = str(rid).split(":")
+    if len(parts) >= 2 and parts[0] == "antidoom":
+        return parts[1]
+    return None
 
 
-def _source_hardness(source: str | None) -> int:
-    s = (source or "").lower()
-    return 1 if any(h in s for h in _HARD_SOURCE_HINTS) else 0
+def _row_to_prompt(row_idx: int, row: dict[str, Any]) -> dict[str, Any] | None:
+    text = extract_user_text_from_conversations(row.get("conversations"))
+    if text is None:
+        for key in ("prompt", "question", "text", "input"):
+            if row.get(key):
+                text = str(row[key]).strip()
+                break
+    if not text:
+        return None
+    comp = component_source_from_row(row)
+    return {
+        "row_index": row_idx,
+        "prompt_id": row_idx,
+        "id": row.get("id"),
+        "text": text[:4000],
+        "source": comp or row.get("source") or "unknown",
+        "hf_source": row.get("source"),
+        "dataset": "LiquidAI/antidoom-mix-v1.0",
+    }
 
 
-def load_antidoom_mix(max_prompts: int, *, prefer_hard: bool = True) -> list[dict]:
-    """Load prompts from LiquidAI/antidoom-mix-v1.0. Raises if empty.
+def _per_source_counts(total: int, n_sources: int) -> list[int]:
+    base, rem = divmod(total, n_sources)
+    return [base + (1 if i < rem else 0) for i in range(n_sources)]
 
-    When prefer_hard=True, scan a larger window and fill the budget preferring
-    math/code/reasoning sources first (still real antidoom-mix rows only).
-    """
+
+def sample_reasoning_prompts(
+    total: int = 200,
+    *,
+    seed: int = 42,
+    sources: tuple[str, ...] = REASONING_COMPONENT_SOURCES,
+) -> list[dict]:
+    """Stratified random sample from antidoom-mix reasoning component sources only."""
     from datasets import load_dataset
 
     ds = load_dataset("LiquidAI/antidoom-mix-v1.0", split="train")
-    # Scan more rows than needed so we can prefer hard sources without inventing.
-    scan_n = min(len(ds), max(max_prompts * 40, 5000))
-    hard: list[dict] = []
-    soft: list[dict] = []
-    for i in range(scan_n):
-        row = ds[i]
-        text = extract_user_text_from_conversations(row.get("conversations"))
-        if text is None:
-            for key in ("prompt", "question", "text", "input"):
-                if row.get(key):
-                    text = str(row[key]).strip()
-                    break
-        if not text:
-            continue
-        item = {
-            "prompt_id": i,
-            "id": row.get("id"),
-            "text": text[:4000],
-            "source": row.get("source") or "antidoom-mix",
-            "dataset": "LiquidAI/antidoom-mix-v1.0",
-        }
-        if prefer_hard and _source_hardness(item["source"]):
-            hard.append(item)
-        else:
-            soft.append(item)
-        if prefer_hard and len(hard) >= max_prompts:
-            break
-        if not prefer_hard and len(hard) + len(soft) >= max_prompts:
-            break
+    by_source: dict[str, list[int]] = {s: [] for s in sources}
+    for i in range(len(ds)):
+        comp = component_source_from_row(ds[i])
+        if comp in by_source:
+            by_source[comp].append(i)
 
-    if prefer_hard:
-        prompts = hard[:max_prompts]
-        if len(prompts) < max_prompts:
-            prompts.extend(soft[: max_prompts - len(prompts)])
-    else:
-        prompts = (hard + soft)[:max_prompts]
+    rng = random.Random(seed)
+    counts = _per_source_counts(total, len(sources))
+    out: list[dict] = []
+    for src, n_take in zip(sources, counts):
+        pool = by_source[src]
+        if len(pool) < n_take:
+            raise RuntimeError(
+                f"Not enough rows for {src}: need {n_take}, have {len(pool)}"
+            )
+        chosen = rng.sample(pool, n_take)
+        for row_idx in sorted(chosen):
+            item = _row_to_prompt(row_idx, ds[row_idx])
+            if item is None:
+                raise RuntimeError(f"Unparseable prompt at row {row_idx} ({src})")
+            out.append(item)
 
-    if not prompts:
-        raise RuntimeError(
-            "LiquidAI/antidoom-mix-v1.0 loaded but yielded zero parseable prompts. "
-            f"columns={ds.column_names}. Refusing to invent substitutes."
-        )
-    n_hard = sum(1 for p in prompts if _source_hardness(p["source"]))
+    rng.shuffle(out)
     logger.info(
-        "Loaded %d prompts from antidoom-mix-v1.0 (hard-preferred=%s, hard_count=%d, scanned=%d)",
-        len(prompts),
-        prefer_hard,
-        n_hard,
-        scan_n,
+        "Sampled %d prompts from %d reasoning sources (seed=%d): %s",
+        len(out),
+        len(sources),
+        seed,
+        {s: c for s, c in zip(sources, counts)},
     )
-    return prompts
-
-
-HARD_MATH_PROMPTS = [
-    "Prove that the square root of 2 is irrational, writing a full step-by-step proof.",
-    "Solve: A tank fills in 6 hours and empties in 8. How long to fill if both open? Show all steps.",
-    "Find all positive integers n such that n^2 + n + 1 divides n^3 - 1. Explain carefully.",
-    "Compute the last two digits of 7^100 using modular arithmetic. Show every step.",
-    "A fair coin is flipped until two consecutive heads appear. Expected number of flips? Derive fully.",
-    "Prove that there are infinitely many primes. Write a detailed proof.",
-    "Solve the system: x+y+z=6, 2x-y+z=3, x+2y-z=2. Show all steps.",
-    "Explain the Fourier transform of a Gaussian step by step with derivations.",
-    "A frog climbs 3m by day and slips 2m by night from a 10m well. When does it escape? Reason carefully.",
-    "Derive the quadratic formula from ax^2+bx+c=0 by completing the square. Every step.",
-]
-
-HARD_CODE_PROMPTS = [
-    "Write a Python function that finds the longest palindromic substring. Trace an example by hand first.",
-    "Implement Dijkstra's algorithm and walk through it on a 6-node graph step by step.",
-    "Explain and correct this buggy binary search, then prove correctness of the fixed version.",
-    "Write a recursive solution to the N-Queens problem and analyze its complexity carefully.",
-    "Design a thread-safe LRU cache and reason about race conditions at each step.",
-    "Write a correct implementation of quicksort and prove its average complexity.",
-    "Implement topological sort on a DAG and prove it terminates. Show a worked example.",
-    "Write merge sort and derive its recurrence T(n)=2T(n/2)+O(n) solution step by step.",
-    "Implement a red-black tree insert and walk through rotations on an example sequence.",
-    "Write a correct union-find with path compression; analyze amortized complexity carefully.",
-]
-
-
-def with_hard_extras(base: list[dict], *, id_offset: int = 200000) -> list[dict]:
-    """Append labeled hard math/coding prompts (PROJECT_SPEC §10.2)."""
-    out = list(base)
-    for j, t in enumerate(HARD_MATH_PROMPTS):
-        out.append(
-            {
-                "prompt_id": id_offset + j,
-                "text": t,
-                "source": "hard_math",
-                "dataset": "project_spec_section_10.2",
-            }
-        )
-    for j, t in enumerate(HARD_CODE_PROMPTS):
-        out.append(
-            {
-                "prompt_id": id_offset + 1000 + j,
-                "text": t,
-                "source": "hard_code",
-                "dataset": "project_spec_section_10.2",
-            }
-        )
     return out
+
+
+def save_prompt_sample(
+    prompts: list[dict],
+    path: Path | str,
+    *,
+    seed: int = 42,
+    total: int | None = None,
+) -> None:
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    by_source: dict[str, int] = {}
+    for p in prompts:
+        by_source[p["source"]] = by_source.get(p["source"], 0) + 1
+    payload = {
+        "dataset": "LiquidAI/antidoom-mix-v1.0",
+        "seed": seed,
+        "total_requested": total or len(prompts),
+        "total_sampled": len(prompts),
+        "sources": list(REASONING_COMPONENT_SOURCES),
+        "per_source_counts": by_source,
+        "prompts": [
+            {
+                "prompt_id": p["prompt_id"],
+                "row_index": p["row_index"],
+                "id": p["id"],
+                "source": p["source"],
+                "hf_source": p.get("hf_source"),
+            }
+            for p in prompts
+        ],
+    }
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    logger.info("Wrote prompt sample audit file: %s", path)
+
+
+def load_prompt_sample(path: Path | str) -> list[dict]:
+    """Reload full prompt texts from saved sample IDs."""
+    from datasets import load_dataset
+
+    path = Path(path)
+    if not path.is_file():
+        raise FileNotFoundError(f"Missing prompt sample file: {path}")
+    meta = json.loads(path.read_text(encoding="utf-8"))
+    ds = load_dataset("LiquidAI/antidoom-mix-v1.0", split="train")
+    out: list[dict] = []
+    for entry in meta["prompts"]:
+        row_idx = entry["row_index"]
+        item = _row_to_prompt(row_idx, ds[row_idx])
+        if item is None:
+            raise RuntimeError(f"Could not reload prompt row {row_idx}")
+        out.append(item)
+    logger.info("Reloaded %d prompts from %s", len(out), path)
+    return out
+
+
+def get_or_create_prompt_sample(
+    path: Path | str = DEFAULT_SAMPLE_PATH,
+    *,
+    total: int = 200,
+    seed: int = 42,
+) -> list[dict]:
+    path = Path(path)
+    if path.is_file():
+        return load_prompt_sample(path)
+    prompts = sample_reasoning_prompts(total=total, seed=seed)
+    save_prompt_sample(prompts, path, seed=seed, total=total)
+    return prompts

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Empirically identify the J-space workspace band for Qwen3.5-4B."""
+"""Empirically identify the J-space workspace band for the active model."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ logger = logging.getLogger("workspace_band")
 
 def main() -> int:
     from jspace.loading import load_stack, clear_cuda
+    from jspace.model_config import get_active_model, artifact_paths
     from jspace.geometry import compute_workspace_band_metrics, identify_workspace_band
     from jspace.analysis import (
         plot_workspace_band_metrics,
@@ -25,7 +26,9 @@ def main() -> int:
         ensure_dir,
     )
 
-    out = ensure_dir(ROOT / "results")
+    cfg = get_active_model()
+    paths = artifact_paths(cfg)
+    out = ensure_dir(paths["results"])
     stack = load_stack()
 
     # Extra prompts from wikitext if available
@@ -63,14 +66,15 @@ def main() -> int:
         "n_prompts_ntp": metrics["n_prompts_ntp"],
         "n_layers": metrics["n_layers"],
     }
-    save_json(metrics_ser, out / "workspace_band_metrics_qwen3.5-4b.json")
-    save_json(band, out / "workspace_band_qwen3.5-4b.json")
+    save_json(metrics_ser, paths["workspace_band_metrics"])
+    save_json(band, paths["workspace_band"])
     plot_workspace_band_metrics(metrics, band, out)
 
-    status = f"""# Workspace Band — Qwen3.5-4B
+    status = f"""# Workspace Band — {cfg.display_name}
 
 Empirically identified workspace band:
 
+- **Model**: `{cfg.model_id}`
 - **Start layer**: {band['workspace_start']}
 - **End layer**: {band['workspace_end']}
 - **Mid layer**: {band['mid_workspace_layer']}
@@ -79,11 +83,11 @@ Empirically identified workspace band:
 - Motor layers: {len(band['motor_layers'])} layers after band
 - NTP prompts used: {metrics['n_prompts_ntp']}
 
-Metrics and plots: `results/workspace_band_*.png`, `results/workspace_band_qwen3.5-4b.json`.
+Metrics and plots: `results/workspace_band_*.png`, `{paths['workspace_band']}`.
 """
     write_status("01_workspace_band", status)
     append_results_summary(
-        "Workspace Band (Qwen3.5-4B)",
+        f"Workspace Band ({cfg.display_name})",
         status,
     )
     clear_cuda()

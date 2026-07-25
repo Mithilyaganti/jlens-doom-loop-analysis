@@ -1,0 +1,1426 @@
+{
+  "dataset": "LiquidAI/antidoom-mix-v1.0",
+  "seed": 42,
+  "total_requested": 200,
+  "total_sampled": 200,
+  "sources": [
+    "gsm8k_train",
+    "math_lighteval_train",
+    "math_qa_train",
+    "apps_train",
+    "open_perfectblend_ultrainteract",
+    "open_perfectblend_metamathqa",
+    "open_perfectblend_evol_codealpaca"
+  ],
+  "per_source_counts": {
+    "apps_train": 29,
+    "open_perfectblend_evol_codealpaca": 28,
+    "open_perfectblend_ultrainteract": 28,
+    "math_lighteval_train": 29,
+    "gsm8k_train": 29,
+    "math_qa_train": 29,
+    "open_perfectblend_metamathqa": 28
+  },
+  "prompts": [
+    {
+      "prompt_id": 289217,
+      "row_index": 289217,
+      "id": "antidoom:apps_train:792",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 172911,
+      "row_index": 172911,
+      "id": "antidoom:apps_train:2887",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 101896,
+      "row_index": 101896,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:36533",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 340846,
+      "row_index": 340846,
+      "id": "antidoom:open_perfectblend_ultrainteract:36391",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 86352,
+      "row_index": 86352,
+      "id": "antidoom:math_lighteval_train:4454",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 451717,
+      "row_index": 451717,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:46092",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 218022,
+      "row_index": 218022,
+      "id": "antidoom:math_lighteval_train:2252",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 365112,
+      "row_index": 365112,
+      "id": "antidoom:math_lighteval_train:2781",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 338453,
+      "row_index": 338453,
+      "id": "antidoom:gsm8k_train:6456",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 392439,
+      "row_index": 392439,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:28878",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 99810,
+      "row_index": 99810,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:47956",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 76104,
+      "row_index": 76104,
+      "id": "antidoom:apps_train:1724",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 88049,
+      "row_index": 88049,
+      "id": "antidoom:open_perfectblend_ultrainteract:37996",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 398870,
+      "row_index": 398870,
+      "id": "antidoom:math_lighteval_train:3521",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 3883,
+      "row_index": 3883,
+      "id": "antidoom:math_lighteval_train:5465",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 209391,
+      "row_index": 209391,
+      "id": "antidoom:apps_train:1003",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 120702,
+      "row_index": 120702,
+      "id": "antidoom:math_qa_train:11707",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 284779,
+      "row_index": 284779,
+      "id": "antidoom:apps_train:58",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 472653,
+      "row_index": 472653,
+      "id": "antidoom:open_perfectblend_ultrainteract:31054",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 290449,
+      "row_index": 290449,
+      "id": "antidoom:math_qa_train:4398",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 333053,
+      "row_index": 333053,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:48212",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 282572,
+      "row_index": 282572,
+      "id": "antidoom:math_qa_train:7883",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 186489,
+      "row_index": 186489,
+      "id": "antidoom:apps_train:3296",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 405906,
+      "row_index": 405906,
+      "id": "antidoom:math_qa_train:11888",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 220160,
+      "row_index": 220160,
+      "id": "antidoom:math_lighteval_train:6395",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 241882,
+      "row_index": 241882,
+      "id": "antidoom:math_qa_train:6586",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 114587,
+      "row_index": 114587,
+      "id": "antidoom:gsm8k_train:6655",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 376347,
+      "row_index": 376347,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:16631",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 207228,
+      "row_index": 207228,
+      "id": "antidoom:apps_train:3949",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 248052,
+      "row_index": 248052,
+      "id": "antidoom:apps_train:1043",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 427686,
+      "row_index": 427686,
+      "id": "antidoom:open_perfectblend_metamathqa:20412",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 57930,
+      "row_index": 57930,
+      "id": "antidoom:open_perfectblend_metamathqa:18259",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 452709,
+      "row_index": 452709,
+      "id": "antidoom:math_qa_train:2418",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 181980,
+      "row_index": 181980,
+      "id": "antidoom:math_lighteval_train:2095",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 134306,
+      "row_index": 134306,
+      "id": "antidoom:open_perfectblend_ultrainteract:8478",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 233346,
+      "row_index": 233346,
+      "id": "antidoom:math_lighteval_train:5165",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 165621,
+      "row_index": 165621,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:23179",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 336938,
+      "row_index": 336938,
+      "id": "antidoom:open_perfectblend_metamathqa:27557",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 374423,
+      "row_index": 374423,
+      "id": "antidoom:open_perfectblend_metamathqa:7549",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 470959,
+      "row_index": 470959,
+      "id": "antidoom:open_perfectblend_metamathqa:8744",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 382625,
+      "row_index": 382625,
+      "id": "antidoom:math_qa_train:8772",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 285252,
+      "row_index": 285252,
+      "id": "antidoom:math_lighteval_train:82",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 388066,
+      "row_index": 388066,
+      "id": "antidoom:gsm8k_train:506",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 435035,
+      "row_index": 435035,
+      "id": "antidoom:apps_train:2813",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 178300,
+      "row_index": 178300,
+      "id": "antidoom:math_lighteval_train:6642",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 15352,
+      "row_index": 15352,
+      "id": "antidoom:gsm8k_train:4341",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 424112,
+      "row_index": 424112,
+      "id": "antidoom:math_lighteval_train:5736",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 303399,
+      "row_index": 303399,
+      "id": "antidoom:math_qa_train:26574",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 51166,
+      "row_index": 51166,
+      "id": "antidoom:apps_train:557",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 330138,
+      "row_index": 330138,
+      "id": "antidoom:math_qa_train:25670",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 123614,
+      "row_index": 123614,
+      "id": "antidoom:math_qa_train:27930",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 385249,
+      "row_index": 385249,
+      "id": "antidoom:gsm8k_train:3778",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 214632,
+      "row_index": 214632,
+      "id": "antidoom:open_perfectblend_metamathqa:36556",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 394630,
+      "row_index": 394630,
+      "id": "antidoom:open_perfectblend_metamathqa:16366",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 206556,
+      "row_index": 206556,
+      "id": "antidoom:apps_train:4901",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 149262,
+      "row_index": 149262,
+      "id": "antidoom:math_lighteval_train:6051",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 453498,
+      "row_index": 453498,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:14653",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 401180,
+      "row_index": 401180,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:5362",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 324870,
+      "row_index": 324870,
+      "id": "antidoom:math_qa_train:21231",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 294447,
+      "row_index": 294447,
+      "id": "antidoom:open_perfectblend_metamathqa:42941",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 184705,
+      "row_index": 184705,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:34204",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 102094,
+      "row_index": 102094,
+      "id": "antidoom:math_qa_train:8038",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 16467,
+      "row_index": 16467,
+      "id": "antidoom:gsm8k_train:2668",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 318575,
+      "row_index": 318575,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:27248",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 24659,
+      "row_index": 24659,
+      "id": "antidoom:apps_train:2745",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 165806,
+      "row_index": 165806,
+      "id": "antidoom:apps_train:3567",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 252948,
+      "row_index": 252948,
+      "id": "antidoom:open_perfectblend_ultrainteract:429",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 179962,
+      "row_index": 179962,
+      "id": "antidoom:math_lighteval_train:2637",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 129346,
+      "row_index": 129346,
+      "id": "antidoom:apps_train:327",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 40819,
+      "row_index": 40819,
+      "id": "antidoom:open_perfectblend_metamathqa:6175",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 156351,
+      "row_index": 156351,
+      "id": "antidoom:open_perfectblend_ultrainteract:13126",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 149188,
+      "row_index": 149188,
+      "id": "antidoom:math_lighteval_train:3888",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 297067,
+      "row_index": 297067,
+      "id": "antidoom:apps_train:1004",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 308152,
+      "row_index": 308152,
+      "id": "antidoom:gsm8k_train:3077",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 42833,
+      "row_index": 42833,
+      "id": "antidoom:apps_train:507",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 471201,
+      "row_index": 471201,
+      "id": "antidoom:open_perfectblend_ultrainteract:20706",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 250591,
+      "row_index": 250591,
+      "id": "antidoom:open_perfectblend_ultrainteract:14674",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 118751,
+      "row_index": 118751,
+      "id": "antidoom:math_lighteval_train:4471",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 72558,
+      "row_index": 72558,
+      "id": "antidoom:open_perfectblend_metamathqa:34673",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 406338,
+      "row_index": 406338,
+      "id": "antidoom:open_perfectblend_ultrainteract:48079",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 315291,
+      "row_index": 315291,
+      "id": "antidoom:math_lighteval_train:5619",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 11962,
+      "row_index": 11962,
+      "id": "antidoom:gsm8k_train:6320",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 322195,
+      "row_index": 322195,
+      "id": "antidoom:open_perfectblend_ultrainteract:22128",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 270715,
+      "row_index": 270715,
+      "id": "antidoom:open_perfectblend_ultrainteract:34300",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 91074,
+      "row_index": 91074,
+      "id": "antidoom:open_perfectblend_ultrainteract:26913",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 88955,
+      "row_index": 88955,
+      "id": "antidoom:open_perfectblend_ultrainteract:39186",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 388384,
+      "row_index": 388384,
+      "id": "antidoom:gsm8k_train:6863",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 338769,
+      "row_index": 338769,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:28867",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 234849,
+      "row_index": 234849,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:18494",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 396693,
+      "row_index": 396693,
+      "id": "antidoom:math_lighteval_train:1363",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 318571,
+      "row_index": 318571,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:32630",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 374755,
+      "row_index": 374755,
+      "id": "antidoom:open_perfectblend_metamathqa:16755",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 116853,
+      "row_index": 116853,
+      "id": "antidoom:gsm8k_train:1958",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 158917,
+      "row_index": 158917,
+      "id": "antidoom:open_perfectblend_metamathqa:48226",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 156066,
+      "row_index": 156066,
+      "id": "antidoom:math_qa_train:18769",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 96637,
+      "row_index": 96637,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:3882",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 167042,
+      "row_index": 167042,
+      "id": "antidoom:open_perfectblend_ultrainteract:28533",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 133187,
+      "row_index": 133187,
+      "id": "antidoom:open_perfectblend_ultrainteract:1032",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 190672,
+      "row_index": 190672,
+      "id": "antidoom:math_qa_train:22413",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 168396,
+      "row_index": 168396,
+      "id": "antidoom:open_perfectblend_metamathqa:26691",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 103801,
+      "row_index": 103801,
+      "id": "antidoom:gsm8k_train:360",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 353607,
+      "row_index": 353607,
+      "id": "antidoom:apps_train:610",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 229239,
+      "row_index": 229239,
+      "id": "antidoom:open_perfectblend_ultrainteract:10433",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 116005,
+      "row_index": 116005,
+      "id": "antidoom:math_lighteval_train:1164",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 352735,
+      "row_index": 352735,
+      "id": "antidoom:gsm8k_train:593",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 112682,
+      "row_index": 112682,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:37562",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 69675,
+      "row_index": 69675,
+      "id": "antidoom:open_perfectblend_metamathqa:21087",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 347180,
+      "row_index": 347180,
+      "id": "antidoom:open_perfectblend_metamathqa:39089",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 153968,
+      "row_index": 153968,
+      "id": "antidoom:math_qa_train:29089",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 417747,
+      "row_index": 417747,
+      "id": "antidoom:apps_train:3103",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 7198,
+      "row_index": 7198,
+      "id": "antidoom:open_perfectblend_metamathqa:1924",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 52446,
+      "row_index": 52446,
+      "id": "antidoom:math_lighteval_train:3354",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 129134,
+      "row_index": 129134,
+      "id": "antidoom:gsm8k_train:4584",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 477827,
+      "row_index": 477827,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:36263",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 452390,
+      "row_index": 452390,
+      "id": "antidoom:open_perfectblend_metamathqa:45417",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 199303,
+      "row_index": 199303,
+      "id": "antidoom:math_lighteval_train:5776",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 242939,
+      "row_index": 242939,
+      "id": "antidoom:open_perfectblend_metamathqa:48038",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 473944,
+      "row_index": 473944,
+      "id": "antidoom:open_perfectblend_metamathqa:48541",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 58449,
+      "row_index": 58449,
+      "id": "antidoom:gsm8k_train:5001",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 123142,
+      "row_index": 123142,
+      "id": "antidoom:gsm8k_train:3451",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 478129,
+      "row_index": 478129,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:1313",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 435555,
+      "row_index": 435555,
+      "id": "antidoom:math_qa_train:15589",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 332169,
+      "row_index": 332169,
+      "id": "antidoom:open_perfectblend_metamathqa:44160",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 53376,
+      "row_index": 53376,
+      "id": "antidoom:gsm8k_train:6287",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 123910,
+      "row_index": 123910,
+      "id": "antidoom:apps_train:612",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 290068,
+      "row_index": 290068,
+      "id": "antidoom:open_perfectblend_ultrainteract:19253",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 22929,
+      "row_index": 22929,
+      "id": "antidoom:math_qa_train:12321",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 276797,
+      "row_index": 276797,
+      "id": "antidoom:apps_train:2790",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 67343,
+      "row_index": 67343,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:38300",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 55810,
+      "row_index": 55810,
+      "id": "antidoom:apps_train:4350",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 312839,
+      "row_index": 312839,
+      "id": "antidoom:apps_train:668",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 402694,
+      "row_index": 402694,
+      "id": "antidoom:open_perfectblend_metamathqa:26465",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 374526,
+      "row_index": 374526,
+      "id": "antidoom:gsm8k_train:5137",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 308387,
+      "row_index": 308387,
+      "id": "antidoom:math_lighteval_train:4003",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 255067,
+      "row_index": 255067,
+      "id": "antidoom:apps_train:4115",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 369155,
+      "row_index": 369155,
+      "id": "antidoom:open_perfectblend_ultrainteract:3208",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 40020,
+      "row_index": 40020,
+      "id": "antidoom:math_qa_train:5358",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 124896,
+      "row_index": 124896,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:17646",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 84251,
+      "row_index": 84251,
+      "id": "antidoom:math_lighteval_train:194",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 366,
+      "row_index": 366,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:24621",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 2312,
+      "row_index": 2312,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:33567",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 285266,
+      "row_index": 285266,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:12599",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 199841,
+      "row_index": 199841,
+      "id": "antidoom:math_qa_train:10098",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 34421,
+      "row_index": 34421,
+      "id": "antidoom:math_qa_train:4015",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 311855,
+      "row_index": 311855,
+      "id": "antidoom:open_perfectblend_ultrainteract:45628",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 101473,
+      "row_index": 101473,
+      "id": "antidoom:open_perfectblend_metamathqa:43425",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 449453,
+      "row_index": 449453,
+      "id": "antidoom:math_qa_train:16830",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 72169,
+      "row_index": 72169,
+      "id": "antidoom:gsm8k_train:3976",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 272732,
+      "row_index": 272732,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:17767",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 70934,
+      "row_index": 70934,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:19832",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 221461,
+      "row_index": 221461,
+      "id": "antidoom:gsm8k_train:5440",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 292320,
+      "row_index": 292320,
+      "id": "antidoom:gsm8k_train:4944",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 13378,
+      "row_index": 13378,
+      "id": "antidoom:gsm8k_train:5839",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 443820,
+      "row_index": 443820,
+      "id": "antidoom:math_lighteval_train:181",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 266154,
+      "row_index": 266154,
+      "id": "antidoom:open_perfectblend_metamathqa:39171",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 21627,
+      "row_index": 21627,
+      "id": "antidoom:math_qa_train:9500",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 453737,
+      "row_index": 453737,
+      "id": "antidoom:open_perfectblend_ultrainteract:43483",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 96843,
+      "row_index": 96843,
+      "id": "antidoom:open_perfectblend_metamathqa:22857",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 48013,
+      "row_index": 48013,
+      "id": "antidoom:gsm8k_train:3938",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 464856,
+      "row_index": 464856,
+      "id": "antidoom:math_qa_train:28773",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 265478,
+      "row_index": 265478,
+      "id": "antidoom:gsm8k_train:4575",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 455346,
+      "row_index": 455346,
+      "id": "antidoom:math_lighteval_train:6602",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 64687,
+      "row_index": 64687,
+      "id": "antidoom:math_qa_train:14796",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 49990,
+      "row_index": 49990,
+      "id": "antidoom:math_lighteval_train:932",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 477262,
+      "row_index": 477262,
+      "id": "antidoom:apps_train:3392",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 315465,
+      "row_index": 315465,
+      "id": "antidoom:open_perfectblend_ultrainteract:33968",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 360988,
+      "row_index": 360988,
+      "id": "antidoom:apps_train:1768",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 157993,
+      "row_index": 157993,
+      "id": "antidoom:apps_train:1148",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 427548,
+      "row_index": 427548,
+      "id": "antidoom:open_perfectblend_metamathqa:47747",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 214921,
+      "row_index": 214921,
+      "id": "antidoom:apps_train:4249",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 368721,
+      "row_index": 368721,
+      "id": "antidoom:math_qa_train:20067",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 366334,
+      "row_index": 366334,
+      "id": "antidoom:math_lighteval_train:1993",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 369669,
+      "row_index": 369669,
+      "id": "antidoom:open_perfectblend_ultrainteract:31398",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 422269,
+      "row_index": 422269,
+      "id": "antidoom:math_lighteval_train:6117",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 296686,
+      "row_index": 296686,
+      "id": "antidoom:apps_train:2993",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 240893,
+      "row_index": 240893,
+      "id": "antidoom:open_perfectblend_metamathqa:43161",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 355199,
+      "row_index": 355199,
+      "id": "antidoom:open_perfectblend_ultrainteract:4106",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 140894,
+      "row_index": 140894,
+      "id": "antidoom:math_qa_train:11927",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 189649,
+      "row_index": 189649,
+      "id": "antidoom:math_lighteval_train:7278",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 414634,
+      "row_index": 414634,
+      "id": "antidoom:open_perfectblend_ultrainteract:47279",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 138440,
+      "row_index": 138440,
+      "id": "antidoom:open_perfectblend_ultrainteract:30420",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 428345,
+      "row_index": 428345,
+      "id": "antidoom:open_perfectblend_metamathqa:37932",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 187851,
+      "row_index": 187851,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:32390",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 55714,
+      "row_index": 55714,
+      "id": "antidoom:math_lighteval_train:4871",
+      "source": "math_lighteval_train",
+      "hf_source": "DigitalLearningGmbH/MATH-lighteval"
+    },
+    {
+      "prompt_id": 358898,
+      "row_index": 358898,
+      "id": "antidoom:open_perfectblend_ultrainteract:24390",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 285296,
+      "row_index": 285296,
+      "id": "antidoom:gsm8k_train:4647",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 168122,
+      "row_index": 168122,
+      "id": "antidoom:open_perfectblend_ultrainteract:21227",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 314399,
+      "row_index": 314399,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:2311",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 333581,
+      "row_index": 333581,
+      "id": "antidoom:gsm8k_train:5597",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 314908,
+      "row_index": 314908,
+      "id": "antidoom:gsm8k_train:2598",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 30195,
+      "row_index": 30195,
+      "id": "antidoom:open_perfectblend_metamathqa:43150",
+      "source": "open_perfectblend_metamathqa",
+      "hf_source": "meta-math/MetaMathQA"
+    },
+    {
+      "prompt_id": 382219,
+      "row_index": 382219,
+      "id": "antidoom:open_perfectblend_evol_codealpaca:30229",
+      "source": "open_perfectblend_evol_codealpaca",
+      "hf_source": "theblackcat102/evol-codealpaca-v1"
+    },
+    {
+      "prompt_id": 146017,
+      "row_index": 146017,
+      "id": "antidoom:gsm8k_train:2202",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 39405,
+      "row_index": 39405,
+      "id": "antidoom:math_qa_train:22125",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 346805,
+      "row_index": 346805,
+      "id": "antidoom:math_qa_train:28982",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    },
+    {
+      "prompt_id": 123613,
+      "row_index": 123613,
+      "id": "antidoom:apps_train:3212",
+      "source": "apps_train",
+      "hf_source": "codeparrot/apps"
+    },
+    {
+      "prompt_id": 467731,
+      "row_index": 467731,
+      "id": "antidoom:gsm8k_train:6205",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 44604,
+      "row_index": 44604,
+      "id": "antidoom:gsm8k_train:6722",
+      "source": "gsm8k_train",
+      "hf_source": "openai/gsm8k"
+    },
+    {
+      "prompt_id": 199289,
+      "row_index": 199289,
+      "id": "antidoom:open_perfectblend_ultrainteract:4169",
+      "source": "open_perfectblend_ultrainteract",
+      "hf_source": "openbmb/UltraInteract_sft"
+    },
+    {
+      "prompt_id": 422988,
+      "row_index": 422988,
+      "id": "antidoom:math_qa_train:24176",
+      "source": "math_qa_train",
+      "hf_source": "allenai/math_qa"
+    }
+  ]
+}

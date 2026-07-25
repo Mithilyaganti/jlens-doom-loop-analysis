@@ -19,16 +19,17 @@ sys.path.insert(0, str(ROOT))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("exp2")
 
-MAX_PROMPTS = int(os.environ.get("JLENS_EXP2_PROMPTS", "80"))
-MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "2048"))
-ANALYZE_ONLY = os.environ.get("JLENS_EXP2_ANALYZE_ONLY", "0") == "1"
+MAX_PROMPTS = int(os.environ.get("JLENS_EXP2_PROMPTS", "200"))
+MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "4000"))
+# Default: analyze traces from unified baseline pass (no regeneration).
+ANALYZE_ONLY = os.environ.get("JLENS_EXP2_ANALYZE_ONLY", "1") == "1"
 
 
 def load_exp2_prompts(max_n: int) -> list[dict]:
-    """Load real antidoom-mix + hard math/coding (PROJECT_SPEC §10.2)."""
-    from jspace.prompts import load_antidoom_mix, with_hard_extras
+    """Load stratified antidoom-mix reasoning subset (same as baseline pass)."""
+    from jspace.prompts import get_or_create_prompt_sample
 
-    prompts = with_hard_extras(load_antidoom_mix(max_n))
+    prompts = get_or_create_prompt_sample(total=max_n)
     logger.info("Exp2 prompt set size: %d", len(prompts))
     return prompts
 
@@ -102,6 +103,7 @@ def workspace_occupancy_from_readouts(indices: torch.Tensor, values: torch.Tenso
 
 def main() -> int:
     from jspace.loading import load_stack, clear_cuda
+    from jspace.model_config import get_active_model, artifact_paths
     from jspace.generation import (
         apply_chat_template,
         generate_with_tiered_cache,
@@ -122,12 +124,14 @@ def main() -> int:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    out = ensure_dir(ROOT / "results" / "exp2")
+    cfg = get_active_model()
+    paths = artifact_paths(cfg)
+    out = ensure_dir(paths["exp2"])
     looping_dir = ensure_dir(out / "looping")
     nonloop_dir = ensure_dir(out / "nonlooping")
 
     stack = load_stack()
-    band_path = ROOT / "results" / "workspace_band_qwen3.5-4b.json"
+    band_path = paths["workspace_band"]
     if not band_path.is_file():
         raise FileNotFoundError(
             f"Missing {band_path}. Run scripts/01_workspace_band.py first."

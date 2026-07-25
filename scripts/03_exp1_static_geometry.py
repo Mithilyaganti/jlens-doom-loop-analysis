@@ -20,6 +20,7 @@ logger = logging.getLogger("exp1")
 
 def main() -> int:
     from jspace.loading import load_stack, clear_cuda
+    from jspace.model_config import get_active_model, artifact_paths
     from jspace.geometry import (
         jlens_direction_batch,
         pairwise_cosine,
@@ -39,10 +40,12 @@ def main() -> int:
         append_results_summary,
     )
 
+    cfg = get_active_model()
+    paths = artifact_paths(cfg)
     out = ensure_dir(ROOT / "results" / "exp1")
     stack = load_stack()
 
-    band_path = ROOT / "results" / "workspace_band_qwen3.5-4b.json"
+    band_path = paths["workspace_band"]
     if not band_path.is_file():
         raise FileNotFoundError(
             f"Missing {band_path}. Run scripts/01_workspace_band.py first — "
@@ -53,7 +56,7 @@ def main() -> int:
         if key not in band:
             raise ValueError(f"workspace band file missing required key: {key}")
 
-    trigger_csv = ROOT / "results" / "trigger_tokens_qwen3.5-4b.csv"
+    trigger_csv = paths["trigger_csv"]
     sets = build_all_token_sets(stack.tokenizer, trigger_csv if trigger_csv.is_file() else None, size=30)
 
     # Save token sets

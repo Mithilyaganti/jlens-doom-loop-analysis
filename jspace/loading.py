@@ -19,10 +19,13 @@ VENDOR_JLENS = ROOT / "vendor" / "open-jlens-data" / "code" / "jacobian-lens"
 if VENDOR_JLENS.is_dir() and str(VENDOR_JLENS) not in sys.path:
     sys.path.insert(0, str(VENDOR_JLENS))
 
-DEFAULT_MODEL = "Qwen/Qwen3.5-4B"
-DEFAULT_LENS_PATH = ROOT / "lenses" / "qwen3.5-4b.pt"
-DEFAULT_LENS_HF = "neuronpedia/jacobian-lens"
-DEFAULT_LENS_HF_FILE = "qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt"
+from jspace.model_config import get_active_model
+
+_ACTIVE = get_active_model()
+DEFAULT_MODEL = _ACTIVE.model_id
+DEFAULT_LENS_PATH = _ACTIVE.lens_path or (ROOT / "lenses" / f"{_ACTIVE.slug}.pt")
+DEFAULT_LENS_HF = _ACTIVE.lens_hf_repo
+DEFAULT_LENS_HF_FILE = _ACTIVE.lens_hf_file
 
 
 @dataclass
@@ -31,7 +34,7 @@ class LoadedStack:
 
     model: Any
     tokenizer: Any
-    lens: Any  # JacobianLens
+    lens: Any  # JacobianLens | None if not yet fitted
     model_name: str
     n_layers: int
     d_model: int
@@ -41,6 +44,9 @@ class LoadedStack:
     final_norm: Any
     lm_head: Any
     W_U: torch.Tensor  # [vocab, d_model] unembedding (may be meta/4bit — use lm_head)
+    hybrid_architecture: bool = False
+    slug: str = ""
+    generation_backend: str = "hf"
 
 
 def clear_cuda() -> None:
@@ -94,13 +100,20 @@ def load_model_and_tokenizer(
 
 
 def download_lens(
-    dest: Path = DEFAULT_LENS_PATH,
+    dest: Path | None = None,
     *,
-    repo_id: str = DEFAULT_LENS_HF,
-    filename: str = DEFAULT_LENS_HF_FILE,
+    repo_id: str | None = None,
+    filename: str | None = None,
 ) -> Path:
     """Download pre-fitted J-lens from neuronpedia if not already present."""
-    dest = Path(dest)
+    dest = Path(dest or DEFAULT_LENS_PATH)
+    repo_id = repo_id or DEFAULT_LENS_HF
+    filename = filename or DEFAULT_LENS_HF_FILE
+    if not repo_id or not filename:
+        raise FileNotFoundError(
+            f"No pre-fitted lens published for this model. Expected path: {dest}. "
+            "Fit one with scripts/06_fit_lfm_lens.py (or open-jlens fitter)."
+        )
     if dest.is_file() and dest.stat().st_size > 1_000_000:
         logger.info("Lens already present at %s (%.1f MB)", dest, dest.stat().st_size / 1e6)
         return dest
@@ -109,7 +122,6 @@ def download_lens(
 
     logger.info("Downloading lens %s/%s → %s", repo_id, filename, dest)
     path = hf_hub_download(repo_id=repo_id, filename=filename, local_dir=str(dest.parent / "_hf_cache"))
-    # Copy/move to canonical location
     import shutil
 
     shutil.copy2(path, dest)
@@ -174,44 +186,76 @@ def resolve_layout(model: Any) -> tuple[Any, Any, Any, Any]:
 
 
 def load_stack(
-    model_name: str = DEFAULT_MODEL,
-    lens_path: Path | str = DEFAULT_LENS_PATH,
+    model_name: str | None = None,
+    lens_path: Path | str | None = None,
     *,
-    quantize: bool = True,
+    quantize: bool | None = None,
     download_if_missing: bool = True,
+    require_lens: bool = False,
 ) -> LoadedStack:
-    """Load model + tokenizer + J-lens ready for experiments."""
+    """Load model + tokenizer (+ J-lens if available).
+
+    For LiquidAI/LFM2-2.6B there is no pre-fitted neuronpedia lens. Generation +
+    loop detection work with lens=None; Exp1–3 require fitting first
+    (see scripts/06_fit_lfm_lens.py / handoff).
+    """
+    active = get_active_model()
+    model_name = model_name or active.model_id
+    if quantize is None:
+        quantize = active.hf_quantize
+    if lens_path is None:
+        lens_path = active.lens_path or DEFAULT_LENS_PATH
     lens_path = Path(lens_path)
-    if download_if_missing and not lens_path.is_file():
-        download_lens(lens_path)
+
+    if (
+        download_if_missing
+        and active.lens_hf_repo
+        and active.lens_hf_file
+        and not lens_path.is_file()
+    ):
+        download_lens(
+            lens_path,
+            repo_id=active.lens_hf_repo,
+            filename=active.lens_hf_file,
+        )
 
     model, tokenizer = load_model_and_tokenizer(model_name, quantize=quantize)
-    lens = load_jacobian_lens(lens_path)
     text_module, layers, final_norm, lm_head = resolve_layout(model)
 
     cfg = model.config.get_text_config() if hasattr(model.config, "get_text_config") else model.config
-    n_layers = int(cfg.num_hidden_layers)
+    n_layers = int(getattr(cfg, "num_hidden_layers", len(layers)))
     d_model = int(cfg.hidden_size)
 
-    # Sanity: lens dims
-    if lens.d_model != d_model:
-        raise ValueError(f"Lens d_model={lens.d_model} != model d_model={d_model}")
-    if max(lens.source_layers) >= n_layers:
-        raise ValueError(
-            f"Lens has layer {max(lens.source_layers)} but model has only {n_layers} layers"
+    lens = None
+    if lens_path.is_file():
+        lens = load_jacobian_lens(lens_path)
+        if lens.d_model != d_model:
+            raise ValueError(f"Lens d_model={lens.d_model} != model d_model={d_model}")
+        if max(lens.source_layers) >= n_layers:
+            raise ValueError(
+                f"Lens has layer {max(lens.source_layers)} but model has only {n_layers} layers"
+            )
+    elif require_lens:
+        raise FileNotFoundError(
+            f"J-lens required but missing at {lens_path}. "
+            f"For {active.display_name} fit a lens first (hybrid LFM needs attention-layer adaptation)."
+        )
+    else:
+        logger.warning(
+            "No J-lens at %s — generation/detection OK; Exp1–3 geometry blocked until fitted.",
+            lens_path,
         )
 
-    # Unembedding weight (may be 4-bit Linear4bit — callers should use lm_head)
     W_U = lm_head.weight.detach() if hasattr(lm_head, "weight") else None
-
     device = next(model.parameters()).device
     logger.info(
-        "Stack ready: %s, n_layers=%d, d_model=%d, device=%s, lens_layers=%d",
+        "Stack ready: %s, n_layers=%d, d_model=%d, device=%s, lens=%s, hybrid=%s",
         model_name,
         n_layers,
         d_model,
         device,
-        len(lens.source_layers),
+        "yes" if lens is not None else "no",
+        active.hybrid_architecture,
     )
     return LoadedStack(
         model=model,
@@ -226,6 +270,9 @@ def load_stack(
         final_norm=final_norm,
         lm_head=lm_head,
         W_U=W_U,
+        hybrid_architecture=active.hybrid_architecture,
+        slug=active.slug,
+        generation_backend="hf",
     )
 
 

@@ -43,10 +43,20 @@ def generate_greedy(
     stack: Any,
     prompt_text: str,
     *,
-    max_new_tokens: int = 2048,
+    max_new_tokens: int = 4000,
     temperature: float = 0.01,
+    vllm_generator: Any = None,
 ) -> dict[str, Any]:
-    """Generate completion (near-greedy) without residual caching."""
+    """Generate completion (near-greedy). Uses vLLM if generator provided."""
+    if vllm_generator is not None:
+        out = vllm_generator.generate(
+            prompt_text,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            tokenizer=stack.tokenizer,
+        )
+        return out
+
     tokenizer = stack.tokenizer
     model = stack.model
     inputs = tokenizer(prompt_text, return_tensors="pt", truncation=True, max_length=2048)
@@ -75,6 +85,7 @@ def generate_greedy(
         "generated_text": gen_text,
         "prompt_len": prompt_len,
         "full_ids": out[0].tolist(),
+        "backend": "hf",
     }
 
 
@@ -83,25 +94,41 @@ def generate_with_tiered_cache(
     stack: Any,
     prompt_text: str,
     *,
-    max_new_tokens: int = 2048,
+    max_new_tokens: int = 4000,
     temperature: float = 0.01,
     workspace_layers: Sequence[int] | None = None,
     top_k: int = 10,
     cache_tier3: bool = False,
+    vllm_generator: Any = None,
 ) -> dict[str, Any]:
     """Generate with Tier-1 readouts (+ Tier-2 workspace residuals).
 
-    Uses a single forward pass over the full sequence after generation for
-    readout extraction (memory-safe on 8GB: generate first, then re-forward
-    once with hooks). For long sequences, re-forward uses use_cache=False and
-    only keeps requested layers.
+    If stack.lens is None, still generates + detects loops but skips J-lens caches.
     """
     gen = generate_greedy(
-        stack, prompt_text, max_new_tokens=max_new_tokens, temperature=temperature
+        stack,
+        prompt_text,
+        max_new_tokens=max_new_tokens,
+        temperature=temperature,
+        vllm_generator=vllm_generator,
     )
+    gen_ids = gen["generated_ids"]
+    loop = detect_loop(
+        gen["generated_text"], token_ids=gen_ids, tokenizer=stack.tokenizer
+    )
+
+    if stack.lens is None:
+        return {
+            **gen,
+            "readouts": None,
+            "residuals_ws": None,
+            "residuals_full": None,
+            "loop": loop,
+            "note": "no_jlens_skip_tier_cache",
+        }
+
     full_ids = torch.tensor([gen["full_ids"]], device=stack.device)
     prompt_len = gen["prompt_len"]
-    gen_ids = gen["generated_ids"]
     n_gen = len(gen_ids)
 
     if n_gen == 0:
@@ -110,30 +137,21 @@ def generate_with_tiered_cache(
             "readouts": None,
             "residuals_ws": None,
             "residuals_full": None,
-            "loop": detect_loop(gen["generated_text"], token_ids=gen_ids, tokenizer=stack.tokenizer),
+            "loop": loop,
         }
 
     layers_all = list(range(stack.n_layers)) if cache_tier3 else None
     ws = list(workspace_layers or [])
-    record_layers = set(ws)
-    if cache_tier3:
-        record_layers = set(layers_all)
-    # Always record enough for Tier-1 at all layers would be heavy if we keep
-    # full residuals — compute readouts on the fly in the hook and discard.
     from jlens.hooks import ActivationRecorder
 
-    # Cap sequence for residual re-forward to avoid OOM (keep last tokens if needed)
     max_ctx = min(full_ids.shape[1], 1024 + prompt_len)
-    # Prefer keeping the end of generation (where loops appear)
     if full_ids.shape[1] > max_ctx:
-        # keep prompt head + tail of generation
         keep_prompt = min(prompt_len, 256)
         tail = max_ctx - keep_prompt
         ids = torch.cat(
             [full_ids[:, :keep_prompt], full_ids[:, -tail:]], dim=1
         )
-        # Adjust indices: gen positions in truncated seq
-        offset_gen_start = keep_prompt  # gen starts after kept prompt in truncated
+        offset_gen_start = keep_prompt
         truncated = True
         trunc_info = {"keep_prompt": keep_prompt, "tail": tail, "orig_len": full_ids.shape[1]}
     else:
@@ -142,19 +160,12 @@ def generate_with_tiered_cache(
         truncated = False
         trunc_info = {}
 
-    # Tier-1: need all layers' readouts — process layer chunks to save VRAM
     n_layers = stack.n_layers
     seq_len = ids.shape[1]
-    n_positions = seq_len  # store for all positions in truncated seq
-
-    # Storage: only for generated region positions in truncated tensor
     gen_pos_start = offset_gen_start
     gen_positions = list(range(gen_pos_start, seq_len))
     n_gp = len(gen_positions)
     if n_gp == 0:
-        loop = detect_loop(
-            gen["generated_text"], token_ids=gen_ids, tokenizer=stack.tokenizer
-        )
         return {**gen, "readouts": None, "residuals_ws": None, "residuals_full": None, "loop": loop, "trunc": trunc_info}
 
     topk_idx = torch.zeros(n_layers, n_gp, top_k, dtype=torch.long)
@@ -162,7 +173,7 @@ def generate_with_tiered_cache(
     residuals_ws: dict[int, torch.Tensor] = {}
     residuals_full: dict[int, torch.Tensor] = {}
 
-    chunk_size = 6  # layers per forward
+    chunk_size = 6
     for start in range(0, n_layers, chunk_size):
         chunk = list(range(start, min(start + chunk_size, n_layers)))
         need = set(chunk)
@@ -173,7 +184,7 @@ def generate_with_tiered_cache(
             for l in chunk:
                 if l not in rec.activations:
                     continue
-                h = rec.activations[l][0, gen_positions, :].float()  # [n_gp, d]
+                h = rec.activations[l][0, gen_positions, :].float()
                 if l in stack.lens.jacobians:
                     try:
                         idx, val = jlens_readout(stack, h, l, top_k=top_k)
@@ -196,12 +207,9 @@ def generate_with_tiered_cache(
         prompt="",
     )
 
-    # Map trigger index into gen_positions frame if truncated
     trigger_local = loop.trigger_token_index
     if truncated and trigger_local is not None:
-        # original gen index → may be outside tail
         orig_full_pos = prompt_len + trigger_local
-        # In truncated tensor: if in tail region
         orig_len = trunc_info["orig_len"]
         tail = trunc_info["tail"]
         tail_start_orig = orig_len - tail
