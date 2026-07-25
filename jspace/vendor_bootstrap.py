@@ -11,17 +11,29 @@ logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parent.parent
 OPEN_JLENS_REPO = "https://github.com/eliebak/open-jlens-data.git"
-JLENS_PKG = ROOT / "vendor" / "open-jlens-data" / "code" / "jacobian-lens"
-JLENS_MARKER = JLENS_PKG / "jlens" / "__init__.py"
+
+# Prefer /content/open-jlens-data on Colab so vendor never dirties the git clone.
+_COLAB_JLENS = Path("/content/open-jlens-data")
+_VENDOR_JLENS = ROOT / "vendor" / "open-jlens-data"
+
+
+def _jlens_pkg(root: Path) -> Path:
+    return root / "code" / "jacobian-lens"
+
+
+def _jlens_marker(root: Path) -> Path:
+    return _jlens_pkg(root) / "jlens" / "__init__.py"
 
 
 def ensure_open_jlens() -> Path:
-    if JLENS_MARKER.is_file():
-        return JLENS_PKG
+    for root in (_COLAB_JLENS, _VENDOR_JLENS):
+        if _jlens_marker(root).is_file():
+            return _jlens_pkg(root)
 
-    dest = ROOT / "vendor" / "open-jlens-data"
+    # On Colab, clone outside the repo tree; elsewhere use vendor/
+    dest = _COLAB_JLENS if Path("/content").is_dir() else _VENDOR_JLENS
     dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.is_dir() and not JLENS_MARKER.is_file():
+    if dest.is_dir() and not _jlens_marker(dest).is_file():
         import shutil
 
         logger.warning("Removing incomplete open-jlens vendor at %s", dest)
@@ -32,13 +44,14 @@ def ensure_open_jlens() -> Path:
         ["git", "clone", "--depth", "1", OPEN_JLENS_REPO, str(dest)],
         check=True,
     )
-    if not JLENS_MARKER.is_file():
-        raise RuntimeError(f"Clone OK but jlens missing at {JLENS_MARKER}")
-    return JLENS_PKG
+    marker = _jlens_marker(dest)
+    if not marker.is_file():
+        raise RuntimeError(f"Clone OK but jlens missing at {marker}")
+    return _jlens_pkg(dest)
 
 
 def pip_install_jlens(pkg_dir: Path | None = None) -> None:
-    pkg_dir = pkg_dir or JLENS_PKG
+    pkg_dir = pkg_dir or ensure_open_jlens()
     logger.info("pip install -e %s", pkg_dir)
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "-q", "-e", str(pkg_dir)],
