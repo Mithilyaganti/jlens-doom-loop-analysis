@@ -253,25 +253,27 @@ def resolve_layout(model: Any) -> tuple[Any, Any, Any, Any]:
     try:
         layout = _find_layout(model)
     except ValueError:
-        # Liquid LFM2 hybrid: model.model.layers + norm, embed may differ
+        # LFM2: final norm is `embedding_norm` (not `norm`) — jlens layouts miss this.
         name = type(model).__name__
-        if "Lfm2" in name or "LFM" in name:
+        if "Lfm2" in name or "LFM" in name or "Lfm" in name:
             for layout in (
+                Layout("model", layers="layers", norm="embedding_norm", embed="embed_tokens"),
                 Layout("model", layers="layers", norm="norm", embed="embed_tokens"),
-                Layout("model", layers="layers", norm="norm_f", embed="embed_tokens"),
             ):
                 try:
                     candidate = _resolve_attr_path(model, layout.path)
-                    if hasattr(candidate, layout.layers) and hasattr(model, layout.lm_head):
-                        text_module = candidate
-                        layers = getattr(text_module, layout.layers)
-                        final_norm = getattr(text_module, layout.norm, None)
-                        lm_head = getattr(model, layout.lm_head)
-                        if final_norm is None:
-                            final_norm = torch.nn.Identity()
-                        return text_module, layers, final_norm, lm_head
                 except AttributeError:
                     continue
+                if not hasattr(candidate, layout.layers):
+                    continue
+                if not hasattr(model, layout.lm_head):
+                    continue
+                text_module = candidate
+                layers = getattr(text_module, layout.layers)
+                final_norm = getattr(text_module, layout.norm, None) or torch.nn.Identity()
+                lm_head = getattr(model, layout.lm_head)
+                logger.info("Using LFM2 layout fallback: path=%s norm=%s", layout.path, layout.norm)
+                return text_module, layers, final_norm, lm_head
         raise
     text_module = _resolve_attr_path(model, layout.path)
     layers = getattr(text_module, layout.layers)
