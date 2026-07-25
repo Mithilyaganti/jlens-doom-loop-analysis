@@ -60,7 +60,10 @@ def pip_install_jlens(pkg_dir: Path | None = None) -> None:
 
 
 def ensure_jlens_importable() -> None:
-    """Clone vendor if needed, add to sys.path, pip install if import fails."""
+    """Clone vendor if needed and add to sys.path.
+
+    Prefer path injection over `pip install -e` (editable install is slow/hangy on Colab).
+    """
     pkg = ensure_open_jlens()
     pkg_str = str(pkg)
     if pkg_str not in sys.path:
@@ -69,5 +72,6 @@ def ensure_jlens_importable() -> None:
         import jlens  # noqa: F401
         return
     except ImportError:
+        # Last resort only — path inject usually works after clone
         pip_install_jlens(pkg)
         import jlens  # noqa: F401
