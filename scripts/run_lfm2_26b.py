@@ -57,6 +57,7 @@ def main() -> int:
     env["PYTHONPATH"] = str(ROOT) + (os.pathsep + env.get("PYTHONPATH", ""))
 
     scripts: list[str] = [
+        "00_colab_vendors.py",
         "06_fit_lfm_lens.py",
         "02_baseline_pass.py",
     ]
@@ -85,6 +86,9 @@ def main() -> int:
         logger.info("RUNNING %s", name)
         proc = subprocess.run([sys.executable, str(path)], cwd=str(ROOT), env=env)
         codes.append((name, proc.returncode))
+        if name.startswith("00_") and proc.returncode != 0:
+            logger.error("Vendor setup failed — aborting")
+            break
         if name.startswith("02_") and proc.returncode not in (0, 2):
             logger.error("Baseline pass failed hard")
             break

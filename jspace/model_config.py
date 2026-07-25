@@ -74,8 +74,22 @@ _REGISTRY = {
 def get_active_model() -> ModelConfig:
     """Resolve model from JLENS_MODEL env (default: LFM2-2.6B)."""
     key = os.environ.get("JLENS_MODEL", "LiquidAI/LFM2-2.6B").strip()
+    hf_q = os.environ.get("JLENS_HF_QUANTIZE")
     if key in _REGISTRY:
-        return _REGISTRY[key]
+        cfg = _REGISTRY[key]
+        if hf_q is not None:
+            return ModelConfig(
+                model_id=cfg.model_id,
+                slug=cfg.slug,
+                display_name=cfg.display_name,
+                hf_quantize=hf_q == "1",
+                lens_path=cfg.lens_path,
+                lens_hf_repo=cfg.lens_hf_repo,
+                lens_hf_file=cfg.lens_hf_file,
+                hybrid_architecture=cfg.hybrid_architecture,
+                force_disable_thinking=cfg.force_disable_thinking,
+            )
+        return cfg
     # Allow raw HF ids not in registry
     slug = key.split("/")[-1].lower().replace("_", "-")
     return ModelConfig(
