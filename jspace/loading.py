@@ -193,11 +193,83 @@ def load_jacobian_lens(path: Path | str = DEFAULT_LENS_PATH, device: str = "cpu"
     raise ValueError(f"Unrecognized lens file format: keys={list(raw.keys()) if isinstance(raw, dict) else type(raw)}")
 
 
+def load_tokenizer_only(model_name: str, *, trust_remote_code: bool = True) -> Any:
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=trust_remote_code)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    return tokenizer
+
+
+def _vllm_tokenizer_only_mode(require_lens: bool, lens_path: Path) -> bool:
+    """vLLM generates; HF model load is redundant and breaks on hybrid LFM layouts."""
+    import os
+
+    return (
+        os.environ.get("JLENS_BACKEND", "").lower() == "vllm"
+        and not require_lens
+        and not lens_path.is_file()
+    )
+
+
+def load_stack_tokenizer_only(model_name: str, active: Any) -> LoadedStack:
+    """Tokenizer + config only — for vLLM generation when no J-lens tier cache."""
+    from transformers import AutoConfig
+
+    logger.info("Tokenizer-only stack for vLLM backend: %s", model_name)
+    tokenizer = load_tokenizer_only(model_name)
+    cfg = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
+    text_cfg = cfg.get_text_config() if hasattr(cfg, "get_text_config") else cfg
+    n_layers = int(getattr(text_cfg, "num_hidden_layers", 0))
+    d_model = int(getattr(text_cfg, "hidden_size", 0))
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return LoadedStack(
+        model=None,
+        tokenizer=tokenizer,
+        lens=None,
+        model_name=model_name,
+        n_layers=n_layers,
+        d_model=d_model,
+        device=device,
+        text_module=None,
+        layers=None,
+        final_norm=None,
+        lm_head=None,
+        W_U=None,
+        hybrid_architecture=active.hybrid_architecture,
+        slug=active.slug,
+        generation_backend="vllm",
+    )
+
+
 def resolve_layout(model: Any) -> tuple[Any, Any, Any, Any]:
     """Return (text_module, layers ModuleList, final_norm, lm_head)."""
-    from jlens.hf import _find_layout, _resolve_attr_path
+    from jlens.hf import Layout, _find_layout, _resolve_attr_path
 
-    layout = _find_layout(model)
+    try:
+        layout = _find_layout(model)
+    except ValueError:
+        # Liquid LFM2 hybrid: model.model.layers + norm, embed may differ
+        name = type(model).__name__
+        if "Lfm2" in name or "LFM" in name:
+            for layout in (
+                Layout("model", layers="layers", norm="norm", embed="embed_tokens"),
+                Layout("model", layers="layers", norm="norm_f", embed="embed_tokens"),
+            ):
+                try:
+                    candidate = _resolve_attr_path(model, layout.path)
+                    if hasattr(candidate, layout.layers) and hasattr(model, layout.lm_head):
+                        text_module = candidate
+                        layers = getattr(text_module, layout.layers)
+                        final_norm = getattr(text_module, layout.norm, None)
+                        lm_head = getattr(model, layout.lm_head)
+                        if final_norm is None:
+                            final_norm = torch.nn.Identity()
+                        return text_module, layers, final_norm, lm_head
+                except AttributeError:
+                    continue
+        raise
     text_module = _resolve_attr_path(model, layout.path)
     layers = getattr(text_module, layout.layers)
     final_norm = getattr(text_module, layout.norm)
@@ -238,6 +310,9 @@ def load_stack(
             repo_id=active.lens_hf_repo,
             filename=active.lens_hf_file,
         )
+
+    if _vllm_tokenizer_only_mode(require_lens, lens_path):
+        return load_stack_tokenizer_only(model_name, active)
 
     model, tokenizer = load_model_and_tokenizer(model_name, quantize=quantize)
     text_module, layers, final_norm, lm_head = resolve_layout(model)

@@ -110,6 +110,7 @@ def main() -> int:
     vllm_gen = make_generator(cfg.model_id)
     if vllm_gen is not None:
         logger.info("Using vLLM backend dtype=%s", getattr(vllm_gen, "dtype", "?"))
+        stack.generation_backend = "vllm"
     else:
         logger.info("Using HuggingFace generate backend (quantize=%s)", cfg.hf_quantize)
 
