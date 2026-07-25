@@ -16,8 +16,28 @@ logger = logging.getLogger(__name__)
 # Project root (parent of code/)
 ROOT = Path(__file__).resolve().parent.parent
 VENDOR_JLENS = ROOT / "vendor" / "open-jlens-data" / "code" / "jacobian-lens"
-if VENDOR_JLENS.is_dir() and str(VENDOR_JLENS) not in sys.path:
-    sys.path.insert(0, str(VENDOR_JLENS))
+
+
+def _bootstrap_jlens_vendor() -> None:
+    """Colab git clones omit vendor/ — auto-fetch open-jlens on first import."""
+    marker = VENDOR_JLENS / "jlens" / "__init__.py"
+    if marker.is_file():
+        if str(VENDOR_JLENS) not in sys.path:
+            sys.path.insert(0, str(VENDOR_JLENS))
+        return
+    try:
+        import jlens  # noqa: F401
+        return
+    except ImportError:
+        pass
+    from jspace.vendor_bootstrap import ensure_jlens_importable
+
+    ensure_jlens_importable()
+    if str(VENDOR_JLENS) not in sys.path:
+        sys.path.insert(0, str(VENDOR_JLENS))
+
+
+_bootstrap_jlens_vendor()
 
 from jspace.model_config import get_active_model
 
