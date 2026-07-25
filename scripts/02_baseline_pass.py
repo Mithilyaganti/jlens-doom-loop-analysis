@@ -28,6 +28,10 @@ TIER3_MAX = int(os.environ.get("JLENS_TIER3_MAX", "5"))
 
 
 def main() -> int:
+    from jspace.vendor_bootstrap import ensure_jlens_importable
+
+    ensure_jlens_importable()
+
     from jspace.loading import load_stack, clear_cuda
     from jspace.model_config import get_active_model, artifact_paths
     from jspace.prompts import get_or_create_prompt_sample, DEFAULT_SAMPLE_PATH
