@@ -1,31 +1,31 @@
 token_id,decoded,word,source
-321, and,and,discourse_control
-429,and,and,discourse_control
-1541, And,and,discourse_control
-2939,And,and,discourse_control
-466, or,or,discourse_control
-269,or,or,discourse_control
-2441, Or,or,discourse_control
-2126,Or,or,discourse_control
-9033,when,when,discourse_control
-3095, When,when,discourse_control
-4350,When,when,discourse_control
-413, if,if,discourse_control
-331,if,if,discourse_control
-1368, If,if,discourse_control
-2592,If,if,discourse_control
-353, I,I,discourse_control
-40,I,I,discourse_control
-488, you,you,discourse_control
-9053,you,you,discourse_control
-1394, You,you,discourse_control
-2523,You,you,discourse_control
-567, we,we,discourse_control
-868,we,we,discourse_control
-1165, We,we,discourse_control
-1596,We,we,discourse_control
-781, they,they,discourse_control
-19458,they,they,discourse_control
-2302, They,they,discourse_control
-6651,They,they,discourse_control
-551, he,he,discourse_control
+810, and,and,discourse_control
+905,and,and,discourse_control
+2087, And,and,discourse_control
+4483,And,and,discourse_control
+933, or,or,discourse_control
+777,or,or,discourse_control
+2247, Or,or,discourse_control
+4087,Or,or,discourse_control
+18258,when,when,discourse_control
+3145, When,when,discourse_control
+4453,When,when,discourse_control
+1288, if,if,discourse_control
+888,if,if,discourse_control
+2182, If,if,discourse_control
+3383,If,if,discourse_control
+859, I,I,discourse_control
+550,I,I,discourse_control
+1010, you,you,discourse_control
+14795,you,you,discourse_control
+2297, You,you,discourse_control
+4083,You,you,discourse_control
+1023, we,we,discourse_control
+1212,we,we,discourse_control
+1776, We,we,discourse_control
+2584,We,we,discourse_control
+1186, they,they,discourse_control
+23141,they,they,discourse_control
+2216, They,they,discourse_control
+8208,They,they,discourse_control
+950, he,he,discourse_control

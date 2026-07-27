@@ -1,0 +1,32 @@
+{
+  "dataset": "LiquidAI/antidoom-mix-v1.0",
+  "model_id": "LiquidAI/LFM2-2.6B",
+  "model_slug": "lfm2-2.6b",
+  "backend": "hf",
+  "vllm_dtype": null,
+  "sample_file": "/content/j-lens/results/prompt_sample_ids.json",
+  "n_prompts": 200,
+  "n_completed": 200,
+  "n_loop": 11,
+  "loop_rate": 0.055,
+  "unique_triggers": 11,
+  "looping_prompt_ids": [
+    86352,
+    96637,
+    120702,
+    123613,
+    133187,
+    179962,
+    199303,
+    290449,
+    340846,
+    346805,
+    422988
+  ],
+  "max_new_tokens": 4000,
+  "temperature": 0.01,
+  "tier3_traces_saved": 5,
+  "empirical_table_empty": false,
+  "jlens_available": false,
+  "note": "Public LiquidAI/LFM2-2.6B is NOT the blog's private early LFM2.5-2.6B. It is also NOT Antidoom-trained. Dynamic reasoning left enabled."
+}

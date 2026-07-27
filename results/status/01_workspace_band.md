@@ -1,13 +1,15 @@
-# Workspace Band — Qwen3.5-4B
+# Workspace Band — LFM2-2.6B
 
-Empirically identified workspace band:
+Empirically identified on **attention-only** J-lens layers (hybrid LFM; conv skipped).
 
-- **Start layer**: 24
-- **End layer**: 28
-- **Mid layer**: 26
-- **Key layers (Tier-2 cache)**: [24, 25, 26, 27, 28]
-- Sensory layers: 24 layers before band
-- Motor layers: 2 layers after band
-- NTP prompts used: 40
+- **Model**: `LiquidAI/LFM2-2.6B` (NF4 load; lens fp16)
+- **Lens**: `lenses/lfm2-2.6b.pt` (270 WikiText prompts, attn layers `[2,5,9,13,17,21,24,27]`)
+- **Workspace band**: **L21–L21** (single fitted attn layer scored as workspace; L24/L27 treated as motor)
+- **Mid / key layer**: 21
+- **Sensory (fitted)**: 2, 5, 9, 13, 17
+- **Motor (fitted)**: 24, 27
+- NTP prompts: 40 wikitext-2 snippets
 
-Metrics and plots: `results/workspace_band_*.png`, `results/workspace_band_qwen3.5-4b.json`.
+Artifacts: `results/workspace_band_lfm2-2.6b.json`, `results/workspace_band_metrics_lfm2-2.6b.json`, `results/*_by_layer.png`.
+
+**Caveat:** With only 8 fitted layers, the contiguous “band” collapses to one layer. Use plots before over-interpreting width; Exp2/3 should still target L21 (± neighbors if needed).

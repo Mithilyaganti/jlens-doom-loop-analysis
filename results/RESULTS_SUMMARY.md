@@ -160,3 +160,34 @@ Both positive and negative results are publishable per PROJECT_SPEC §11.6.
 - **Exp 3**: complete — 120/120 checkpoint pairs, all plots + `stats.json`
 - **Verification**: `scripts/verify_deliverables.py` — GATE PASSED
 - **Phase 2/3**: not run (per spec — only after Phase 1 validates)
+
+## Workspace Band (LFM2-2.6B)
+
+# Workspace Band — LFM2-2.6B
+
+Empirically identified workspace band:
+
+- **Model**: `LiquidAI/LFM2-2.6B`
+- **Start layer**: 21
+- **End layer**: 21
+- **Mid layer**: 21
+- **Key layers (Tier-2 cache)**: [21]
+- Sensory layers: 5 layers before band
+- Motor layers: 2 layers after band
+- NTP prompts used: 40
+
+Metrics and plots: `results/workspace_band_*.png`, `C:\Users\mithi\Desktop\mithil\projects\j-lens\results\workspace_band_lfm2-2.6b.json`.
+
+## Experiment 1 — Static Geometry
+
+# Experiment 1 — Static Geometry
+
+Compared trigger tokens vs frequency-matched content, discourse controls, and random tokens
+across all layers.
+
+**Workspace-band means (L21–L21):**
+- Pairwise sim: trigger=0.0905 vs controls=0.0878
+- Workspace align: trigger=0.2477 vs controls=0.1942
+- Success criterion (higher clustering and/or alignment): **True**
+
+Plots in `results/exp1/`. Mid-layer PCA at L21.
