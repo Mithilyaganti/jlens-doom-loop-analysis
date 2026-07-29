@@ -188,6 +188,16 @@ def main() -> int:
         sync_baseline_artifacts(cfg.slug, reason="start")
 
     vllm_gen = make_generator(cfg.model_id)
+    if vllm_gen is None and os.environ.get("JLENS_BACKEND", "").lower() == "vllm":
+        # vLLM requested but init failed (e.g. tokenizer API mismatch) → full HF load
+        logger.warning(
+            "vLLM unavailable after init — switching to HF bf16/fp16 "
+            "(JLENS_HF_QUANTIZE=%s)",
+            os.environ.get("JLENS_HF_QUANTIZE", "0"),
+        )
+        os.environ["JLENS_BACKEND"] = "hf"
+        if "JLENS_HF_QUANTIZE" not in os.environ:
+            os.environ["JLENS_HF_QUANTIZE"] = "0"
     stack = load_stack(require_lens=False)
     if vllm_gen is not None:
         logger.info("Using vLLM backend dtype=%s", getattr(vllm_gen, "dtype", "?"))

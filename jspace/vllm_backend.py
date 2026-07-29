@@ -132,8 +132,10 @@ def make_generator(model_id: str):
     Never hard-crash when JLENS_BACKEND=vllm but vllm is missing — fall back to HF
     so Colab runs can continue after a failed/skipped pip install.
     """
-    backend = os.environ.get("JLENS_BACKEND", "auto").strip().lower()
-    if backend == "hf":
+    # Prefer HF when explicitly requested, or when vLLM is known broken for this stack.
+    # Colab users can force: echo hf_bf16 > /content/jlens_a1_backend.txt
+    force_hf = os.environ.get("JLENS_FORCE_HF", "").strip() == "1"
+    if force_hf:
         return None
     want_vllm = backend == "vllm" or (backend == "auto" and vllm_available())
     if not want_vllm:
@@ -145,8 +147,18 @@ def make_generator(model_id: str):
             backend,
         )
         return None
-    return VLLMGenerator(
-        model_id,
-        max_model_len=int(os.environ.get("JLENS_MAX_MODEL_LEN", "6000")),
-        gpu_memory_utilization=float(os.environ.get("JLENS_GPU_UTIL", "0.85")),
-    )
+    try:
+        return VLLMGenerator(
+            model_id,
+            max_model_len=int(os.environ.get("JLENS_MAX_MODEL_LEN", "6000")),
+            gpu_memory_utilization=float(os.environ.get("JLENS_GPU_UTIL", "0.85")),
+        )
+    except Exception as e:
+        # Common on Colab: vLLM 0.8.x vs new transformers (Qwen2Tokenizer
+        # missing all_special_tokens_extended). Fall back to HF bf16/fp16.
+        logger.warning(
+            "vLLM init failed (%s: %s) — falling back to HuggingFace generate",
+            type(e).__name__,
+            str(e)[:300],
+        )
+        return None
