@@ -134,8 +134,9 @@ def make_generator(model_id: str):
     """
     # Prefer HF when explicitly requested, or when vLLM is known broken for this stack.
     # Colab users can force: echo hf_bf16 > /content/jlens_a1_backend.txt
+    backend = os.environ.get("JLENS_BACKEND", "auto").strip().lower()
     force_hf = os.environ.get("JLENS_FORCE_HF", "").strip() == "1"
-    if force_hf:
+    if force_hf or backend in ("hf", "huggingface", "transformers"):
         return None
     want_vllm = backend == "vllm" or (backend == "auto" and vllm_available())
     if not want_vllm:
