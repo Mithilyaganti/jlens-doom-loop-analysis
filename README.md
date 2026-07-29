@@ -2,9 +2,9 @@
 
 Mechanistic interpretability project: apply Anthropic's **Jacobian Lens (J-lens / J-space)** to characterize what happens inside small LMs when they enter **doom loops**, and test whether intervening on J-space directions can prevent them **without training**.
 
-Phase 1 focuses on **`Qwen/Qwen3.5-4B`** only (Liquid reported 22.9% doom-loop rate under greedy sampling on this model).
+**Current Phase 1 target:** **`LiquidAI/LFM2-2.6B`** (completed run on 200 antidoom-mix prompts). Earlier Qwen3.5-4B work is archived under `artifacts/archive/`.
 
-See `PROMPT.md` and `PROJECT_SPEC.md` for full research design.
+See `PROMPT.md`, `PROJECT_SPEC.md`, and **`LFM2_26B_FINDINGS_AND_FAQ.md`** for full research design and results FAQ.
 
 ## Hardware
 
@@ -96,6 +96,8 @@ jspace/
   token_sets.py    # Exp 1 token sets
 scripts/           # Phase 1 pipeline
 results/           # plots, CSVs, status notes, RESULTS_SUMMARY.md
+artifacts/         # Drive exports, Colab fit blobs, archived runs (see artifacts/README.md)
+docs/              # handoffs and session notes
 vendor/            # open-jlens-data, antidoom
 lenses/            # pre-fitted .pt
 ```

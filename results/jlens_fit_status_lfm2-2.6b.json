@@ -6,17 +6,10 @@
   "n_prompts": 270,
   "dim_batch": 16,
   "max_seq_len": 128,
-  "source_layers": [
-    2,
-    5,
-    9,
-    13,
-    17,
-    21,
-    24,
-    27
-  ],
-  "lens_path": "/content/lfm2_jlens_fit/lfm2-2.6b.pt",
+  "source_layers": [2, 5, 9, 13, 17, 21, 24, 27],
+  "lens_path": "lenses/lfm2-2.6b.pt",
+  "local_lens_bytes": 67112297,
   "elapsed_min": 116.54,
-  "gpu": "Tesla T4"
+  "gpu": "Tesla T4",
+  "notes": "Fitted on Colab FP16, attn-only (conv skipped). Installed locally for workspace band + Exp1."
 }

@@ -1,36 +1,36 @@
 {
   "mcnemar_baseline_vs_trigger": {
-    "chi2": 0.0,
-    "p_value": 1.0,
-    "b": 0,
-    "c": 0
+    "chi2": 0.25,
+    "p_value": 0.6170750774519739,
+    "b": 2,
+    "c": 2
   },
   "cohens_h_baseline_vs_trigger": 0.0,
   "loop_rates": {
-    "baseline": 0.0,
-    "ablate_trigger": 0.0,
-    "ablate_random": 0.0,
-    "ablate_control": 0.0,
-    "ablate_trigger_sensory": 0.0,
-    "ablate_trigger_motor": 0.0
+    "baseline": 0.18181818181818182,
+    "ablate_trigger": 0.18181818181818182,
+    "ablate_random": 0.09090909090909091,
+    "ablate_control": 0.2727272727272727,
+    "ablate_trigger_sensory": 0.18181818181818182,
+    "ablate_trigger_motor": 0.09090909090909091
   },
   "mean_gen_lengths": {
-    "baseline": 1391.05,
-    "ablate_trigger": 1345.4,
-    "ablate_random": 1340.85,
-    "ablate_control": 1333.4,
-    "ablate_trigger_sensory": 1391.4,
-    "ablate_trigger_motor": 1382.3
+    "baseline": 1956.7272727272727,
+    "ablate_trigger": 1603.090909090909,
+    "ablate_random": 1978.3636363636363,
+    "ablate_control": 1903.8181818181818,
+    "ablate_trigger_sensory": 1231.909090909091,
+    "ablate_trigger_motor": 1011.3636363636364
   },
   "eval_acc": {
-    "baseline": 0.2,
-    "ablate_trigger": 0.2,
-    "ablate_random": 0.2,
-    "ablate_control": 0.2
+    "baseline": 1.0,
+    "ablate_trigger": 1.0,
+    "ablate_random": 1.0,
+    "ablate_control": 1.0
   },
   "dose_rates": {
-    "top-1": 0.0,
-    "top-3": 0.05,
-    "top-5": 0.0
+    "top-1": 0.2727272727272727,
+    "top-3": 0.18181818181818182,
+    "top-5": 0.36363636363636365
   }
 }

@@ -27,6 +27,6 @@
   "temperature": 0.01,
   "tier3_traces_saved": 5,
   "empirical_table_empty": false,
-  "jlens_available": false,
-  "note": "Public LiquidAI/LFM2-2.6B is NOT the blog's private early LFM2.5-2.6B. It is also NOT Antidoom-trained. Dynamic reasoning left enabled."
+  "jlens_available": true,
+  "note": "Public LiquidAI/LFM2-2.6B is NOT the blog's private early LFM2.5-2.6B. It is also NOT Antidoom-trained. Dynamic reasoning left enabled. | J-lens now fitted (270-prompt fp16 attn-only); workspace band + Exp1 done."
 }

@@ -1,0 +1,34 @@
+{
+  "experiment": "exp2_dynamic_monitoring",
+  "model_id": "LiquidAI/LFM2-2.6B",
+  "n_prompts": 200,
+  "n_loop": 5,
+  "n_non": 195,
+  "loop_rate": 0.025,
+  "workspace_layers": [21],
+  "mean_loop_align": 0.17168146148324012,
+  "mean_non_align": 0.13036531308749452,
+  "align_delta_loop_minus_non": 0.0413161483957456,
+  "loop_top1_at_m1": 0.6,
+  "non_top1_at_m1": 0.041025641025641026,
+  "loop_occ_at_m2": 0.24915719363510566,
+  "non_occ_at_m2": 0.5768226916319797,
+  "success_criterion_met": true,
+  "success_drivers": [
+    "elevated_trigger_alignment_at_m1",
+    "premature_top1_readout_convergence_at_m1"
+  ],
+  "caveats": [
+    "Only 5 looping traces in this hooked re-gen (baseline had 11/200) - underpowered",
+    "Single workspace layer L21 (attn-only hybrid lens), not a multi-layer band",
+    "Tier-3 full-residual HTML visualization is stretch and not fully implemented",
+    "Prompt set is the 200 stratified antidoom-mix sample (no extra hard GSM8K/HumanEval packs from PROJECT_SPEC 10.2)",
+    "Initial analysis used a broken tail-truncation window; looping traces were re-cached with trigger-centered windows before final metrics"
+  ],
+  "changes_from_first_analyze_pass": {
+    "bug": "Cache window kept generation tail; 4/5 loop triggers fell outside readouts",
+    "fix": "Trigger-centered window + persist trigger_local_in_readouts; recache 5 loops; re-analyze",
+    "align_before": {"loop": 0.0794, "non": 0.1304},
+    "align_after": {"loop": 0.1717, "non": 0.1304}
+  }
+}

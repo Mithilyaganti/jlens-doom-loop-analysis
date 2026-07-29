@@ -62,7 +62,7 @@ def main() -> int:
         write_status,
         append_results_summary,
     )
-    from jspace.checkpoint import save_checkpoint, load_checkpoint, git_checkpoint
+    from jspace.checkpoint import save_checkpoint, load_checkpoint
 
     cfg = get_active_model()
     paths = artifact_paths(cfg)
@@ -166,13 +166,22 @@ def main() -> int:
         per_prompt = {int(k): v for k, v in ckpt["per_prompt"].items()}
         logger.info("Resumed Exp3 checkpoint with %d prompts partially done", len(per_prompt))
 
-    def persist_ckpt() -> None:
+    def persist_ckpt(status: str = "running") -> None:
+        done_pairs = sum(len(v) for v in per_prompt.values())
+        total_pairs = len(prompts) * len(conditions)
         save_checkpoint(
             ckpt_name,
             {
+                "status": status,
+                "model_id": cfg.model_id,
+                "max_new_tokens": MAX_NEW_TOKENS,
                 "per_prompt": per_prompt,
                 "conditions": [c[0] for c in conditions],
                 "n_looping_prompts": len(prompts),
+                "n_done_pairs": done_pairs,
+                "n_total_pairs": total_pairs,
+                "workspace_layers": ws_layers,
+                "trigger_ids_used": trigger_ids[:1],
             },
         )
 
@@ -225,13 +234,26 @@ def main() -> int:
                 "n_tokens": len(gen["generated_ids"]),
                 "trigger_decoded": loop.trigger_decoded,
             }
-            persist_ckpt()  # save after every prompt for crash safety
-            if (i + 1) % 5 == 0:
-                logger.info("  %s %d/%d", cname, i + 1, len(prompts))
+            persist_ckpt("running")
+            logger.info(
+                "  %s %d/%d pid=%s loop=%s tokens=%d (pairs %d/%d)",
+                cname,
+                i + 1,
+                len(prompts),
+                pid,
+                bool(loop.is_loop),
+                len(gen["generated_ids"]),
+                sum(len(v) for v in per_prompt.values()),
+                len(prompts) * len(conditions),
+            )
             clear_cuda()
 
-    git_checkpoint("exp3 main conditions complete")
+    persist_ckpt("main_conditions_done")
 
+    if os.environ.get("JLENS_GIT_CHECKPOINT", "0") == "1":
+        from jspace.checkpoint import git_checkpoint
+
+        git_checkpoint("exp3 main conditions complete")
     # Aggregate
     cond_names = [c[0] for c in conditions]
     rows = []
@@ -437,6 +459,24 @@ Both positive and negative results are publishable per PROJECT_SPEC §11.6.
 """
     write_status("05_exp3", status)
     append_results_summary("Experiment 3 — Causal Interventions", status)
+    # Final checkpoint after plots/stats
+    save_checkpoint(
+        ckpt_name,
+        {
+            "status": "complete",
+            "model_id": cfg.model_id,
+            "max_new_tokens": MAX_NEW_TOKENS,
+            "per_prompt": per_prompt,
+            "conditions": [c[0] for c in conditions],
+            "n_looping_prompts": len(prompts),
+            "n_done_pairs": len(prompts) * len(conditions),
+            "n_total_pairs": len(prompts) * len(conditions),
+            "loop_rates": rates,
+            "result_type": result_type,
+            "dose_rates": dose_rates,
+            "eval_acc": eval_acc,
+        },
+    )
     clear_cuda()
     return 0
 

@@ -140,45 +140,127 @@ def generate_with_tiered_cache(
             "loop": loop,
         }
 
-    layers_all = list(range(stack.n_layers)) if cache_tier3 else None
     ws = list(workspace_layers or [])
+    cached = cache_jlens_readouts_for_sequence(
+        stack,
+        full_ids=full_ids,
+        prompt_len=prompt_len,
+        trigger_token_index=loop.trigger_token_index,
+        workspace_layers=ws,
+        top_k=top_k,
+        cache_tier3=cache_tier3,
+    )
+    return {
+        **gen,
+        **cached,
+        "loop": loop,
+    }
+
+
+def _choose_cache_window(
+    full_len: int,
+    prompt_len: int,
+    trigger_token_index: int | None,
+    *,
+    max_ctx: int = 1536,
+    pre_trigger: int = 64,
+    post_trigger: int = 16,
+) -> tuple[int, int, dict[str, Any]]:
+    """Pick a contiguous token window that covers pre-onset context.
+
+    For looping traces, center the window on the trigger so positions −5..0
+    are always inside the cached readouts (critical for Exp2).
+    """
+    max_ctx = min(max_ctx, full_len)
+    if full_len <= max_ctx:
+        return 0, full_len, {"truncated": False, "orig_len": full_len, "mode": "full"}
+
+    if trigger_token_index is not None and trigger_token_index >= 0:
+        # Absolute index in full_ids of the trigger token.
+        abs_trig = prompt_len + int(trigger_token_index)
+        # End just after trigger (+ small margin); start max_ctx before that.
+        end = min(full_len, abs_trig + 1 + post_trigger)
+        start = max(0, end - max_ctx)
+        # Ensure we still keep enough tokens before trigger for −5..0 analysis.
+        need_before = pre_trigger + 8
+        if abs_trig - start < need_before:
+            start = max(0, abs_trig - need_before)
+            end = min(full_len, start + max_ctx)
+        mode = "trigger_centered"
+    else:
+        # Non-loop: keep the most recent context (generation tail).
+        end = full_len
+        start = full_len - max_ctx
+        mode = "tail"
+
+    info = {
+        "truncated": True,
+        "orig_len": full_len,
+        "window_start": start,
+        "window_end": end,
+        "mode": mode,
+        "max_ctx": max_ctx,
+    }
+    return start, end, info
+
+
+@torch.no_grad()
+def cache_jlens_readouts_for_sequence(
+    stack: Any,
+    *,
+    full_ids: torch.Tensor,
+    prompt_len: int,
+    trigger_token_index: int | None,
+    workspace_layers: Sequence[int] | None = None,
+    top_k: int = 10,
+    cache_tier3: bool = False,
+    max_ctx: int = 1536,
+) -> dict[str, Any]:
+    """Tier-1/2 J-lens cache for an already-generated full token sequence."""
     from jlens.hooks import ActivationRecorder
 
-    max_ctx = min(full_ids.shape[1], 1024 + prompt_len)
-    if full_ids.shape[1] > max_ctx:
-        keep_prompt = min(prompt_len, 256)
-        tail = max_ctx - keep_prompt
-        ids = torch.cat(
-            [full_ids[:, :keep_prompt], full_ids[:, -tail:]], dim=1
-        )
-        offset_gen_start = keep_prompt
-        truncated = True
-        trunc_info = {"keep_prompt": keep_prompt, "tail": tail, "orig_len": full_ids.shape[1]}
-    else:
-        ids = full_ids
-        offset_gen_start = prompt_len
-        truncated = False
-        trunc_info = {}
+    if full_ids.dim() == 1:
+        full_ids = full_ids.unsqueeze(0)
+    full_ids = full_ids.to(stack.device)
+    full_len = int(full_ids.shape[1])
+    ws = list(workspace_layers or [])
 
-    n_layers = stack.n_layers
+    start, end, trunc_info = _choose_cache_window(
+        full_len,
+        prompt_len,
+        trigger_token_index,
+        max_ctx=max_ctx,
+    )
+    ids = full_ids[:, start:end]
+    # Positions in `ids` that correspond to generated tokens.
+    gen_abs_start = max(prompt_len, start)
+    gen_pos_start = gen_abs_start - start  # index within ids
     seq_len = ids.shape[1]
-    gen_pos_start = offset_gen_start
     gen_positions = list(range(gen_pos_start, seq_len))
     n_gp = len(gen_positions)
     if n_gp == 0:
-        return {**gen, "readouts": None, "residuals_ws": None, "residuals_full": None, "loop": loop, "trunc": trunc_info}
+        return {
+            "readouts": None,
+            "residuals_ws": None,
+            "residuals_full": None,
+            "trunc": trunc_info,
+            "gen_pos_start": gen_pos_start,
+            "trigger_local_in_readouts": None,
+            "n_gen_positions_cached": 0,
+        }
 
+    n_layers = stack.n_layers
     topk_idx = torch.zeros(n_layers, n_gp, top_k, dtype=torch.long)
     topk_val = torch.zeros(n_layers, n_gp, top_k, dtype=torch.float16)
     residuals_ws: dict[int, torch.Tensor] = {}
     residuals_full: dict[int, torch.Tensor] = {}
 
     chunk_size = 6
-    for start in range(0, n_layers, chunk_size):
-        chunk = list(range(start, min(start + chunk_size, n_layers)))
+    for c0 in range(0, n_layers, chunk_size):
+        chunk = list(range(c0, min(c0 + chunk_size, n_layers)))
         need = set(chunk)
         if ws:
-            need |= {l for l in ws if start <= l < start + chunk_size}
+            need |= {l for l in ws if c0 <= l < c0 + chunk_size}
         with ActivationRecorder(stack.layers, at=sorted(need)) as rec:
             stack.model(input_ids=ids, use_cache=False)
             for l in chunk:
@@ -200,32 +282,23 @@ def generate_with_tiered_cache(
             del rec.activations
         clear_cuda()
 
-    loop = detect_loop(
-        gen["generated_text"],
-        token_ids=gen_ids,
-        tokenizer=stack.tokenizer,
-        prompt="",
-    )
+    trigger_local_trunc = None
+    if trigger_token_index is not None:
+        abs_trig = prompt_len + int(trigger_token_index)
+        if start <= abs_trig < end:
+            # Index within gen_positions / readout time axis.
+            trigger_local_trunc = (abs_trig - start) - gen_pos_start
 
-    trigger_local = loop.trigger_token_index
-    if truncated and trigger_local is not None:
-        orig_full_pos = prompt_len + trigger_local
-        orig_len = trunc_info["orig_len"]
-        tail = trunc_info["tail"]
-        tail_start_orig = orig_len - tail
-        if orig_full_pos >= tail_start_orig:
-            trigger_local_trunc = trunc_info["keep_prompt"] + (orig_full_pos - tail_start_orig) - gen_pos_start
-        else:
-            trigger_local_trunc = None
-    else:
-        trigger_local_trunc = trigger_local
-
+    trunc_info = {
+        **trunc_info,
+        "prompt_len": prompt_len,
+        "trigger_token_index": trigger_token_index,
+        "trigger_abs": (prompt_len + trigger_token_index) if trigger_token_index is not None else None,
+    }
     return {
-        **gen,
         "readouts": {"indices": topk_idx, "values": topk_val},
         "residuals_ws": residuals_ws,
         "residuals_full": residuals_full if cache_tier3 else None,
-        "loop": loop,
         "trunc": trunc_info,
         "gen_pos_start": gen_pos_start,
         "trigger_local_in_readouts": trigger_local_trunc,
@@ -250,6 +323,9 @@ def loop_result_to_meta(loop: Any, gen: dict[str, Any], prompt_id: Any = None) -
         "generated_text": gen.get("generated_text", ""),
         "n_tokens": len(gen.get("generated_ids", [])),
         "prompt_text": gen.get("prompt_text", "")[:2000],
+        "trigger_local_in_readouts": gen.get("trigger_local_in_readouts"),
+        "n_gen_positions_cached": gen.get("n_gen_positions_cached"),
+        "trunc": gen.get("trunc"),
     }
 
 
@@ -265,10 +341,10 @@ def save_trace(out_dir: Path, trace: dict[str, Any], meta: dict[str, Any]) -> No
     if trace.get("residuals_full"):
         torch.save(trace["residuals_full"], out_dir / "residuals_full.pt")
     if "generated_ids" in trace:
-        torch.save(
-            {
-                "generated_ids": trace["generated_ids"],
-                "prompt_len": trace.get("prompt_len"),
-            },
-            out_dir / "tokens.pt",
-        )
+        payload = {
+            "generated_ids": trace["generated_ids"],
+            "prompt_len": trace.get("prompt_len"),
+        }
+        if trace.get("full_ids") is not None:
+            payload["full_ids"] = trace["full_ids"]
+        torch.save(payload, out_dir / "tokens.pt")

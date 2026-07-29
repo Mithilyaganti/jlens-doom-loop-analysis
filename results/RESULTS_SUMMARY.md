@@ -191,3 +191,74 @@ across all layers.
 - Success criterion (higher clustering and/or alignment): **True**
 
 Plots in `results/exp1/`. Mid-layer PCA at L21.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 200, loops: 5, non-loops: 195, rate: 2.5%
+- Workspace layers cached (Tier-2): [21]
+- Mean trigger alignment (−1): loop=0.07942445576190948, non=0.13036531308749452
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `example_looping_trace.html`.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 200, loops: 5, non-loops: 195, rate: 2.5%
+- Workspace layers cached (Tier-2): [21]
+- Mean trigger alignment (−1): loop=0.17168146148324012, non=0.13036531308749452
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `example_looping_trace.html`.
+
+## Experiment 3 — Causal Interventions
+
+# Experiment 3 — Causal Interventions
+
+## Loop rates
+{
+  "baseline": 0.18181818181818182,
+  "ablate_trigger": 0.18181818181818182,
+  "ablate_random": 0.09090909090909091,
+  "ablate_control": 0.2727272727272727,
+  "ablate_trigger_sensory": 0.18181818181818182,
+  "ablate_trigger_motor": 0.09090909090909091
+}
+
+## Interpretation
+- Result type: **mixed**
+- Baseline loop rate: 0.182
+- Ablate trigger (workspace): 0.182
+- Ablate random: 0.091
+- Ablate control token: 0.273
+- Ablate trigger sensory: 0.182
+- Ablate trigger motor: 0.091
+
+## Stats
+{
+  "chi2": 0.25,
+  "p_value": 0.6170750774519739,
+  "b": 2,
+  "c": 2
+}
+Cohen's h (baseline vs trigger ablate): 0.0
+
+## Dose-response
+{
+  "top-1": 0.2727272727272727,
+  "top-3": 0.18181818181818182,
+  "top-5": 0.36363636363636365
+}
+
+## Eval quality (tiny set)
+{
+  "baseline": 1.0,
+  "ablate_trigger": 1.0,
+  "ablate_random": 1.0,
+  "ablate_control": 1.0
+}
+
+Both positive and negative results are publishable per PROJECT_SPEC §11.6.

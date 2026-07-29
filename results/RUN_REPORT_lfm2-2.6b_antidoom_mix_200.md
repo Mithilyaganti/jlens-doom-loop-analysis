@@ -7,33 +7,47 @@
 - **Dynamic thinking**: left at model default (hybrid reasoning enabled)
 
 ## Run settings
-- Backend: **unknown**
-- vLLM dtype: `n/a`
+- Backend: **hf** (4-bit NF4 for generation; J-lens fitted separately in FP16)
 - max_new_tokens: 4000
 - temperature: 0.01
-- J-lens available: False
+- J-lens available: **True** (`lenses/lfm2-2.6b.pt`, 270-prompt FP16 attn-only fit)
 
 ## Dataset
 - Source: `LiquidAI/antidoom-mix-v1.0` (7 reasoning component sources only)
 - Stratified sample: 200 prompts, seed=42
-- Per-source counts: `{"apps_train": 29, "open_perfectblend_evol_codealpaca": 28, "open_perfectblend_ultrainteract": 28, "math_lighteval_train": 29, "gsm8k_train": 29, "math_qa_train": 29, "open_perfectblend_metamathqa": 28}`
-- Audit: `C:\Users\mithi\Desktop\mithil\projects\j-lens\results\prompt_sample_ids.json`
+- Sample file: `prompt_sample_ids.json`
 
-## Baseline pass (generation + loop detection)
-- Progress: **0/200** prompts completed
-- **Loop rate: 0.0%** (0 loops)
-- Unique trigger tokens: 0
-- Looping prompt IDs: 0
-- Trigger table: `C:\Users\mithi\Desktop\mithil\projects\j-lens\results\trigger_tokens_lfm2-2.6b.csv`
-- Checkpoint: `C:\Users\mithi\Desktop\mithil\projects\j-lens\results\checkpoints\baseline_pass_lfm2-2.6b.json`
+## Baseline pass (generation + loop detection) — DONE
+- Progress: **200/200** prompts completed
+- **Loop rate: 5.5%** (11 / 200)
+- Unique trigger tokens: 11 (one each)
+- Looping prompt IDs: `86352, 96637, 120702, 123613, 133187, 179962, 199303, 290449, 340846, 346805, 422988`
 
-## Experiment 2 (analyze-only, same generations)
-- Pending (baseline not finished)
+## J-lens fit — DONE
+- Colab FP16, WikiText **270** prompts, attn layers `[2,5,9,13,17,21,24,27]`
+- Lens: `lenses/lfm2-2.6b.pt`
 
-## Experiment 3 (looping prompts only)
-- Skipped (zero baseline loops)
+## Workspace band — DONE
+- Band: **L21–L21** (attn-only hybrid lens; L24/L27 treated as motor)
 
-## J-lens fit status
-- **Not fitted**: No pre-fitted J-lens for LFM2-2.6B. Fitting requires adapting open-jlens (vendor/open-jlens-data) to skip LIV conv blocks and fit Jacobians only on attention layers. Prefer Colab A100/L4 with bf16 for the fit. Until then: run baseline generation+detection; defer Exp1/Exp2 geometry/Exp3 ablation.
+## Exp1 static geometry — DONE
+- Workspace means (L21): pairwise sim trigger **0.0905** vs controls **0.0878**; alignment trigger **0.2477** vs controls **0.1942**
+- `success_criterion_met`: **true** (mainly alignment)
 
-All numbers above are from real runs — nothing invented.
+## Exp2 dynamic monitoring — DONE
+- Hooked re-gen: **200/200** Tier-1/2 at L21 (`max_new_tokens=4000`)
+- Regen loop rate: **2.5%** (5/200)
+- Alignment −1: loop **0.172** vs non **0.130**; top-1=trigger at −1: **0.60** vs **0.041**
+- `success_criterion_met`: **true** (preliminary; n_loop=5)
+
+## Exp3 causal ablation — DONE
+- 11 baseline looping prompts × 6 conditions = **66/66** (`max_new_tokens=4000`)
+- Loop rates: baseline **0.182**, ablate_trigger **0.182**, random **0.091**, control **0.273**, sensory **0.182**, motor **0.091**
+- McNemar p=**0.62**, Cohen's h=**0.0** — primary trigger ablation did **not** reduce loops vs baseline
+- Result type: **mixed / null primary** (underpowered; many known loopers did not re-loop)
+- Eval accuracy stayed 1.0 on tiny arithmetic set
+
+## Stretch / not done
+- Exp2 Tier-3 full-residual HTML visualization
+
+All numbers above are from completed LFM artifacts — nothing invented.

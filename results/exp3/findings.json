@@ -1,0 +1,30 @@
+{
+  "experiment": "exp3_causal_ablation",
+  "model_id": "LiquidAI/LFM2-2.6B",
+  "max_new_tokens": 4000,
+  "n_prompts": 11,
+  "n_condition_pairs": 66,
+  "prompt_source": "baseline looping_prompt_ids",
+  "workspace_layers": [21],
+  "loop_rates": {
+    "baseline": 0.1818,
+    "ablate_trigger": 0.1818,
+    "ablate_random": 0.0909,
+    "ablate_control": 0.2727,
+    "ablate_trigger_sensory": 0.1818,
+    "ablate_trigger_motor": 0.0909
+  },
+  "mcnemar_baseline_vs_trigger": {"chi2": 0.25, "p_value": 0.617, "b": 2, "c": 2},
+  "cohens_h_baseline_vs_trigger": 0.0,
+  "dose_rates": {"top-1": 0.2727, "top-3": 0.1818, "top-5": 0.3636},
+  "eval_acc": {"baseline": 1.0, "ablate_trigger": 1.0, "ablate_random": 1.0, "ablate_control": 1.0},
+  "result_type": "mixed_null_primary",
+  "success_criterion_met": false,
+  "interpretation": "Primary workspace trigger ablation did not reduce loop rate vs baseline (both 2/11). Random/motor ablations were numerically lower (1/11) but n=11 and baseline re-loop rate is only 18% (known looping prompts often did not re-loop under NF4). McNemar p=0.62, Cohen h=0. Eval accuracy stayed 1.0 (ablations not destroying basic competence). Treat as underpowered null/mixed — not a causal confirmation.",
+  "caveats": [
+    "Only 11 prompts (baseline loopers); many did not re-loop on Exp3 baseline re-run",
+    "Main ablate_trigger used top-1 empirical trigger direction only (dose-response tests 1/3/5)",
+    "Single workspace layer L21",
+    "NF4 generation nondeterminism vs original baseline Colab run"
+  ]
+}

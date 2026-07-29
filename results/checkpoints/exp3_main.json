@@ -1,0 +1,391 @@
+{
+  "saved_at": "2026-07-28T21:15:20.970926+00:00",
+  "status": "complete",
+  "model_id": "LiquidAI/LFM2-2.6B",
+  "max_new_tokens": 4000,
+  "per_prompt": {
+    "340846": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 851,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 607,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 764,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 717,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 292,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 478,
+        "trigger_decoded": null
+      }
+    },
+    "86352": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 319,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 281,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 407,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 566,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 698,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 292,
+        "trigger_decoded": null
+      }
+    },
+    "120702": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 371,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 642,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 433,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": "315"
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 461,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 547,
+        "trigger_decoded": null
+      }
+    },
+    "290449": {
+      "baseline": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " different"
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 278,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " received"
+      },
+      "ablate_control": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " is"
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 288,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 300,
+        "trigger_decoded": null
+      }
+    },
+    "179962": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 746,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 1014,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 612,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 668,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " removed"
+      }
+    },
+    "96637": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 797,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": "`"
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 726,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 738,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 571,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 620,
+        "trigger_decoded": null
+      }
+    },
+    "133187": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " -"
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " sequences"
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " that"
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 833,
+        "trigger_decoded": null
+      }
+    },
+    "199303": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 936,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 789,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 798,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": " we"
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 733,
+        "trigger_decoded": null
+      }
+    },
+    "346805": {
+      "baseline": {
+        "is_loop": true,
+        "n_tokens": 4000,
+        "trigger_decoded": "06"
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 789,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 491,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 406,
+        "trigger_decoded": null
+      }
+    },
+    "123613": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 4000,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 1063,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 1056,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 614,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 752,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 1075,
+        "trigger_decoded": null
+      }
+    },
+    "422988": {
+      "baseline": {
+        "is_loop": false,
+        "n_tokens": 1504,
+        "trigger_decoded": null
+      },
+      "ablate_trigger": {
+        "is_loop": false,
+        "n_tokens": 1185,
+        "trigger_decoded": null
+      },
+      "ablate_random": {
+        "is_loop": false,
+        "n_tokens": 1362,
+        "trigger_decoded": null
+      },
+      "ablate_control": {
+        "is_loop": false,
+        "n_tokens": 897,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_sensory": {
+        "is_loop": false,
+        "n_tokens": 1330,
+        "trigger_decoded": null
+      },
+      "ablate_trigger_motor": {
+        "is_loop": false,
+        "n_tokens": 1841,
+        "trigger_decoded": null
+      }
+    }
+  },
+  "conditions": [
+    "baseline",
+    "ablate_trigger",
+    "ablate_random",
+    "ablate_control",
+    "ablate_trigger_sensory",
+    "ablate_trigger_motor"
+  ],
+  "n_looping_prompts": 11,
+  "n_done_pairs": 66,
+  "n_total_pairs": 66,
+  "loop_rates": {
+    "baseline": 0.18181818181818182,
+    "ablate_trigger": 0.18181818181818182,
+    "ablate_random": 0.09090909090909091,
+    "ablate_control": 0.2727272727272727,
+    "ablate_trigger_sensory": 0.18181818181818182,
+    "ablate_trigger_motor": 0.09090909090909091
+  },
+  "result_type": "mixed",
+  "dose_rates": {
+    "top-1": 0.2727272727272727,
+    "top-3": 0.18181818181818182,
+    "top-5": 0.36363636363636365
+  },
+  "eval_acc": {
+    "baseline": 1.0,
+    "ablate_trigger": 1.0,
+    "ablate_random": 1.0,
+    "ablate_control": 1.0
+  }
+}

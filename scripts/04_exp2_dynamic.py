@@ -7,7 +7,9 @@ import json
 import logging
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -23,6 +25,10 @@ MAX_PROMPTS = int(os.environ.get("JLENS_EXP2_PROMPTS", "200"))
 MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "4000"))
 # Default: analyze traces from unified baseline pass (no regeneration).
 ANALYZE_ONLY = os.environ.get("JLENS_EXP2_ANALYZE_ONLY", "1") == "1"
+# Generation-only: save hooked traces + checkpoint; skip plots/summary analysis.
+GEN_ONLY = os.environ.get("JLENS_EXP2_GEN_ONLY", "0") == "1"
+CKPT_NAME = os.environ.get("JLENS_EXP2_CKPT", "exp2_gen_lfm2-2.6b")
+LOCK_PATH = ROOT / "results" / ".exp2_gen.lock"
 
 
 def load_exp2_prompts(max_n: int) -> list[dict]:
@@ -32,6 +38,89 @@ def load_exp2_prompts(max_n: int) -> list[dict]:
     prompts = get_or_create_prompt_sample(total=max_n)
     logger.info("Exp2 prompt set size: %d", len(prompts))
     return prompts
+
+
+def _trace_complete(dest: Path) -> bool:
+    """A hooked Exp2 trace is complete when meta + readouts exist."""
+    return (dest / "meta.json").is_file() and (dest / "readouts.pt").is_file()
+
+
+def _find_existing_trace(prompt_id: Any, looping_dir: Path, nonloop_dir: Path) -> Path | None:
+    for base in (looping_dir, nonloop_dir):
+        dest = base / f"p{prompt_id}"
+        if _trace_complete(dest):
+            return dest
+    return None
+
+
+def _prioritize_prompts(prompts: list[dict], priority_ids: list[int]) -> list[dict]:
+    """Run known looping IDs first, then the rest (stable order)."""
+    pri = {int(x) for x in priority_ids}
+    first = [p for p in prompts if int(p["prompt_id"]) in pri]
+    rest = [p for p in prompts if int(p["prompt_id"]) not in pri]
+    # Preserve priority_ids order for the first block.
+    by_id = {int(p["prompt_id"]): p for p in first}
+    ordered_first = [by_id[i] for i in priority_ids if i in by_id]
+    return ordered_first + rest
+
+
+def _pid_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        import psutil
+
+        return psutil.pid_exists(pid)
+    except Exception:
+        pass
+    # Fallback: Windows tasklist / POSIX kill(0)
+    if os.name == "nt":
+        import subprocess
+
+        out = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return str(pid) in (out.stdout or "")
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def _acquire_lock() -> None:
+    if LOCK_PATH.is_file():
+        try:
+            old = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+            old_pid = int(old.get("pid", -1))
+        except Exception:
+            old_pid = -1
+        if _pid_alive(old_pid):
+            raise RuntimeError(
+                f"Exp2 generation already running (lock {LOCK_PATH}, pid={old_pid}). "
+                "Stop the other process or delete the lock if stale."
+            )
+    LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOCK_PATH.write_text(
+        json.dumps(
+            {
+                "pid": os.getpid(),
+                "started_at": datetime.now(timezone.utc).isoformat(),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def _release_lock() -> None:
+    try:
+        if LOCK_PATH.is_file():
+            LOCK_PATH.unlink()
+    except OSError:
+        pass
 
 
 def load_saved_trace(trace_dir: Path) -> dict | None:
@@ -66,7 +155,12 @@ def load_saved_trace(trace_dir: Path) -> dict | None:
         repeat_start_char=meta.get("repeat_start_char"),
         end_char=meta.get("end_char"),
     )
-    trace["trigger_local_in_readouts"] = meta.get("trigger_token_index")
+    # Prefer the readout-local index (after cache-window mapping). Fall back to
+    # raw trigger index only when the sequence was not truncated.
+    local = meta.get("trigger_local_in_readouts")
+    if local is None and not (meta.get("trunc") or {}).get("truncated"):
+        local = meta.get("trigger_token_index")
+    trace["trigger_local_in_readouts"] = local
     return trace
 
 
@@ -130,7 +224,9 @@ def main() -> int:
     looping_dir = ensure_dir(out / "looping")
     nonloop_dir = ensure_dir(out / "nonlooping")
 
-    stack = load_stack()
+    if ANALYZE_ONLY and GEN_ONLY:
+        raise ValueError("Set only one of JLENS_EXP2_ANALYZE_ONLY / JLENS_EXP2_GEN_ONLY")
+
     band_path = paths["workspace_band"]
     if not band_path.is_file():
         raise FileNotFoundError(
@@ -142,12 +238,17 @@ def main() -> int:
     ws_layers = list(band["key_workspace_layers"])
     mid = int(band["mid_workspace_layer"])
 
+    # Load model when generating, or when analyzing (alignment needs lens).
+    stack = load_stack()
+
     prompts = load_exp2_prompts(MAX_PROMPTS) if not ANALYZE_ONLY else []
     logger.info(
-        "Exp2: %d prompts (analyze_only=%s), ws_layers=%s",
+        "Exp2: %d prompts (analyze_only=%s gen_only=%s), ws_layers=%s, max_new=%d",
         len(prompts),
         ANALYZE_ONLY,
+        GEN_ONLY,
         ws_layers,
+        MAX_NEW_TOKENS,
     )
 
     # Aggregates for pre-onset positions -5..0
@@ -252,30 +353,182 @@ def main() -> int:
             meta = trace["meta"]
             process_trace(trace, meta, is_loop, dest, i, len(saved))
     else:
-        for i, p in enumerate(prompts):
-            chat = apply_chat_template(stack.tokenizer, p["text"])
-            try:
-                trace = generate_with_tiered_cache(
-                    stack,
-                    chat,
-                    max_new_tokens=MAX_NEW_TOKENS,
-                    temperature=0.01,
-                    workspace_layers=ws_layers,
-                    top_k=10,
-                    cache_tier3=False,
-                )
-            except Exception as e:
-                logger.exception("prompt %s failed: %s", p["prompt_id"], e)
-                clear_cuda()
-                continue
+        from jspace.checkpoint import save_checkpoint, load_checkpoint
 
-            loop = trace["loop"]
-            meta = loop_result_to_meta(loop, trace, prompt_id=p["prompt_id"])
-            meta["source"] = p.get("source")
-            dest = looping_dir / f"p{p['prompt_id']}" if loop.is_loop else nonloop_dir / f"p{p['prompt_id']}"
-            save_trace(dest, trace, meta)
-            process_trace(trace, meta, loop.is_loop, dest, i, len(prompts))
-            clear_cuda()
+        if stack.lens is None:
+            raise RuntimeError(
+                "Exp2 hooked generation requires lenses/lfm2-2.6b.pt — lens not loaded."
+            )
+
+        _acquire_lock()
+        try:
+            baseline_summary = {}
+            bs_path = paths.get("baseline_summary")
+            if bs_path and Path(bs_path).is_file():
+                baseline_summary = load_json(bs_path)
+            priority_ids = [int(x) for x in baseline_summary.get("looping_prompt_ids") or []]
+            prompts = _prioritize_prompts(prompts, priority_ids)
+            logger.info(
+                "Priority looping IDs first (%d): %s",
+                len(priority_ids),
+                priority_ids,
+            )
+
+            ckpt = load_checkpoint(CKPT_NAME) or {
+                "completed_ids": [],
+                "failed_ids": [],
+                "n_loop": 0,
+                "n_non": 0,
+                "model_id": cfg.model_id,
+                "max_new_tokens": MAX_NEW_TOKENS,
+                "workspace_layers": ws_layers,
+            }
+            completed = {int(x) for x in ckpt.get("completed_ids") or []}
+            failed = {int(x) for x in ckpt.get("failed_ids") or []}
+
+            # Also treat on-disk complete traces as done (resume-safe).
+            for p in prompts:
+                pid = int(p["prompt_id"])
+                existing = _find_existing_trace(pid, looping_dir, nonloop_dir)
+                if existing is not None:
+                    completed.add(pid)
+
+            def persist_ckpt(*, last_id: int | None = None, status: str = "running") -> None:
+                save_checkpoint(
+                    CKPT_NAME,
+                    {
+                        "status": status,
+                        "model_id": cfg.model_id,
+                        "max_new_tokens": MAX_NEW_TOKENS,
+                        "workspace_layers": ws_layers,
+                        "n_total": len(prompts),
+                        "n_completed": len(completed),
+                        "n_failed": len(failed),
+                        "n_loop": int(ckpt.get("n_loop", 0)),
+                        "n_non": int(ckpt.get("n_non", 0)),
+                        "completed_ids": sorted(completed),
+                        "failed_ids": sorted(failed),
+                        "last_prompt_id": last_id,
+                        "priority_ids": priority_ids,
+                    },
+                )
+
+            persist_ckpt(status="running")
+            todo = [p for p in prompts if int(p["prompt_id"]) not in completed]
+            logger.info(
+                "Resume: %d already complete, %d remaining of %d",
+                len(completed),
+                len(todo),
+                len(prompts),
+            )
+
+            for i, p in enumerate(todo):
+                pid = int(p["prompt_id"])
+                chat = apply_chat_template(stack.tokenizer, p["text"])
+                logger.info(
+                    "Generating hooked trace %d/%d prompt_id=%s (done=%d loops=%s non=%s)",
+                    i + 1,
+                    len(todo),
+                    pid,
+                    len(completed),
+                    ckpt.get("n_loop"),
+                    ckpt.get("n_non"),
+                )
+                try:
+                    trace = generate_with_tiered_cache(
+                        stack,
+                        chat,
+                        max_new_tokens=MAX_NEW_TOKENS,
+                        temperature=0.01,
+                        workspace_layers=ws_layers,
+                        top_k=10,
+                        cache_tier3=False,
+                    )
+                except Exception as e:
+                    logger.exception("prompt %s failed: %s", pid, e)
+                    failed.add(pid)
+                    persist_ckpt(last_id=pid, status="running")
+                    clear_cuda()
+                    continue
+
+                loop = trace["loop"]
+                meta = loop_result_to_meta(loop, trace, prompt_id=pid)
+                meta["source"] = p.get("source")
+                meta["hf_source"] = p.get("hf_source")
+                meta["antidoom_id"] = p.get("antidoom_id")
+                meta["model_id"] = cfg.model_id
+                meta["backend"] = os.environ.get("JLENS_BACKEND", "hf")
+                meta["jlens_hooks"] = True
+                meta["workspace_layers"] = ws_layers
+                if trace.get("readouts") is None:
+                    logger.error("prompt %s produced no readouts — not marking complete", pid)
+                    failed.add(pid)
+                    persist_ckpt(last_id=pid, status="running")
+                    clear_cuda()
+                    continue
+
+                dest = looping_dir / f"p{pid}" if loop.is_loop else nonloop_dir / f"p{pid}"
+                # Remove stale counterpart folder if loop label flipped on re-run.
+                other = nonloop_dir / f"p{pid}" if loop.is_loop else looping_dir / f"p{pid}"
+                if other.exists() and other != dest:
+                    import shutil
+
+                    shutil.rmtree(other, ignore_errors=True)
+                save_trace(dest, trace, meta)
+                if not GEN_ONLY:
+                    process_trace(trace, meta, loop.is_loop, dest, i, len(todo))
+                else:
+                    if loop.is_loop:
+                        n_loop += 1
+                    else:
+                        n_non += 1
+
+                completed.add(pid)
+                failed.discard(pid)
+                if loop.is_loop:
+                    ckpt["n_loop"] = int(ckpt.get("n_loop", 0)) + 1
+                else:
+                    ckpt["n_non"] = int(ckpt.get("n_non", 0)) + 1
+                persist_ckpt(last_id=pid, status="running")
+                clear_cuda()
+
+            persist_ckpt(status="complete" if len(completed) >= len(prompts) else "partial")
+            logger.info(
+                "Generation pass finished: completed=%d/%d failed=%d loops=%s non=%s",
+                len(completed),
+                len(prompts),
+                len(failed),
+                ckpt.get("n_loop"),
+                ckpt.get("n_non"),
+            )
+        finally:
+            _release_lock()
+
+    if GEN_ONLY:
+        # Generation-only night run: skip analysis/plots; write a short status.
+        ckpt = None
+        try:
+            from jspace.checkpoint import load_checkpoint
+
+            ckpt = load_checkpoint(CKPT_NAME)
+        except Exception:
+            ckpt = None
+        n_done = len((ckpt or {}).get("completed_ids") or [])
+        status = f"""# Experiment 2 — Generation (in progress / checkpointed)
+
+- Mode: **GEN_ONLY** (analysis deferred)
+- Checkpoint: `results/checkpoints/{CKPT_NAME}.json`
+- Completed hooked traces: **{n_done}** / {MAX_PROMPTS}
+- max_new_tokens: {MAX_NEW_TOKENS}
+- Workspace layers (Tier-2): {ws_layers}
+- Status: {(ckpt or {}).get('status')}
+- Loops so far: {(ckpt or {}).get('n_loop')} | Non-loops: {(ckpt or {}).get('n_non')}
+
+Resume later with the same env flags; completed prompt IDs are skipped.
+"""
+        write_status("04_exp2", status)
+        clear_cuda()
+        return 0
 
     # Plots
     def means_cis(d):

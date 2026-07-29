@@ -1,8 +1,8 @@
 {
-  "n_prompts": 50,
-  "n_loop": 1,
-  "n_non": 49,
-  "loop_rate": 0.02,
-  "mean_loop_align": 0.0071596247144043446,
-  "mean_non_align": 0.03229696372029733
+  "n_prompts": 200,
+  "n_loop": 5,
+  "n_non": 195,
+  "loop_rate": 0.025,
+  "mean_loop_align": 0.17168146148324012,
+  "mean_non_align": 0.13036531308749452
 }
