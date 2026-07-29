@@ -45,24 +45,29 @@ def main() -> int:
     import pandas as pd
 
     out = ensure_dir(ROOT / "results")
-    summary_path = out / "baseline_pass_summary.json"
+    from jspace.model_config import artifact_paths, get_active_model
+
+    paths = artifact_paths(get_active_model())
+    summary_path = paths["baseline_summary"]
+    if not summary_path.is_file():
+        summary_path = out / "baseline_pass_summary.json"
     if summary_path.is_file():
         logger.info(
             "Baseline pass already complete — rebuilding status from %s", summary_path
         )
         stats = json.loads(summary_path.read_text(encoding="utf-8"))
-        status = f"""# Trigger Token Extraction — Qwen3.5-4B (from baseline pass)
+        status = f"""# Trigger Token Extraction — {get_active_model().display_name} (from baseline pass)
 
 - Prompts: {stats.get('n_prompts')}
 - Loops detected: {stats.get('n_loop')} ({stats.get('loop_rate', 0):.1%})
-- Table: `results/trigger_tokens_qwen3.5-4b.csv`
+- Table: `{paths['trigger_csv']}`
 - Source: unified baseline pass (`scripts/02_baseline_pass.py`)
 """
         write_status("02_trigger_tokens", status)
-        append_results_summary("Trigger Tokens (Qwen3.5-4B)", status)
+        append_results_summary(f"Trigger Tokens ({get_active_model().display_name})", status)
         return 0 if stats.get("n_loop", 0) > 0 else 2
 
-    generations_path = out / "trigger_gen_log.jsonl"
+    generations_path = paths["trigger_log"]
     stack = load_stack()
     prompts = load_prompts(MAX_PROMPTS)
     logger.info("Running trigger extraction on %d prompts (max_new=%d)", len(prompts), MAX_NEW_TOKENS)

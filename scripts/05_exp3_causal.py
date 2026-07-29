@@ -29,9 +29,15 @@ def load_looping_prompts() -> list[dict]:
 
     paths = artifact_paths()
     summary_path = paths["baseline_summary"]
+    # Legacy unscoped fallback
+    if not summary_path.is_file():
+        alt = paths["results"] / "baseline_pass_summary.json"
+        if alt.is_file():
+            summary_path = alt
     if not summary_path.is_file():
         raise FileNotFoundError(
-            "Missing results/baseline_pass_summary.json — run scripts/02_baseline_pass.py first."
+            f"Missing {paths['baseline_summary']} (or legacy baseline_pass_summary.json) "
+            "— run scripts/02_baseline_pass.py first."
         )
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     loop_ids = {int(x) for x in summary.get("looping_prompt_ids", [])}

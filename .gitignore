@@ -10,6 +10,8 @@ lenses/_hf_cache/
 !lenses/.gitkeep
 results/exp2/looping/
 results/exp2/nonlooping/
+results/exp2_*/looping/
+results/exp2_*/nonlooping/
 # Large local backups (Drive exports, Colab fit blobs, archived traces)
 artifacts/exports/
 artifacts/jlens_fit/

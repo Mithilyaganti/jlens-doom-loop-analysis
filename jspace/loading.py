@@ -203,16 +203,24 @@ def load_tokenizer_only(model_name: str, *, trust_remote_code: bool = True) -> A
 
 
 def _vllm_tokenizer_only_mode(require_lens: bool, lens_path: Path) -> bool:
-    """vLLM generates; HF model load is redundant and breaks on hybrid LFM layouts."""
+    """vLLM generates; skip HF weight load (lens file may exist but is unused here).
+
+    Important for Qwen: pre-fitted ``lenses/qwen3.5-4b.pt`` must NOT force a full
+    HF+vLLM double load on Colab T4 — that OOMs. Tier-1/2 hooked gen uses HF, not vLLM.
+    """
     import os
 
     from jspace.vllm_backend import vllm_available
 
+    force = os.environ.get("JLENS_VLLM_TOKENIZER_ONLY", "").strip()
+    if force == "0":
+        return False
+    if force == "1":
+        return vllm_available() and not require_lens
     return (
         os.environ.get("JLENS_BACKEND", "").lower() == "vllm"
         and vllm_available()
         and not require_lens
-        and not lens_path.is_file()
     )
 
 

@@ -106,7 +106,7 @@ def get_active_model() -> ModelConfig:
 
 
 def artifact_paths(cfg: ModelConfig | None = None) -> dict[str, Path]:
-    """Canonical results paths for the active model."""
+    """Canonical results paths for the active model (slug-scoped to avoid cross-model clobber)."""
     cfg = cfg or get_active_model()
     results = ROOT / "results"
     return {
@@ -114,13 +114,14 @@ def artifact_paths(cfg: ModelConfig | None = None) -> dict[str, Path]:
         "workspace_band": results / f"workspace_band_{cfg.slug}.json",
         "workspace_band_metrics": results / f"workspace_band_metrics_{cfg.slug}.json",
         "trigger_csv": results / f"trigger_tokens_{cfg.slug}.csv",
-        "trigger_log": results / "trigger_gen_log.jsonl",
-        "baseline_summary": results / "baseline_pass_summary.json",
+        "trigger_log": results / f"trigger_gen_log_{cfg.slug}.jsonl",
+        "baseline_summary": results / f"baseline_pass_summary_{cfg.slug}.json",
         "baseline_checkpoint": results / "checkpoints" / f"baseline_pass_{cfg.slug}.json",
         "prompt_sample": results / "prompt_sample_ids.json",
         "jlens_fit_status": results / f"jlens_fit_status_{cfg.slug}.json",
         "run_report": results / f"RUN_REPORT_{cfg.slug}_antidoom_mix_200.md",
-        "exp2": results / "exp2",
-        "exp3": results / "exp3",
+        # Per-model Exp2/3 trees (LFM used legacy results/exp2 — keep readable via slug)
+        "exp2": results / f"exp2_{cfg.slug}",
+        "exp3": results / f"exp3_{cfg.slug}",
         "lens": cfg.lens_path,
     }

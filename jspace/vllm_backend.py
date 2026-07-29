@@ -71,6 +71,15 @@ class VLLMGenerator:
             if dtype == "fp8":
                 logger.warning("vLLM fp8 failed (%s); retrying bfloat16", e)
                 kwargs["dtype"] = "bfloat16"
+                try:
+                    self.llm = LLM(**kwargs)
+                except Exception as e2:
+                    logger.warning("vLLM bfloat16 failed (%s); retrying float16", e2)
+                    kwargs["dtype"] = "float16"
+                    self.llm = LLM(**kwargs)
+            elif dtype in ("bfloat16", "bf16"):
+                logger.warning("vLLM bfloat16 failed (%s); retrying float16", e)
+                kwargs["dtype"] = "float16"
                 self.llm = LLM(**kwargs)
             else:
                 raise
