@@ -5,7 +5,7 @@ Used on Colab so a disconnect does not lose checkpointed baseline/Exp2 work.
 Env
 ---
 JLENS_DRIVE_SYNC_DIR   Absolute path to Drive folder (required to enable sync)
-JLENS_DRIVE_SYNC_EVERY How many completed prompts between full syncs (default 1)
+JLENS_DRIVE_SYNC_EVERY How many completed prompts between full syncs (default 10)
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ def drive_sync_dir() -> Path | None:
 
 
 def sync_every() -> int:
-    return max(1, int(os.environ.get("JLENS_DRIVE_SYNC_EVERY", "1")))
+    return max(1, int(os.environ.get("JLENS_DRIVE_SYNC_EVERY", "10")))
 
 
 def _copy_file(src: Path, dst: Path) -> None:

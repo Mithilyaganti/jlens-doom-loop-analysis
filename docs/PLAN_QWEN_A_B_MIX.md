@@ -156,7 +156,7 @@ Ballpark time for 200×≤4000 hooked: Colab bf16 often ~4–12 h; laptop NF4 of
 Start **A1**: open `notebooks/colab_qwen35_4b_a1_baseline.ipynb` on Colab **T4**.
 
 - Smoke **bf16** (Cell 6) → full **200** baseline (Cell 7).
-- Checkpoints + Drive sync after **every** prompt (`MyDrive/jlens_qwen_a1_baseline/`).
+- Checkpoints every prompt locally; Drive sync every **10** prompts (`MyDrive/jlens_qwen_a1_baseline/`).
 - Defer A2/A4 until this path is green.
 
 See also: `docs/COLAB_QWEN_A1_RUN.md`.

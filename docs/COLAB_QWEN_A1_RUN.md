@@ -19,7 +19,7 @@ Upload / open from the repo:
 3. **Cell 1** — mount Drive (`MyDrive/jlens_qwen_a1_baseline/`).
 4. **Cell 2** — clone branch `cursor/lfm2-exp1-jlens-fit` (or the branch you pushed).
 5. **Cell 3** — install vLLM + deps (several minutes).
-6. **Cell 4** — env (bf16, 4000 tokens, Drive sync every prompt).
+6. **Cell 4** — env (bf16, 4000 tokens, Drive sync every **10** prompts).
 7. **Cell 5** — restore from Drive if resuming.
 8. **Cell 6** — **SMOKE** (1 prompt). Confirm it finishes and Drive `LAST_SYNC.txt` updates.
 9. **Cell 7** — **FULL 200**. Leave it running (overnight OK).
@@ -48,4 +48,4 @@ New runtime → Cells **1–5** → **Cell 7** again. Completed prompts are skip
 
 ## Time honesty
 
-T4 + 4000 tokens: **4–5 hours may be partial**. Progress is saved every prompt on Drive — resume next session until `n_completed=200`.
+T4 + 4000 tokens: **4–5 hours may be partial**. Local checkpoint every prompt; Drive sync every **10** prompts (+ start/final). Resume next session until `n_completed=200`.
