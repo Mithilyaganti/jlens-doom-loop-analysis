@@ -17,7 +17,8 @@ artifacts/exports/
 artifacts/jlens_fit/
 artifacts/archive/
 !artifacts/archive/README.md
-data/
+data/*
+!data/gsm8k_eval.json
 .cache/
 huggingface/
 *.log

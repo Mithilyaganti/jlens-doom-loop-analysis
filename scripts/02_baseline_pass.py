@@ -4,6 +4,15 @@
 Feeds trigger-token extraction. Saves audit file results/prompt_sample_ids.json
 and per-trace caches under results/exp2_{slug}/.
 
+Batched baseline (JLENS_BASELINE_BATCH_GEN=1, default on with the vLLM backend):
+all pending prompts are generated in ONE vLLM continuous-batching call, then
+loop labels + trigger extraction are recorded per prompt. The vLLM path never
+records tier caches (the use_tier gate requires the HF stack), so no second
+recording pass is needed — the batch IS the expensive work. When band+lens are
+present the HF path still records per-prompt tier caches as before. Any vLLM
+failure (init, batch, or per-prompt) releases the vLLM engine and switches the
+run to the HF backend for the remaining prompts.
+
 Resume-safe: checkpoint JSON + on-disk meta.json. Optional Drive sync via
 JLENS_DRIVE_SYNC_DIR (see jspace.drive_sync).
 """
@@ -27,10 +36,11 @@ logger = logging.getLogger("baseline_pass")
 TOTAL_PROMPTS = int(os.environ.get("JLENS_BASELINE_PROMPTS", "200"))
 SEED = int(os.environ.get("JLENS_SAMPLE_SEED", "42"))
 MAX_NEW_TOKENS = int(os.environ.get("JLENS_MAX_NEW_TOKENS", "4000"))
-TEMPERATURE = float(os.environ.get("JLENS_TEMPERATURE", "0.01"))
+TEMPERATURE = float(os.environ.get("JLENS_TEMPERATURE", "0.0"))  # 0.0 = greedy (deterministic)
 TIER3_MAX = int(os.environ.get("JLENS_TIER3_MAX", "0"))  # 0 = skip Tier-3 in baseline (A4 later)
 SMOKE_ONLY = os.environ.get("JLENS_BASELINE_SMOKE", "0") == "1"
 SMOKE_N = int(os.environ.get("JLENS_BASELINE_SMOKE_N", "1"))
+BATCH_GEN = os.environ.get("JLENS_BASELINE_BATCH_GEN", "1") == "1"
 
 
 def _utc() -> str:
@@ -50,6 +60,7 @@ def main() -> int:
         generate_with_tiered_cache,
         generate_greedy,
         loop_result_to_meta,
+        per_prompt_seed,
         save_trace,
     )
     from jspace.detection import detect_loop
@@ -205,6 +216,22 @@ def main() -> int:
     else:
         logger.info("Using HuggingFace generate backend (quantize=%s)", cfg.hf_quantize)
 
+    def _switch_to_hf(reason: str) -> None:
+        """Release vLLM GPU memory and load the HF stack for the rest of the run."""
+        nonlocal vllm_gen, stack
+        if vllm_gen is None:
+            return
+        logger.warning("Switching to HuggingFace backend (%s)", reason)
+        vllm_gen.release()
+        vllm_gen = None
+        os.environ["JLENS_BACKEND"] = "hf"
+        if "JLENS_HF_QUANTIZE" not in os.environ:
+            os.environ["JLENS_HF_QUANTIZE"] = "0"
+        stack = load_stack(require_lens=False)
+        logger.info(
+            "HF fallback stack loaded (JLENS_HF_QUANTIZE=%s)", os.environ.get("JLENS_HF_QUANTIZE")
+        )
+
     gen_log_path = paths["trigger_log"]
     # Append if resuming; rewrite only on fresh run
     log_mode = "a" if done_ids else "w"
@@ -213,54 +240,44 @@ def main() -> int:
 
     since_sync = 0
     with gen_log_path.open(log_mode, encoding="utf-8") as logf:
-        for i, p in enumerate(prompts):
-            pid = int(p["prompt_id"])
-            if pid in done_ids:
-                continue
 
-            chat = apply_chat_template(stack.tokenizer, p["text"])
-            try:
-                # A1: generation+detection. Tier cache only if band+lens on HF stack.
-                use_tier = (
-                    stack.lens is not None
-                    and bool(ws_layers)
-                    and vllm_gen is None
-                    and stack.model is not None
+        def _generate_trace(pid: int, chat: str) -> dict:
+            # A1: generation+detection. Tier cache only if band+lens on HF stack.
+            use_tier = (
+                stack.lens is not None
+                and bool(ws_layers)
+                and vllm_gen is None
+                and stack.model is not None
+            )
+            if not use_tier:
+                gen = generate_greedy(
+                    stack,
+                    chat,
+                    max_new_tokens=MAX_NEW_TOKENS,
+                    temperature=TEMPERATURE,
+                    vllm_generator=vllm_gen,
+                    prompt_id=pid,
                 )
-                if not use_tier:
-                    gen = generate_greedy(
-                        stack,
-                        chat,
-                        max_new_tokens=MAX_NEW_TOKENS,
-                        temperature=TEMPERATURE,
-                        vllm_generator=vllm_gen,
-                    )
-                    loop = detect_loop(
-                        gen["generated_text"],
-                        token_ids=gen["generated_ids"],
-                        tokenizer=stack.tokenizer,
-                    )
-                    trace = {**gen, "loop": loop, "readouts": None, "residuals_ws": None}
-                else:
-                    trace = generate_with_tiered_cache(
-                        stack,
-                        chat,
-                        max_new_tokens=MAX_NEW_TOKENS,
-                        temperature=TEMPERATURE,
-                        workspace_layers=ws_layers,
-                        top_k=10,
-                        cache_tier3=False,
-                        vllm_generator=None,
-                    )
-            except Exception as e:
-                logger.exception("gen failed prompt %s: %s", pid, e)
-                failed_ids.add(pid)
-                persist_ckpt(last_id=pid, status="running")
-                if drive_sync_dir() is not None:
-                    sync_baseline_artifacts(cfg.slug, reason=f"fail_p{pid}")
-                clear_cuda()
-                continue
+                loop = detect_loop(
+                    gen["generated_text"],
+                    token_ids=gen["generated_ids"],
+                    tokenizer=stack.tokenizer,
+                )
+                return {**gen, "loop": loop, "readouts": None, "residuals_ws": None}
+            return generate_with_tiered_cache(
+                stack,
+                chat,
+                max_new_tokens=MAX_NEW_TOKENS,
+                temperature=TEMPERATURE,
+                workspace_layers=ws_layers,
+                top_k=10,
+                cache_tier3=False,
+                vllm_generator=None,
+                prompt_id=pid,
+            )
 
+        def _record_prompt(pid: int, p: dict, trace: dict) -> None:
+            nonlocal n_loop, since_sync
             loop = trace["loop"]
             meta = loop_result_to_meta(loop, trace, prompt_id=pid)
             meta["source"] = p.get("source")
@@ -268,9 +285,11 @@ def main() -> int:
             meta["antidoom_id"] = p.get("id")
             meta["model_id"] = cfg.model_id
             meta["backend"] = trace.get("backend", "hf" if vllm_gen is None else "vllm")
-            meta["vllm_dtype"] = getattr(vllm_gen, "dtype", None)
+            meta["vllm_dtype"] = trace.get("dtype") if vllm_gen is not None else None
             meta["max_new_tokens"] = MAX_NEW_TOKENS
-            meta["temperature"] = TEMPERATURE
+            meta["temperature"] = trace.get("temperature", TEMPERATURE)
+            meta["seed"] = trace.get("seed")
+            meta["greedy"] = trace.get("greedy")
             dest = looping_dir / f"p{pid}" if loop.is_loop else nonloop_dir / f"p{pid}"
             save_trace(dest, trace, meta)
 
@@ -325,6 +344,77 @@ def main() -> int:
 
             clear_cuda()
 
+        if vllm_gen is not None and BATCH_GEN:
+            pending = [p for p in prompts if int(p["prompt_id"]) not in done_ids]
+            if pending:
+                logger.info(
+                    "Batched vLLM pass: generating %d pending prompt(s) in one call",
+                    len(pending),
+                )
+                try:
+                    chats = [apply_chat_template(stack.tokenizer, p["text"]) for p in pending]
+                    seeds = [per_prompt_seed(SEED, int(p["prompt_id"])) for p in pending]
+                    gens = vllm_gen.generate_batch(
+                        chats,
+                        max_new_tokens=MAX_NEW_TOKENS,
+                        temperature=TEMPERATURE,
+                        seeds=seeds,
+                        tokenizer=stack.tokenizer,
+                    )
+                except Exception as e:
+                    logger.exception(
+                        "Batched vLLM generation failed (%s) — switching to per-prompt HF", e
+                    )
+                    _switch_to_hf("vllm_batch_gen_failed")
+                    gens = []
+                for p, gen in zip(pending, gens):
+                    pid = int(p["prompt_id"])
+                    try:
+                        loop = detect_loop(
+                            gen["generated_text"],
+                            token_ids=gen["generated_ids"],
+                            tokenizer=stack.tokenizer,
+                        )
+                        trace = {**gen, "loop": loop, "readouts": None, "residuals_ws": None}
+                        _record_prompt(pid, p, trace)
+                    except Exception as e:
+                        logger.exception("record failed prompt %s: %s", pid, e)
+                        failed_ids.add(pid)
+                        persist_ckpt(last_id=pid, status="running")
+
+        for i, p in enumerate(prompts):
+            pid = int(p["prompt_id"])
+            if pid in done_ids:
+                continue
+
+            chat = apply_chat_template(stack.tokenizer, p["text"])
+            trace = None
+            try:
+                trace = _generate_trace(pid, chat)
+            except Exception as e:
+                if vllm_gen is not None:
+                    logger.exception(
+                        "vLLM generation failed prompt %s: %s — switching to HuggingFace",
+                        pid,
+                        e,
+                    )
+                    _switch_to_hf(f"vllm_gen_failed_p{pid}")
+                    try:
+                        trace = _generate_trace(pid, chat)
+                    except Exception as e2:
+                        logger.exception("gen failed prompt %s: %s", pid, e2)
+                else:
+                    logger.exception("gen failed prompt %s: %s", pid, e)
+            if trace is None:
+                failed_ids.add(pid)
+                persist_ckpt(last_id=pid, status="running")
+                if drive_sync_dir() is not None:
+                    sync_baseline_artifacts(cfg.slug, reason=f"fail_p{pid}")
+                clear_cuda()
+                continue
+
+            _record_prompt(pid, p, trace)
+
     # Optional Tier-3 (default off for A1)
     tier3_done = 0
     if looping_prompt_ids and TIER3_MAX > 0 and stack.lens is not None and ws_layers:
@@ -348,6 +438,7 @@ def main() -> int:
                     top_k=10,
                     cache_tier3=True,
                     vllm_generator=None,
+                    prompt_id=pid,
                 )
                 dest = looping_dir / f"p{pid}"
                 meta = json.loads((dest / "meta.json").read_text(encoding="utf-8"))

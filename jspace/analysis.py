@@ -58,10 +58,25 @@ def plot_lines_by_layer(
     out_path: Path,
     workspace: tuple[int, int] | None = None,
     ylim: tuple[float, float] | None = None,
+    yerr: dict[str, Sequence[float]] | None = None,
 ) -> None:
+    """Layer-curve plot; ``yerr`` maps series name -> per-point half-widths
+    (e.g. bootstrap CI half-width) drawn as error bars on top of the line."""
     fig, ax = plt.subplots(figsize=(9, 5))
     for name, vals in series.items():
         ax.plot(layers, vals, marker="o", markersize=3, label=name, linewidth=1.5)
+        if yerr is not None and name in yerr and yerr[name] is not None:
+            errs = np.asarray(yerr[name], dtype=float)
+            if errs.size == len(list(vals)):
+                ax.errorbar(
+                    list(layers),
+                    list(vals),
+                    yerr=errs,
+                    fmt="none",
+                    elinewidth=1,
+                    capsize=2,
+                    alpha=0.7,
+                )
     if workspace:
         shade_workspace(ax, workspace[0], workspace[1])
     ax.set_xlabel("Layer")
@@ -269,3 +284,65 @@ def append_results_summary(section: str, body: str) -> None:
     with path.open("a", encoding="utf-8") as f:
         f.write(f"\n## {section}\n\n")
         f.write(body.strip() + "\n")
+
+
+# ---------------------------------------------------------------------------
+# Pure trace-indexing helpers for the Exp2 dynamic analysis.
+#
+# Exp2 readouts/residuals cover only the cached window of generated tokens.
+# These helpers map between generated-token indices and readout positions, and
+# pick matched-control anchors, so tests can exercise them on synthetic arrays.
+# ---------------------------------------------------------------------------
+
+
+def readout_gen_offset(meta: dict, prompt_len: int | None, n_gen: int, n_gp: int) -> int | None:
+    """Offset ``off`` such that ``generated_ids[j + off]`` is the token emitted
+    at readout position ``j``; None when the mapping cannot be established.
+
+    - Truncated caches (meta["trunc"]["truncated"]): window_start is known, so
+      off = max(prompt_len, window_start) - prompt_len, validated against sizes.
+    - Untruncated caches: readouts cover the whole generation (off = 0) when
+      n_gen == n_gp; legacy capped caches without trunc metadata are ambiguous
+      (None) and must be skipped for token-identity metrics.
+    """
+    trunc = meta.get("trunc") or {}
+    if trunc.get("truncated"):
+        window_start = int(trunc.get("window_start", 0))
+        plen = int(trunc.get("prompt_len", prompt_len if prompt_len is not None else 0))
+        off = max(plen, window_start) - plen
+        if 0 <= off <= n_gen - n_gp:
+            return off
+        return None
+    if n_gen == n_gp:
+        return 0
+    return None
+
+
+def first_occurrence_anchor(
+    gen_ids: Sequence[int],
+    token_id: int,
+    offset: int,
+    n_gp: int,
+) -> int | None:
+    """Readout-space index of the first generated occurrence of ``token_id``
+    that falls inside the cached window; None if it never occurs in-window."""
+    for j_g, tid in enumerate(gen_ids):
+        if tid != token_id:
+            continue
+        r = j_g - offset
+        if 0 <= r < n_gp:
+            return r
+    return None
+
+
+def position_matched_anchor(depth: float, n_gp: int, min_pos: int = 5) -> int | None:
+    """Anchor matching a normalized generation depth (0=first, 1=last token).
+
+    Readout-space index = round(depth * (n_gp - 1)), clamped to
+    [min_pos, n_gp - 1]; None when the window is too short for a window of
+    ``min_pos`` preceding positions.
+    """
+    if n_gp is None or n_gp <= min_pos:
+        return None
+    a = int(round(float(depth) * (n_gp - 1)))
+    return max(min_pos, min(a, n_gp - 1))

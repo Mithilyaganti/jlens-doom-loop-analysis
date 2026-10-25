@@ -1,8 +1,85 @@
 {
   "mid_layer": 21,
-  "workspace_mean_pairwise_sim_trigger": 0.09047089517116547,
-  "workspace_mean_pairwise_sim_controls": 0.08784294749299686,
+  "workspace_mean_pairwise_sim_trigger": 0.09047088772058487,
+  "workspace_mean_pairwise_sim_controls": 0.08784295618534088,
   "workspace_mean_align_trigger": 0.24769611656665802,
   "workspace_mean_align_controls": 0.19420437018076578,
-  "success_criterion_met": true
+  "success_criterion_met": true,
+  "workspace_band_layers": [
+    21
+  ],
+  "workspace_band_stats": {
+    "pairwise_sim": {
+      "trigger": {
+        "n": 30,
+        "mean": 0.09047089122856657,
+        "ci95_lo": 0.0729300978484874,
+        "ci95_hi": 0.10914602625571812
+      },
+      "freq_content": {
+        "n": 30,
+        "mean": 0.061888810417925315,
+        "ci95_lo": 0.05325292705131384,
+        "ci95_hi": 0.07059678496172031
+      },
+      "discourse": {
+        "n": 30,
+        "mean": 0.15700757627685866,
+        "ci95_lo": 0.14458790981521208,
+        "ci95_hi": 0.16948299913977583
+      },
+      "random": {
+        "n": 30,
+        "mean": 0.04463245685522755,
+        "ci95_lo": 0.03636214369985585,
+        "ci95_hi": 0.05231523232456917
+      },
+      "perm_p_trigger_vs_freq_content": 0.009198160367926415,
+      "perm_p_trigger_vs_discourse": 0.0001999600079984003,
+      "perm_p_trigger_vs_random": 0.0001999600079984003
+    },
+    "alignment": {
+      "trigger": {
+        "n": 30,
+        "mean": 0.2476960964500904,
+        "ci95_lo": 0.21070295237625639,
+        "ci95_hi": 0.28760774348552026
+      },
+      "freq_content": {
+        "n": 30,
+        "mean": 0.17548099532723427,
+        "ci95_lo": 0.15372741132974627,
+        "ci95_hi": 0.20151668523748717
+      },
+      "discourse": {
+        "n": 30,
+        "mean": 0.25838261023163794,
+        "ci95_lo": 0.21268706914037466,
+        "ci95_hi": 0.31117850269501407
+      },
+      "random": {
+        "n": 30,
+        "mean": 0.1487494890888532,
+        "ci95_lo": 0.13303265982617934,
+        "ci95_hi": 0.1663355448966225
+      },
+      "perm_p_trigger_vs_freq_content": 0.003199360127974405,
+      "perm_p_trigger_vs_discourse": 0.7380523895220956,
+      "perm_p_trigger_vs_random": 0.0001999600079984003
+    }
+  },
+  "success_p_values": {
+    "pairwise_sim_min_p": 0.0001999600079984003,
+    "alignment_min_p": 0.0001999600079984003
+  },
+  "success_statements": [
+    "Pairwise-sim criterion met: trigger 0.0905 [0.0729, 0.1091] > controls [0.061888810417925315, 0.15700757627685866, 0.04463245685522755] with min permutation p=0.0002 (n=30 trigger-token observations pooled over band layers [21])",
+    "Workspace-alignment criterion met: trigger 0.2477 [0.2107, 0.2876] > controls [0.17548099532723427, 0.25838261023163794, 0.1487494890888532] with min permutation p=0.0002 (n=30 trigger-token observations pooled over band layers [21])"
+  ],
+  "stats_settings": {
+    "bootstrap_n": 2000,
+    "permutation_n": 5000,
+    "unit": "per-token values pooled over workspace-band layers",
+    "analyze_only": true
+  }
 }

@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import logging
+from pathlib import Path
 from typing import Any, Sequence
 
 import numpy as np
@@ -10,13 +12,51 @@ import torch
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Unembedding-row access with caching
+#
+# bitsandbytes 4-bit lm_head weights only expose rows through W.dequantize(),
+# which materializes the ENTIRE [vocab, d] matrix on every call. Per-token
+# loops (interventions, Exp2 alignment) used to pay that cost once per token.
+# We now dequantize once per weight object and cache it, keyed by id(W) with
+# the weight itself kept in the cache entry so the id cannot be reused while
+# the entry is alive. Call clear_unembed_cache() to free the memory.
+# ---------------------------------------------------------------------------
+
+_UNEMBED_DEQUANT_CACHE: dict[int, tuple[Any, torch.Tensor]] = {}
+
+
+def clear_unembed_cache(weight: Any = None) -> None:
+    """Free the cached dequantized unembedding matrix (all, or one weight's)."""
+    if weight is None:
+        _UNEMBED_DEQUANT_CACHE.clear()
+    else:
+        _UNEMBED_DEQUANT_CACHE.pop(id(weight), None)
+
+
+def _cached_dequant(W: Any) -> torch.Tensor:
+    """Dequantize W once per weight object and cache the CPU fp32 result."""
+    key = id(W)
+    hit = _UNEMBED_DEQUANT_CACHE.get(key)
+    if hit is not None and hit[0] is W:
+        return hit[1]
+    full = W.dequantize().float().cpu()
+    _UNEMBED_DEQUANT_CACHE[key] = (W, full)
+    logger.debug("Dequantized unembedding matrix once: %s", tuple(full.shape))
+    return full
+
 
 def get_unembed_row(stack: Any, token_id: int) -> torch.Tensor:
-    """Return unembedding vector for token_id as float32 [d_model] on CPU."""
+    """Return unembedding vector for token_id as float32 [d_model] on CPU.
+
+    4-bit (bnb) weights are dequantized once per weight object and cached
+    module-level (see clear_unembed_cache); plain tensor weights and the
+    lazy SafetensorsUnembedRows provider are indexed per row directly.
+    """
     W = stack.lm_head.weight
-    # 4-bit Linear: weight may be packed; use dequant via forward on one-hot if needed
+    # 4-bit Linear: weight may be packed; dequantize once, cache, index rows
     if hasattr(W, "dequantize"):
-        row = W.dequantize()[token_id].float().cpu()
+        row = _cached_dequant(W)[token_id].float().cpu()
     else:
         try:
             row = W[token_id].float().detach().cpu()
@@ -25,6 +65,183 @@ def get_unembed_row(stack: Any, token_id: int) -> torch.Tensor:
             emb = stack.text_module.embed_tokens.weight
             row = emb[token_id].float().detach().cpu()
     return row
+
+
+def get_unembed_rows(stack: Any, token_ids: Sequence[int]) -> torch.Tensor:
+    """Return [n_tokens, d_model] float32 CPU rows for token_ids (batched)."""
+    ids = [int(t) for t in token_ids]
+    if not ids:
+        raise ValueError("token_ids must be non-empty")
+    W = stack.lm_head.weight
+    idx = torch.tensor(ids, dtype=torch.long)
+    if hasattr(W, "dequantize"):
+        return _cached_dequant(W)[idx].float().cpu()
+    if torch.is_tensor(W):
+        return W[idx].float().detach().cpu()
+    # Lazy row providers (e.g. SafetensorsUnembedRows)
+    return torch.stack([get_unembed_row(stack, t) for t in ids], dim=0)
+
+
+class SafetensorsUnembedRows:
+    """Lazy, row-indexable unembedding matrix backed by local safetensors shards.
+
+    Lets CPU-only analysis (ANALYZE_ONLY passes) read individual W_U rows
+    without loading the quantized model or any GPU. Rows are fetched through
+    ``get_slice`` so the full [vocab, d] tensor is never materialized; each
+    fetched row is memoized. Use :meth:`from_row_cache` for a purely
+    dict-backed instance (no shards) built from a saved row cache.
+    """
+
+    def __init__(self, shard_paths: Sequence[Path | str], tensor_name: str):
+        self._shard_paths = [Path(p) for p in shard_paths]
+        self.tensor_name = tensor_name
+        self._rows: dict[int, torch.Tensor] = {}
+        self._active_shard: Path | None = None
+        self._shape: tuple[int, ...] | None = None
+
+    @classmethod
+    def from_row_cache(cls, rows: dict[int, torch.Tensor]) -> "SafetensorsUnembedRows":
+        """Dict-backed provider over previously fetched rows (no shard reads)."""
+        obj = cls([], tensor_name="<row-cache>")
+        for tid, row in rows.items():
+            obj._rows[int(tid)] = row.float().cpu()
+        if obj._rows:
+            obj._shape = (max(obj._rows) + 1, next(iter(obj._rows.values())).shape[0])
+        return obj
+
+    def _resolve_shard(self) -> Path:
+        if self._active_shard is not None:
+            return self._active_shard
+        from safetensors import safe_open
+
+        last_err: Exception | None = None
+        for p in self._shard_paths:
+            try:
+                with safe_open(str(p), framework="pt", device="cpu") as f:
+                    if self.tensor_name in set(f.keys()):
+                        self._active_shard = p
+                        return p
+            except Exception as e:  # pragma: no cover - environment dependent
+                last_err = e
+        raise FileNotFoundError(
+            f"Tensor {self.tensor_name!r} not found in {self._shard_paths} ({last_err})"
+        )
+
+    def _load_row(self, tid: int) -> torch.Tensor:
+        from safetensors import safe_open
+
+        shard = self._resolve_shard()
+        with safe_open(str(shard), framework="pt", device="cpu") as f:
+            sl = f.get_slice(self.tensor_name)
+            if self._shape is None:
+                self._shape = tuple(sl.get_shape())
+            return sl[tid].to(torch.float32).cpu()
+
+    def __getitem__(self, token_id: int | torch.Tensor) -> torch.Tensor:
+        tid = int(token_id)
+        row = self._rows.get(tid)
+        if row is None:
+            row = self._load_row(tid)
+            self._rows[tid] = row
+        return row
+
+    def prefetch(self, token_ids: Sequence[int]) -> None:
+        for t in token_ids:
+            self.__getitem__(t)
+
+    def export_rows(self) -> dict[int, torch.Tensor]:
+        """Fetched rows as {token_id: fp16 [d] tensor} for torch.save caching."""
+        return {tid: row.half() for tid, row in self._rows.items()}
+
+    @property
+    def n_rows_cached(self) -> int:
+        return len(self._rows)
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        if self._shape is None:
+            self._load_row(0)  # populates shape lazily
+        return self._shape  # type: ignore[return-value]
+
+    def detach(self) -> "SafetensorsUnembedRows":
+        return self
+
+    def cpu(self) -> "SafetensorsUnembedRows":
+        return self
+
+
+def _hf_cache_snapshots(model_id: str, cache_dir: str | None = None) -> list[Path]:
+    """All locally cached snapshot revisions for a model (any of them may hold
+    the weights when refs/main has moved to a newer, partially-downloaded rev)."""
+    from huggingface_hub import constants
+
+    base = Path(cache_dir) if cache_dir else Path(constants.HF_HUB_CACHE)
+    repo_dir = base / ("models--" + model_id.replace("/", "--"))
+    if not repo_dir.is_dir():
+        return []
+    return sorted((repo_dir / "snapshots").glob("*"))
+
+
+def hf_safetensors_unembed(
+    model_id: str, cache_dir: str | None = None
+) -> SafetensorsUnembedRows | None:
+    """Open W_U rows from locally cached HF safetensors (no download, no model load).
+
+    Prefers a real ``lm_head.weight`` tensor; falls back to the (tied)
+    ``model.embed_tokens.weight``. Looks in every cached snapshot revision, so
+    a refs/main bump to a newer partial revision cannot hide the weights.
+    Returns None when nothing local resolves.
+    """
+    from huggingface_hub import hf_hub_download
+
+    found: dict[str, list[Path]] = {
+        "model.safetensors.index.json": [],
+        "model.safetensors": [],
+    }
+    # Preferred: hub-resolved paths (respect refs/main).
+    for fname in list(found):
+        try:
+            p = hf_hub_download(
+                model_id, filename=fname, cache_dir=cache_dir, local_files_only=True
+            )
+            if p:
+                found[fname].append(Path(p))
+        except Exception:
+            pass
+    # Fallback: any cached snapshot revision.
+    for snap in _hf_cache_snapshots(model_id, cache_dir):
+        for fname in list(found):
+            p = snap / fname
+            if p.is_file() and p not in found[fname]:
+                found[fname].append(p)
+
+    candidates: list[tuple[Path, str]] = []
+    for name in ("lm_head.weight", "model.embed_tokens.weight"):
+        for index in found["model.safetensors.index.json"]:
+            try:
+                wmap = json.loads(index.read_text(encoding="utf-8")).get(
+                    "weight_map", {}
+                )
+            except Exception:
+                continue
+            shard = wmap.get(name)
+            if not shard:
+                continue
+            p = index.parent / shard
+            if p.is_file():
+                candidates.append((p, name))
+        for single in found["model.safetensors"]:
+            candidates.append((single, name))
+
+    for shard, name in candidates:
+        provider = SafetensorsUnembedRows([shard], name)
+        try:
+            provider._resolve_shard()
+            logger.info("Lazy unembedding rows from %s :: %s", shard.name, name)
+            return provider
+        except FileNotFoundError:
+            continue
+    return None
 
 
 def jlens_direction(
@@ -62,7 +279,7 @@ def jlens_direction_batch(
 ) -> torch.Tensor:
     """Return [n_tokens, d_model] directions at one layer."""
     J = stack.lens.jacobians[layer_idx].float()
-    rows = torch.stack([get_unembed_row(stack, tid) for tid in token_ids], dim=0)
+    rows = get_unembed_rows(stack, token_ids)
     dirs = rows @ J.T
     if normalize:
         norms = dirs.norm(dim=-1, keepdim=True).clamp_min(1e-12)
@@ -97,6 +314,51 @@ def pairwise_cosine_matrix(dirs: torch.Tensor) -> torch.Tensor:
     norms = dirs.norm(dim=-1, keepdim=True).clamp_min(1e-12)
     u = dirs / norms
     return u @ u.T
+
+
+def per_token_mean_cosine(dirs: torch.Tensor) -> torch.Tensor:
+    """Per-token mean cosine to the OTHER rows of ``dirs`` [n, d].
+
+    The mean of the returned vector equals the scalar ``pairwise_cosine(dirs)``
+    (each unordered pair contributes cos(i,j) once to token i and once to j),
+    so these values are the per-token observations for bootstrap/permutation
+    statistics over tokens.
+    """
+    n = dirs.shape[0]
+    if n < 2:
+        return torch.zeros(n, dtype=dirs.dtype)
+    sim = pairwise_cosine_matrix(dirs)
+    sim = sim.clone()
+    sim.fill_diagonal_(0.0)
+    return sim.sum(dim=1) / (n - 1)
+
+
+def per_token_alignment(dirs: torch.Tensor, basis: torch.Tensor) -> torch.Tensor:
+    """Per-token fraction of direction variance inside a [k, d] orthonormal basis.
+
+    The mean of the returned vector matches ``workspace_alignment`` called with
+    the same basis, so these are the per-token observations for token-level
+    bootstrap/permutation statistics.
+    """
+    basis = basis.float()
+    proj = dirs.float() @ basis.T  # [n, k]
+    var_in = (proj ** 2).sum(dim=-1)
+    var_tot = (dirs.float() ** 2).sum(dim=-1).clamp_min(1e-12)
+    return var_in / var_tot
+
+
+def top_principal_basis(stack: Any, layer_idx: int) -> torch.Tensor:
+    """Right singular vectors Vh of J_ℓ as [d, d] (rows sorted by singular value).
+
+    The SVD of J does not depend on any token set — compute once per layer and
+    reuse across token sets (see workspace_alignment(basis=...)).
+    """
+    J = stack.lens.jacobians[layer_idx].float()
+    try:
+        _U, _S, Vh = torch.linalg.svd(J, full_matrices=False)
+    except Exception:
+        _U, _S, Vh = torch.linalg.svd(J.cpu(), full_matrices=False)
+    return Vh.cpu()
 
 
 @torch.no_grad()
@@ -424,18 +686,16 @@ def workspace_alignment(
     stack: Any,
     layer_idx: int,
     k: int = 64,
+    *,
+    basis: torch.Tensor | None = None,
 ) -> float:
-    """Fraction of direction variance in top-k principal components of J_ℓ."""
-    J = stack.lens.jacobians[layer_idx].float()
-    # PCA of rows of J (or right singular vectors)
-    try:
-        U, S, Vh = torch.linalg.svd(J, full_matrices=False)
-    except Exception:
-        U, S, Vh = torch.linalg.svd(J.cpu(), full_matrices=False)
-    # Top-k right singular vectors span principal residual directions mapped strongly
-    basis = Vh[:k]  # [k, d]
-    # Project each direction
-    proj = dirs @ basis.T  # [n, k]
-    var_in = (proj ** 2).sum(dim=-1)
-    var_tot = (dirs ** 2).sum(dim=-1).clamp_min(1e-12)
-    return float((var_in / var_tot).mean().item())
+    """Fraction of direction variance in top-k principal components of J_ℓ.
+
+    ``basis``: precomputed right singular vectors of J_ℓ (see
+    top_principal_basis) so the SVD runs once per layer instead of once per
+    token set. When omitted, the SVD is computed here (backward compatible).
+    """
+    if basis is None:
+        basis = top_principal_basis(stack, layer_idx)
+    basis = basis[:k]  # [k, d]
+    return float(per_token_alignment(dirs, basis).mean().item())

@@ -5,7 +5,9 @@
   "n_loop": 5,
   "n_non": 195,
   "loop_rate": 0.025,
-  "workspace_layers": [21],
+  "workspace_layers": [
+    21
+  ],
   "mean_loop_align": 0.17168146148324012,
   "mean_non_align": 0.13036531308749452,
   "align_delta_loop_minus_non": 0.0413161483957456,
@@ -28,7 +30,313 @@
   "changes_from_first_analyze_pass": {
     "bug": "Cache window kept generation tail; 4/5 loop triggers fell outside readouts",
     "fix": "Trigger-centered window + persist trigger_local_in_readouts; recache 5 loops; re-analyze",
-    "align_before": {"loop": 0.0794, "non": 0.1304},
-    "align_after": {"loop": 0.1717, "non": 0.1304}
-  }
+    "align_before": {
+      "loop": 0.0794,
+      "non": 0.1304
+    },
+    "align_after": {
+      "loop": 0.1717,
+      "non": 0.1304
+    }
+  },
+  "headline_stats": {
+    "occupancy_at_m2": {
+      "loop": {
+        "n": 5,
+        "mean": 0.24915719363510566,
+        "ci95_lo": 0.0068137392850288,
+        "ci95_hi": 0.6259307089822611
+      },
+      "same_token_anchor": {
+        "n": 196,
+        "mean": 0.5676391642489481,
+        "ci95_lo": 0.5252289461615826,
+        "ci95_hi": 0.6093065058901055
+      },
+      "position_matched_anchor": {
+        "n": 890,
+        "mean": 0.5415727860091171,
+        "ci95_lo": 0.5195549442498805,
+        "ci95_hi": 0.5621873922705474
+      },
+      "legacy_mid_anchor_nonloop": {
+        "n": 195,
+        "mean": 0.5768226916319797,
+        "ci95_lo": 0.5300419798952356,
+        "ci95_hi": 0.6228011173171472
+      },
+      "perm_p_loop_vs_same_token": 0.015298470152984701,
+      "perm_p_loop_vs_position_matched": 0.03799620037996201,
+      "perm_p_loop_vs_legacy_mid": 0.0225977402259774
+    },
+    "top1_trigger_at_m1": {
+      "loop": {
+        "n": 5,
+        "mean": 0.6,
+        "ci95_lo": 0.2,
+        "ci95_hi": 1.0,
+        "wilson95_lo": 0.2307242812760128,
+        "wilson95_hi": 0.882379225767352
+      },
+      "same_token_anchor": {
+        "n": 196,
+        "mean": 0.5204081632653061,
+        "ci95_lo": 0.45408163265306123,
+        "ci95_hi": 0.5918367346938775,
+        "wilson95_lo": 0.4507498517703269,
+        "wilson95_hi": 0.5892818816207807
+      },
+      "position_matched_anchor": {
+        "n": 890,
+        "mean": 0.22808988764044943,
+        "ci95_lo": 0.20112359550561798,
+        "ci95_hi": 0.25620786516853916,
+        "wilson95_lo": 0.2017259672198779,
+        "wilson95_hi": 0.2567909820402581
+      },
+      "legacy_mid_anchor_nonloop": {
+        "n": 195,
+        "mean": 0.041025641025641026,
+        "ci95_lo": 0.015384615384615385,
+        "ci95_hi": 0.07179487179487179,
+        "wilson95_lo": 0.020932505662650078,
+        "wilson95_hi": 0.07885281545886824
+      },
+      "perm_p_loop_vs_same_token": 1.0,
+      "perm_p_loop_vs_position_matched": 0.08759124087591241,
+      "perm_p_loop_vs_legacy_mid": 0.0012998700129987
+    },
+    "align_trigger_dir_at_m1": {
+      "loop": {
+        "n": 5,
+        "mean": 0.17168146148324012,
+        "ci95_lo": 0.07548926696181298,
+        "ci95_hi": 0.2515294121950863
+      },
+      "same_token_anchor": {
+        "n": 196,
+        "mean": 0.17552853706387841,
+        "ci95_lo": 0.1675079400446836,
+        "ci95_hi": 0.184162856264477
+      },
+      "position_matched_anchor": {
+        "n": 890,
+        "mean": 0.13120563980610517,
+        "ci95_lo": 0.12707170616592062,
+        "ci95_hi": 0.13527087485128647
+      },
+      "legacy_mid_anchor_nonloop": {
+        "n": 195,
+        "mean": 0.13036531308749452,
+        "ci95_lo": 0.12025270506132167,
+        "ci95_hi": 0.14000660841327867
+      },
+      "perm_p_loop_vs_same_token": 0.8986101389861014,
+      "perm_p_loop_vs_position_matched": 0.16368363163683633,
+      "perm_p_loop_vs_legacy_mid": 0.2141785821417858
+    }
+  },
+  "matched_control_analysis": {
+    "description": "Matched-control comparisons for the three headline pre-onset metrics. same_token_anchor: non-looping traces anchored at the first emitted occurrence of each looping trace's trigger token (window [a-5..a]). position_matched_anchor: non-looping traces anchored at the looping traces' mean-normalized trigger depth. legacy_mid_anchor_nonloop: the original arbitrary mid-sequence anchor (kept for continuity).",
+    "loop_triggers": [
+      {
+        "prompt_id": 133187,
+        "trigger_token_id": 523,
+        "trigger_decoded": ".",
+        "anchor_in_readouts": 947,
+        "normalized_depth": 0.23680920230057514
+      },
+      {
+        "prompt_id": 157993,
+        "trigger_token_id": 1196,
+        "trigger_decoded": " {",
+        "anchor_in_readouts": 1519,
+        "normalized_depth": 0.6391597899474869
+      },
+      {
+        "prompt_id": 207228,
+        "trigger_token_id": 2439,
+        "trigger_decoded": " But",
+        "anchor_in_readouts": 1519,
+        "normalized_depth": 0.3920980245061265
+      },
+      {
+        "prompt_id": 346805,
+        "trigger_token_id": 1203,
+        "trigger_decoded": " but",
+        "anchor_in_readouts": 1519,
+        "normalized_depth": 0.6116529132283071
+      },
+      {
+        "prompt_id": 422988,
+        "trigger_token_id": 10631,
+        "trigger_decoded": "option",
+        "anchor_in_readouts": 1519,
+        "normalized_depth": 0.6454113528382096
+      }
+    ],
+    "n_loop": 5,
+    "n_nonloop": 195,
+    "n_nonloop_with_valid_gen_mapping": 178,
+    "min_anchor_pos": 5,
+    "metrics": {
+      "occupancy_at_m2": {
+        "loop": {
+          "n": 5,
+          "mean": 0.24915719363510566,
+          "ci95_lo": 0.0068137392850288,
+          "ci95_hi": 0.6259307089822611
+        },
+        "same_token_anchor": {
+          "n": 196,
+          "mean": 0.5676391642489481,
+          "ci95_lo": 0.5252289461615826,
+          "ci95_hi": 0.6093065058901055
+        },
+        "position_matched_anchor": {
+          "n": 890,
+          "mean": 0.5415727860091171,
+          "ci95_lo": 0.5195549442498805,
+          "ci95_hi": 0.5621873922705474
+        },
+        "legacy_mid_anchor_nonloop": {
+          "n": 195,
+          "mean": 0.5768226916319797,
+          "ci95_lo": 0.5300419798952356,
+          "ci95_hi": 0.6228011173171472
+        },
+        "perm_p_loop_vs_same_token": 0.015298470152984701,
+        "perm_p_loop_vs_position_matched": 0.03799620037996201,
+        "perm_p_loop_vs_legacy_mid": 0.0225977402259774
+      },
+      "top1_trigger_at_m1": {
+        "loop": {
+          "n": 5,
+          "mean": 0.6,
+          "ci95_lo": 0.2,
+          "ci95_hi": 1.0,
+          "wilson95_lo": 0.2307242812760128,
+          "wilson95_hi": 0.882379225767352
+        },
+        "same_token_anchor": {
+          "n": 196,
+          "mean": 0.5204081632653061,
+          "ci95_lo": 0.45408163265306123,
+          "ci95_hi": 0.5918367346938775,
+          "wilson95_lo": 0.4507498517703269,
+          "wilson95_hi": 0.5892818816207807
+        },
+        "position_matched_anchor": {
+          "n": 890,
+          "mean": 0.22808988764044943,
+          "ci95_lo": 0.20112359550561798,
+          "ci95_hi": 0.25620786516853916,
+          "wilson95_lo": 0.2017259672198779,
+          "wilson95_hi": 0.2567909820402581
+        },
+        "legacy_mid_anchor_nonloop": {
+          "n": 195,
+          "mean": 0.041025641025641026,
+          "ci95_lo": 0.015384615384615385,
+          "ci95_hi": 0.07179487179487179,
+          "wilson95_lo": 0.020932505662650078,
+          "wilson95_hi": 0.07885281545886824
+        },
+        "perm_p_loop_vs_same_token": 1.0,
+        "perm_p_loop_vs_position_matched": 0.08759124087591241,
+        "perm_p_loop_vs_legacy_mid": 0.0012998700129987
+      },
+      "align_trigger_dir_at_m1": {
+        "loop": {
+          "n": 5,
+          "mean": 0.17168146148324012,
+          "ci95_lo": 0.07548926696181298,
+          "ci95_hi": 0.2515294121950863
+        },
+        "same_token_anchor": {
+          "n": 196,
+          "mean": 0.17552853706387841,
+          "ci95_lo": 0.1675079400446836,
+          "ci95_hi": 0.184162856264477
+        },
+        "position_matched_anchor": {
+          "n": 890,
+          "mean": 0.13120563980610517,
+          "ci95_lo": 0.12707170616592062,
+          "ci95_hi": 0.13527087485128647
+        },
+        "legacy_mid_anchor_nonloop": {
+          "n": 195,
+          "mean": 0.13036531308749452,
+          "ci95_lo": 0.12025270506132167,
+          "ci95_hi": 0.14000660841327867
+        },
+        "perm_p_loop_vs_same_token": 0.8986101389861014,
+        "perm_p_loop_vs_position_matched": 0.16368363163683633,
+        "perm_p_loop_vs_legacy_mid": 0.2141785821417858
+      }
+    },
+    "per_trigger": {
+      "133187|tid=523": {
+        "prompt_id": 133187,
+        "trigger_token_id": 523,
+        "trigger_decoded": ".",
+        "anchor": 947,
+        "normalized_depth": 0.23680920230057514,
+        "same_token_anchor_n": 171,
+        "same_token_traces_with_token": 171,
+        "position_matched_n": 178
+      },
+      "157993|tid=1196": {
+        "prompt_id": 157993,
+        "trigger_token_id": 1196,
+        "trigger_decoded": " {",
+        "anchor": 1519,
+        "normalized_depth": 0.6391597899474869,
+        "same_token_anchor_n": 3,
+        "same_token_traces_with_token": 3,
+        "position_matched_n": 178
+      },
+      "207228|tid=2439": {
+        "prompt_id": 207228,
+        "trigger_token_id": 2439,
+        "trigger_decoded": " But",
+        "anchor": 1519,
+        "normalized_depth": 0.3920980245061265,
+        "same_token_anchor_n": 3,
+        "same_token_traces_with_token": 3,
+        "position_matched_n": 178
+      },
+      "346805|tid=1203": {
+        "prompt_id": 346805,
+        "trigger_token_id": 1203,
+        "trigger_decoded": " but",
+        "anchor": 1519,
+        "normalized_depth": 0.6116529132283071,
+        "same_token_anchor_n": 19,
+        "same_token_traces_with_token": 19,
+        "position_matched_n": 178
+      },
+      "422988|tid=10631": {
+        "prompt_id": 422988,
+        "trigger_token_id": 10631,
+        "trigger_decoded": "option",
+        "anchor": 1519,
+        "normalized_depth": 0.6454113528382096,
+        "same_token_anchor_n": 0,
+        "same_token_traces_with_token": 0,
+        "position_matched_n": 178
+      }
+    },
+    "notes": [
+      "Loop set is small (n=5 for LFM2) — permutation p-values are resolution-limited; treat as descriptive until more loops are collected.",
+      "same-token/position-matched anchors require a valid generated-token <-> readout-position mapping; traces with ambiguous legacy caches are skipped (n_valid=178 of 195).",
+      "Trigger directions use exact bf16 W_U rows read lazily from local safetensors (ANALYZE_ONLY does not load the quantized model; the generation-time analysis dequantized NF4 weights, so legacy alignment numbers may drift in the 3rd decimal)."
+    ],
+    "stats_settings": {
+      "bootstrap_n": 2000,
+      "permutation_n": 10000
+    }
+  },
+  "analyze_without_model": true
 }

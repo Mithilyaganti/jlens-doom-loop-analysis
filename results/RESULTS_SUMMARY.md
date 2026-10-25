@@ -262,3 +262,371 @@ Cohen's h (baseline vs trigger ablate): 0.0
 }
 
 Both positive and negative results are publishable per PROJECT_SPEC §11.6.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 200, loops: 5, non-loops: 195, rate: 2.5%
+- Workspace layers cached (Tier-2): [21]
+- Mean trigger alignment (−1): loop=0.17168146148324012, non=0.13036531308749452
+
+**Matched-control headline metrics** (bootstrap 95% CIs + permutation p-values in
+`findings.json` → `matched_control_analysis`):
+- occupancy_at_m2: loop 0.249 [n=5] vs same-token 0.568 [n=196] (p=0.0153), pos-matched 0.542 [n=890] (p=0.038), legacy 0.577 [n=195] (p=0.0226)
+- top1_trigger_at_m1: loop 0.600 [n=5] vs same-token 0.520 [n=196] (p=1), pos-matched 0.228 [n=890] (p=0.08759), legacy 0.041 [n=195] (p=0.0013)
+- align_trigger_dir_at_m1: loop 0.172 [n=5] vs same-token 0.176 [n=196] (p=0.8986), pos-matched 0.131 [n=890] (p=0.1637), legacy 0.130 [n=195] (p=0.2142)
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `matched_controls_headline.png`,
+`example_looping_trace.html`.
+
+## Experiment 1 — Static Geometry
+
+# Experiment 1 — Static Geometry
+
+Compared trigger tokens vs frequency-matched content, discourse controls, and random tokens
+across all layers.
+
+**Workspace-band means (L21–L21):**
+- Pairwise sim: trigger=0.0905 vs controls=0.0878 (min perm p=0.0002)
+- Workspace align: trigger=0.2477 vs controls=0.1942 (min perm p=0.0002)
+- Success criterion (higher clustering and/or alignment): **True**
+
+**Significance statements**
+- Pairwise-sim criterion met: trigger 0.0905 [0.0729, 0.1091] > controls [0.061888810417925315, 0.15700757627685866, 0.04463245685522755] with min permutation p=0.0002 (n=30 trigger-token observations pooled over band layers [21])
+- Workspace-alignment criterion met: trigger 0.2477 [0.2107, 0.2876] > controls [0.17548099532723427, 0.25838261023163794, 0.1487494890888532] with min permutation p=0.0002 (n=30 trigger-token observations pooled over band layers [21])
+
+Bootstrap 95% CIs over tokens and trigger-vs-control permutation tests per layer are in
+`geometry_by_layer.csv` (`*_ci_lo/hi`, `perm_p_*` columns); pooled band statistics under
+`workspace_band_stats` in `findings.json`.
+
+Plots in `results/exp1/`. Mid-layer PCA at L21.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 200, loops: 5, non-loops: 195, rate: 2.5%
+- Workspace layers cached (Tier-2): [21]
+- Mean trigger alignment (−1): loop=0.17168146148324012, non=0.13036531308749452
+
+**Matched-control headline metrics** (bootstrap 95% CIs + permutation p-values in
+`findings.json` → `matched_control_analysis`):
+- occupancy_at_m2: loop 0.249 [n=5] vs same-token 0.568 [n=196] (p=0.0153), pos-matched 0.542 [n=890] (p=0.038), legacy 0.577 [n=195] (p=0.0226)
+- top1_trigger_at_m1: loop 0.600 [n=5] vs same-token 0.520 [n=196] (p=1), pos-matched 0.228 [n=890] (p=0.08759), legacy 0.041 [n=195] (p=0.0013)
+- align_trigger_dir_at_m1: loop 0.172 [n=5] vs same-token 0.176 [n=196] (p=0.8986), pos-matched 0.131 [n=890] (p=0.1637), legacy 0.130 [n=195] (p=0.2142)
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `matched_controls_headline.png`,
+`example_looping_trace.html`.
+
+## Experiment 2 — Dynamic Monitoring
+
+# Experiment 2 — Dynamic Monitoring
+
+- Prompts: 200, loops: 5, non-loops: 195, rate: 2.5%
+- Workspace layers cached (Tier-2): [21]
+- Mean trigger alignment (−1): loop=0.17168146148324012, non=0.13036531308749452
+
+**Matched-control headline metrics** (bootstrap 95% CIs + permutation p-values in
+`findings.json` → `matched_control_analysis`):
+- occupancy_at_m2: loop 0.249 [n=5] vs same-token 0.568 [n=196] (p=0.0153), pos-matched 0.542 [n=890] (p=0.038), legacy 0.577 [n=195] (p=0.0226)
+- top1_trigger_at_m1: loop 0.600 [n=5] vs same-token 0.520 [n=196] (p=1), pos-matched 0.228 [n=890] (p=0.08759), legacy 0.041 [n=195] (p=0.0013)
+- align_trigger_dir_at_m1: loop 0.172 [n=5] vs same-token 0.176 [n=196] (p=0.8986), pos-matched 0.131 [n=890] (p=0.1637), legacy 0.130 [n=195] (p=0.2142)
+
+Plots: `workspace_occupancy_pre_onset.png`, `top1_readout_convergence.png`,
+`trigger_alignment_pre_onset.png`, `matched_controls_headline.png`,
+`example_looping_trace.html`.
+
+## Experiment 3 — Causal Interventions (fixed protocol v2)
+
+# Experiment 3 — Causal Interventions (fixed protocol v2)
+
+No looping prompts in baseline pass; Exp3 skipped.
+
+## Experiment 3 — Causal Interventions (fixed protocol v2)
+
+# Experiment 3 — Causal Interventions (fixed protocol v2)
+
+## Design
+Two-pass, per-trace onset-timed interventions. 1 looping prompts;
+0 re-looped in pass 1, 1 stable_nonloop.
+Onset sources: {"global_fallback": 1}
+
+## Loop rates (with Wilson 95% CI)
+{
+  "baseline_rerun": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "ablate_trigger_ws": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "ablate_random": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "ablate_control_token": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "ablate_trigger_sensory": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "ablate_trigger_motor": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ],
+  "logit_suppress_trigger": [
+    0.0,
+    [
+      0.0,
+      0.7935
+    ]
+  ]
+}
+
+## Contrasts vs baseline_rerun (exact McNemar)
+{
+  "ablate_trigger_ws": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  },
+  "ablate_random": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  },
+  "ablate_control_token": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  },
+  "ablate_trigger_sensory": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  },
+  "ablate_trigger_motor": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  },
+  "logit_suppress_trigger": {
+    "n_pairs": 1,
+    "b_baseline_only": 0,
+    "c_condition_only": 0,
+    "p_exact": NaN,
+    "odds_ratio_b_over_c": NaN,
+    "rate_baseline": 0.0,
+    "rate_condition": 0.0,
+    "wilson_ci_baseline": [
+      0.0,
+      0.7934506856227626
+    ],
+    "wilson_ci_condition": [
+      0.0,
+      0.7934506856227626
+    ],
+    "cohens_h": 0.0
+  }
+}
+
+## Mean generation lengths (bootstrap 95% CI)
+{
+  "baseline_rerun": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "ablate_trigger_ws": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "ablate_random": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "ablate_control_token": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "ablate_trigger_sensory": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "ablate_trigger_motor": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ],
+  "logit_suppress_trigger": [
+    256.0,
+    [
+      256.0,
+      256.0
+    ]
+  ]
+}
+
+## Timing sweep (subset n=0)
+{
+  "ablate_trigger_ws@-3": null,
+  "ablate_trigger_ws@-1": null
+}
+
+## Dose-response (subset n=0)
+{
+  "dose_top-1": null,
+  "dose_top-3": null,
+  "dose_top-5": null
+}
+
+## GSM8K surgical eval
+{
+  "n_problems": 2,
+  "start_pos": 50,
+  "trigger_token_id": 4703,
+  "max_new_tokens": 512,
+  "source": "HF openai/gsm8k test split, seed=42, data/gsm8k_eval.json",
+  "accuracy": {
+    "baseline_rerun": 0.5,
+    "ablate_trigger_ws": 0.5,
+    "logit_suppress_trigger": 0.5
+  },
+  "wilson_ci": {
+    "baseline_rerun": [
+      0.09453120573423074,
+      0.9054687942657693
+    ],
+    "ablate_trigger_ws": [
+      0.09453120573423074,
+      0.9054687942657693
+    ],
+    "logit_suppress_trigger": [
+      0.09453120573423074,
+      0.9054687942657693
+    ]
+  },
+  "mean_gen_length": {
+    "baseline_rerun": 282.0,
+    "ablate_trigger_ws": 282.0,
+    "logit_suppress_trigger": 282.0
+  }
+}
+
+## Power note
+{
+  "target_power": 0.8,
+  "smallest_effect": "halve the baseline loop rate",
+  "note": "baseline loop rate is 0 (or no pairs) \u2014 power note undefined"
+}
+
+## Interpretation
+- Result type: **negative**
+- Primary contrast (onset-timed per-trace trigger ablation, all workspace layers): loop rate 0.000 vs baseline_rerun 0.000 (random 0.000, control-token 0.000, sensory 0.000, logit-suppression positive control 0.000). Result type: negative. Both positive and negative results are publishable per PROJECT_SPEC §11.6.
+
+Both positive and negative results are publishable per PROJECT_SPEC §11.6.
