@@ -102,6 +102,30 @@ vendor/            # open-jlens-data, antidoom
 lenses/            # pre-fitted .pt
 ```
 
+## LeanScope (paper 2 data)
+
+Hidden-lean items for a follow-up study on Qwen3.5-4B. The package is `leanscope/`. Letters are canonical: `A` is `option_a` and `B` is `option_b` under both presentation orders. `order=BA` only prints option B first.
+
+| Module | Role |
+| --- | --- |
+| `leanscope/schema.py` | `Scenario`, `LeanCondition`, `Record`, JSONL read/write |
+| `leanscope/scenarios.py` | Three families, five paraphrases, both orders, DeepSeek V4.1 Flash drafter plus an offline fake |
+| `leanscope/conditions.py` | No prompt, assigned lean at four strengths, structure-matched neutral, trait, conceal |
+| `leanscope/splits.py` | Hash-locked train/dev/test by `scenario_id`, same write-once rule as `jspace/eval_sets.py` |
+| `leanscope/labels.py` | Greedy recommendation, natural-lean majority and agreement, voiced/silent judge, hand-label check |
+| `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL |
+| `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading` |
+
+The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (12 scenarios, 4 per family). The frozen split file is `data/leanscope/split_lock.json`. Assigned leans are a seeded coin flip on `scenario_id` (seed 42).
+
+CPU tests, no model download and no API call:
+
+```bash
+python -m pytest tests/test_leanscope_data.py -q
+```
+
+GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 1680 greedy generations. Budget about 4 to 6 L4-hours with activations, and several more if you add `--natural-samples 20`.
+
 ## Caching (memory safety)
 
 Experiment 2 uses a **tiered cache** (PROJECT_SPEC §2.1):

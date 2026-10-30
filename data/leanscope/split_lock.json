@@ -1,0 +1,25 @@
+{
+  "mechanism": "sha256-rank-cut",
+  "salt": "leanscope-split-v1",
+  "ratios": {
+    "train": 0.6,
+    "dev": 0.2,
+    "test": 0.2
+  },
+  "grouped_by": "scenario_id",
+  "note": "Fixed before any model output. Grouped by scenario_id, never by paraphrase or option order. Do not regenerate this file to chase a result. Same write-once discipline as jspace.eval_sets.sample_gsm8k_eval: this file is the source of truth. New scenario ids are appended with a per-id hash bucket and do not move ids already listed here.",
+  "assignments": {
+    "advice-city-year": "test",
+    "advice-course-requirement": "train",
+    "advice-loan-versus-cash": "train",
+    "advice-role-choice": "test",
+    "analysis-assessed-population": "train",
+    "analysis-comparison-method": "test",
+    "analysis-outcome-measure": "train",
+    "analysis-weighting": "train",
+    "product-handset-matched": "dev",
+    "product-laptop-matched": "train",
+    "product-plan-matched": "dev",
+    "product-storage-matched": "train"
+  }
+}
