@@ -151,6 +151,12 @@ class VLLMGenerator:
             trust_remote_code=trust_remote_code,
             enable_prefix_caching=True,
         )
+        # T4 KV cache cannot hold a 200-way 4000-token batch. Cap concurrent
+        # sequences when the caller sets JLENS_VLLM_MAX_NUM_SEQS (the A1
+        # notebook sets this to the same chunk size as JLENS_BASELINE_BATCH_SIZE).
+        max_num_seqs = os.environ.get("JLENS_VLLM_MAX_NUM_SEQS", "").strip()
+        if max_num_seqs:
+            kwargs["max_num_seqs"] = int(max_num_seqs)
         try:
             self.llm = self._try_llm(LLM, kwargs)
         except Exception as e:
@@ -174,15 +180,27 @@ class VLLMGenerator:
 
     @staticmethod
     def _try_llm(llm_cls: Any, kwargs: dict[str, Any]) -> Any:
-        """Init LLM; drop enable_prefix_caching on vLLM versions without it."""
-        try:
-            return llm_cls(**kwargs)
-        except TypeError as e:
-            if "enable_prefix_caching" not in str(e):
+        """Init LLM; drop kwargs this vLLM build does not accept.
+
+        ``enable_prefix_caching`` is retried as False (older vLLM). ``max_num_seqs``
+        is dropped entirely when the constructor rejects it.
+        """
+        while True:
+            try:
+                return llm_cls(**kwargs)
+            except TypeError as e:
+                msg = str(e)
+                if "enable_prefix_caching" in msg and kwargs.get("enable_prefix_caching") is not False:
+                    logger.warning(
+                        "vLLM rejects enable_prefix_caching (%s); retrying without it", e
+                    )
+                    kwargs["enable_prefix_caching"] = False
+                    continue
+                if "max_num_seqs" in msg and "max_num_seqs" in kwargs:
+                    logger.warning("vLLM rejects max_num_seqs (%s); retrying without it", e)
+                    kwargs.pop("max_num_seqs", None)
+                    continue
                 raise
-            logger.warning("vLLM rejects enable_prefix_caching (%s); retrying without it", e)
-            kwargs["enable_prefix_caching"] = False
-            return llm_cls(**kwargs)
 
     def _llm_generate(self, prompts: list[str], sampling_params: Any) -> list[Any]:
         if self.llm is None:

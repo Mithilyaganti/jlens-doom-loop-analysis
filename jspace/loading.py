@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import gc
 import logging
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -76,6 +77,16 @@ def clear_cuda() -> None:
         torch.cuda.synchronize()
 
 
+def hf_attn_implementation() -> str | None:
+    """Optional HF attention backend from JLENS_HF_ATTN (e.g. ``sdpa`` on T4).
+
+    Empty means leave the transformers default alone, so laptop NF4 runs are
+    unchanged unless the caller sets the variable.
+    """
+    raw = os.environ.get("JLENS_HF_ATTN", "").strip()
+    return raw or None
+
+
 def get_bnb_config() -> Any:
     from transformers import BitsAndBytesConfig
 
@@ -109,6 +120,10 @@ def load_model_and_tokenizer(
         "trust_remote_code": trust_remote_code,
         "torch_dtype": torch.bfloat16,
     }
+    attn = hf_attn_implementation()
+    if attn:
+        kwargs["attn_implementation"] = attn
+        logger.info("HF attn_implementation=%s", attn)
     if quantize:
         kwargs["quantization_config"] = get_bnb_config()
 

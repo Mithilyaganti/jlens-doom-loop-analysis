@@ -5,13 +5,23 @@ Feeds trigger-token extraction. Saves audit file results/prompt_sample_ids.json
 and per-trace caches under results/exp2_{slug}/.
 
 Batched baseline (JLENS_BASELINE_BATCH_GEN=1, default on with the vLLM backend):
-all pending prompts are generated in ONE vLLM continuous-batching call, then
-loop labels + trigger extraction are recorded per prompt. The vLLM path never
-records tier caches (the use_tier gate requires the HF stack), so no second
-recording pass is needed — the batch IS the expensive work. When band+lens are
-present the HF path still records per-prompt tier caches as before. Any vLLM
-failure (init, batch, or per-prompt) releases the vLLM engine and switches the
-run to the HF backend for the remaining prompts.
+pending prompts are generated in T4-sized vLLM chunks (JLENS_BASELINE_BATCH_SIZE,
+default 4; ``0`` or ``all`` is the legacy one-call behavior). Each chunk is
+checkpointed before the next, so a Colab disconnect loses at most one chunk.
+The vLLM path never records tier caches (the use_tier gate requires the HF
+stack). When band+lens are present the HF path still records per-prompt tier
+caches as before. Any vLLM failure releases the engine and switches the rest
+of the run to HF.
+
+HF speedup (JLENS_BASELINE_EARLY_STOP, default on): once Liquid's character
+detector has confirmed a loop, generation stops. The 4000 cap is not lowered.
+Non-loops still run to EOS or the cap.
+
+Anti-doom sidecar (JLENS_ANTIDOOM_SIDECAR, default off): an HF logits processor
+that blocks the token which would extend a repeated n-gram. It forces the HF
+backend, because vLLM does not share that processor. A sidecar run is an
+intervention condition and is labeled as such in the summary — it is not the
+unsteered A1 baseline.
 
 Resume-safe: checkpoint JSON + on-disk meta.json. Optional Drive sync via
 JLENS_DRIVE_SYNC_DIR (see jspace.drive_sync).
@@ -66,6 +76,12 @@ def main() -> int:
     from jspace.detection import detect_loop
     from jspace.analysis import ensure_dir, load_json, save_json, write_status
     from jspace.vllm_backend import make_generator
+    from jspace.baseline_speed import (
+        chunk_pending,
+        early_stop_enabled,
+        resolve_batch_chunk_size,
+    )
+    from jspace.antidoom_sidecar import sidecar_enabled, sidecar_from_env
     from jspace.drive_sync import (
         sync_baseline_artifacts,
         restore_from_drive,
@@ -106,12 +122,16 @@ def main() -> int:
         logger.warning("SMOKE MODE: only %d prompt(s)", len(prompts))
 
     logger.info(
-        "Baseline pass model=%s backend_env=%s prompts=%d max_new=%d temp=%s drive=%s",
+        "Baseline pass model=%s backend_env=%s prompts=%d max_new=%d temp=%s "
+        "early_stop=%s batch_chunk=%s sidecar=%s drive=%s",
         cfg.model_id,
         os.environ.get("JLENS_BACKEND", "auto"),
         len(prompts),
         MAX_NEW_TOKENS,
         TEMPERATURE,
+        early_stop_enabled(),
+        resolve_batch_chunk_size(len(prompts)),
+        sidecar_enabled(),
         drive_sync_dir(),
     )
 
@@ -167,6 +187,9 @@ def main() -> int:
             "looping_prompt_ids": sorted(looping_prompt_ids),
             "last_prompt_id": last_id,
             "vllm_dtype": os.environ.get("JLENS_VLLM_DTYPE", ""),
+            "early_stop": early_stop_enabled(),
+            "baseline_batch_size": resolve_batch_chunk_size(len(prompts)),
+            "sidecar_enabled": sidecar_enabled(),
         }
         tmp = ckpt_path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -180,6 +203,14 @@ def main() -> int:
             done_ids.add(int(x))
         for x in ckpt.get("failed_prompt_ids", []):
             failed_ids.add(int(x))
+        prev_side = ckpt.get("sidecar_enabled")
+        if prev_side is not None and bool(prev_side) != sidecar_enabled():
+            logger.warning(
+                "Checkpoint sidecar_enabled=%s but JLENS_ANTIDOOM_SIDECAR is now %s. "
+                "Do not mix steered and unsteered prompts in one baseline summary.",
+                prev_side,
+                sidecar_enabled(),
+            )
         # Re-ingest from disk for accurate loop counts
         n_loop = 0
         looping_prompt_ids = []
@@ -250,6 +281,7 @@ def main() -> int:
                 and stack.model is not None
             )
             if not use_tier:
+                sidecar = sidecar_from_env()
                 gen = generate_greedy(
                     stack,
                     chat,
@@ -257,14 +289,21 @@ def main() -> int:
                     temperature=TEMPERATURE,
                     vllm_generator=vllm_gen,
                     prompt_id=pid,
+                    logits_processor=[sidecar] if sidecar is not None else None,
+                    early_stop=early_stop_enabled() and vllm_gen is None,
                 )
+                if sidecar is not None:
+                    gen["sidecar_enabled"] = True
+                    gen["sidecar_suppressed_steps"] = sidecar.n_suppressed_steps
+                    gen["sidecar_blocked_token_ids"] = list(sidecar.blocked_token_ids)
                 loop = detect_loop(
                     gen["generated_text"],
                     token_ids=gen["generated_ids"],
                     tokenizer=stack.tokenizer,
                 )
                 return {**gen, "loop": loop, "readouts": None, "residuals_ws": None}
-            return generate_with_tiered_cache(
+            sidecar = sidecar_from_env()
+            trace = generate_with_tiered_cache(
                 stack,
                 chat,
                 max_new_tokens=MAX_NEW_TOKENS,
@@ -274,7 +313,14 @@ def main() -> int:
                 cache_tier3=False,
                 vllm_generator=None,
                 prompt_id=pid,
+                logits_processor=[sidecar] if sidecar is not None else None,
+                early_stop=early_stop_enabled(),
             )
+            if sidecar is not None:
+                trace["sidecar_enabled"] = True
+                trace["sidecar_suppressed_steps"] = sidecar.n_suppressed_steps
+                trace["sidecar_blocked_token_ids"] = list(sidecar.blocked_token_ids)
+            return trace
 
         def _record_prompt(pid: int, p: dict, trace: dict) -> None:
             nonlocal n_loop, since_sync
@@ -290,6 +336,9 @@ def main() -> int:
             meta["temperature"] = trace.get("temperature", TEMPERATURE)
             meta["seed"] = trace.get("seed")
             meta["greedy"] = trace.get("greedy")
+            meta["early_stopped"] = bool(trace.get("early_stopped", False))
+            meta["sidecar_enabled"] = bool(trace.get("sidecar_enabled", False))
+            meta["sidecar_suppressed_steps"] = int(trace.get("sidecar_suppressed_steps") or 0)
             dest = looping_dir / f"p{pid}" if loop.is_loop else nonloop_dir / f"p{pid}"
             save_trace(dest, trace, meta)
 
@@ -303,6 +352,9 @@ def main() -> int:
                 "trigger_decoded": loop.trigger_decoded,
                 "trigger_token_str": loop.trigger_token_str,
                 "n_tokens": len(trace.get("generated_ids", [])),
+                "early_stopped": bool(trace.get("early_stopped", False)),
+                "sidecar_enabled": bool(trace.get("sidecar_enabled", False)),
+                "sidecar_suppressed_steps": int(trace.get("sidecar_suppressed_steps") or 0),
                 "snippet": loop.hit.snippet if loop.hit else None,
                 "generated_preview": trace.get("generated_text", "")[:500],
                 "backend": meta["backend"],
@@ -344,16 +396,30 @@ def main() -> int:
 
             clear_cuda()
 
+        if sidecar_enabled() and vllm_gen is not None:
+            logger.warning(
+                "Anti-doom sidecar is an HF logits processor — leaving vLLM so the "
+                "intervention actually runs. Unsteered A1 keeps JLENS_ANTIDOOM_SIDECAR=0."
+            )
+            _switch_to_hf("antidoom_sidecar")
+
         if vllm_gen is not None and BATCH_GEN:
             pending = [p for p in prompts if int(p["prompt_id"]) not in done_ids]
+            chunk_size = resolve_batch_chunk_size(len(pending))
+            groups = chunk_pending(pending, chunk_size)
             if pending:
                 logger.info(
-                    "Batched vLLM pass: generating %d pending prompt(s) in one call",
+                    "Batched vLLM pass: %d pending prompt(s) in %d chunk(s) of %d",
                     len(pending),
+                    len(groups),
+                    chunk_size,
                 )
+            for group in groups:
+                if vllm_gen is None:
+                    break
                 try:
-                    chats = [apply_chat_template(stack.tokenizer, p["text"]) for p in pending]
-                    seeds = [per_prompt_seed(SEED, int(p["prompt_id"])) for p in pending]
+                    chats = [apply_chat_template(stack.tokenizer, p["text"]) for p in group]
+                    seeds = [per_prompt_seed(SEED, int(p["prompt_id"])) for p in group]
                     gens = vllm_gen.generate_batch(
                         chats,
                         max_new_tokens=MAX_NEW_TOKENS,
@@ -366,8 +432,8 @@ def main() -> int:
                         "Batched vLLM generation failed (%s) — switching to per-prompt HF", e
                     )
                     _switch_to_hf("vllm_batch_gen_failed")
-                    gens = []
-                for p, gen in zip(pending, gens):
+                    break
+                for p, gen in zip(group, gens):
                     pid = int(p["prompt_id"])
                     try:
                         loop = detect_loop(
@@ -375,7 +441,14 @@ def main() -> int:
                             token_ids=gen["generated_ids"],
                             tokenizer=stack.tokenizer,
                         )
-                        trace = {**gen, "loop": loop, "readouts": None, "residuals_ws": None}
+                        trace = {
+                            **gen,
+                            "loop": loop,
+                            "readouts": None,
+                            "residuals_ws": None,
+                            "early_stopped": False,
+                            "sidecar_enabled": False,
+                        }
                         _record_prompt(pid, p, trace)
                     except Exception as e:
                         logger.exception("record failed prompt %s: %s", pid, e)
@@ -489,14 +562,26 @@ def main() -> int:
         "failed_prompt_ids": sorted(failed_ids),
         "max_new_tokens": MAX_NEW_TOKENS,
         "temperature": TEMPERATURE,
+        "early_stop": early_stop_enabled(),
+        "baseline_batch_size": resolve_batch_chunk_size(len(prompts)),
+        "sidecar_enabled": sidecar_enabled(),
         "tier3_traces_saved": tier3_done,
         "empirical_table_empty": bool(df.empty),
         "jlens_available": stack.lens is not None,
         "complete": len(done_ids) >= len(prompts),
         "saved_at": _utc(),
         "note": (
-            f"Baseline A1 for {cfg.model_id}. Eval set = seed={SEED} stratified 200. "
-            "Not nerfed: max_new_tokens and temperature as configured."
+            (
+                f"INTERVENTION: anti-doom sidecar was ON for {cfg.model_id}. "
+                "loop_rate is not the unsteered A1 baseline."
+            )
+            if sidecar_enabled()
+            else (
+                f"Baseline A1 for {cfg.model_id}. Eval set = seed={SEED} stratified prompts. "
+                "Not nerfed: max_new_tokens stays at the configured cap. "
+                "Early-stop ends a trace only after a loop is already confirmed. "
+                f"vLLM chunk size={resolve_batch_chunk_size(len(prompts))}."
+            )
         ),
     }
     save_json(summary, paths["baseline_summary"])
@@ -516,7 +601,9 @@ def main() -> int:
 - Prompts: {len(prompts)} (seed={SEED}), completed: {len(done_ids)}, failed: {len(failed_ids)}
 - Loops detected: {n_loop} ({rate:.1%} of completed)
 - Unique trigger token IDs: {len(trigger_counter)}
-- max_new_tokens: {MAX_NEW_TOKENS} (not reduced)
+- max_new_tokens: {MAX_NEW_TOKENS} (cap not reduced; early_stop={early_stop_enabled()})
+- vLLM chunk size: {resolve_batch_chunk_size(len(prompts))}
+- anti-doom sidecar: {sidecar_enabled()} ({"intervention run" if sidecar_enabled() else "off — unsteered baseline"})
 - J-lens available: {stack.lens is not None}
 - Audit: `{sample_path}`
 - Trigger table: `{csv_path}`
