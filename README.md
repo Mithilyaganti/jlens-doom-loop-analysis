@@ -102,6 +102,26 @@ vendor/            # open-jlens-data, antidoom
 lenses/            # pre-fitted .pt
 ```
 
+## LeanScope detection (paper 2)
+
+Hidden-lean readouts on the same J-lens stack. The package is `leanscope/`. It consumes `Record` rows from `leanscope/schema.py` and does not download a model or call a paid API in tests.
+
+| Module | Role |
+| --- | --- |
+| `leanscope/positions.py` | One forward pass, via `jspace.generation.capture_residuals_one_pass`, stores the residual at P0 (last prompt token), P1 (token before the first option word), and optional P2 (end of thinking, `--record-p2` or `LEANSCOPE_RECORD_P2=1`). Multi-token option names are kept; if the name is missing from the answer, P1 falls back to the single token `A` or `B`. |
+| `leanscope/detectors.py` | D1 J-lens concept readout (A minus B over the workspace band), D2 the same readout through the unembedding, D3 L2 logistic on the residual, D4 difference of means, D5 offline text judge plus a bag-of-words stub (DeepSeek V4.1 Flash is an interface that does not send traffic), D6 sampling majority, D7 system-prompt oracle. |
+| `leanscope/metrics.py` | Lean-direction AUROC by layer, position, and strength, with `jspace.stats.clustered_bootstrap_ci` clustered on `scenario_id`. Also lean-present vs structure-matched neutral, silent-lean vs text monitors, ECE and reliability bins, explicit→soft/indirect/natural and leave-one-family-out, and the order-swap, label-shuffle, random-direction, frequency-matched, and length/format controls. |
+
+CPU smoke (fake model, planted direction, no GPU):
+
+```powershell
+python scripts/lean_02_record.py --fake --out results/leanscope/records.jsonl --activations-dir results/leanscope/activations
+python scripts/lean_03_detect.py --fake --records results/leanscope/records.jsonl --out results/leanscope/detection.csv --samples 3 --n-boot 40
+python -m pytest tests/test_leanscope_detection.py tests/test_stats.py -q
+```
+
+`scripts/lean_03_detect.py --samples` defaults to 0. A real natural-lean run passes `--samples 20`.
+
 ## Caching (memory safety)
 
 Experiment 2 uses a **tiered cache** (PROJECT_SPEC §2.1):

@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from jspace.stats import (  # noqa: E402
     bootstrap_ci,
+    clustered_bootstrap_ci,
     cohens_h,
     mcnemar_exact,
     mcnemar_power,
@@ -103,6 +104,25 @@ def test_mcnemar_sample_size_roundtrip():
     assert mcnemar_power(0.3, 0.1, n - 1) < 0.8
     # Impossibly weak effect -> None.
     assert mcnemar_sample_size(0.02, 0.018, power_target=0.8, n_max=200) is None
+
+
+def test_clustered_bootstrap_keeps_rows_of_one_scenario_together():
+    ids = np.array(["s0", "s0", "s1", "s1"])
+
+    def stat(idx):
+        idx = np.asarray(idx)
+        assert int(np.sum(idx == 0)) == int(np.sum(idx == 1))
+        assert int(np.sum(idx == 2)) == int(np.sum(idx == 3))
+        return float(np.mean(idx))
+
+    first = clustered_bootstrap_ci(ids, stat, n_boot=30, seed=0)
+    second = clustered_bootstrap_ci(ids, stat, n_boot=30, seed=0)
+    assert first == second
+    assert np.isfinite(first["point"])
+    assert first["lo"] <= first["point"] <= first["hi"]
+    assert first["n_boot_finite"] == 30
+    empty = clustered_bootstrap_ci([], stat, n_boot=5, seed=0)
+    assert np.isnan(empty["point"])
 
 
 if __name__ == "__main__":
