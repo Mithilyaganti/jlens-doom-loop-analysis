@@ -159,6 +159,29 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
 
+## LeanScope (paper 2) — causal test and alternatives panel
+
+`leanscope/` is the causal and intervention side of the hidden-lean study. It reads `Record` rows from `leanscope/schema.py` (scenario, lean condition, recommendation, split, optional activation path).
+
+- `causal.py` steers and ablates an option direction at P0 (last prompt token) and P1 (the token just before the first option word). The direction is a function with signature `(records, *, layer, position)`. The default is the difference of means, lean A minus lean B, so a detector can replace it. The control is a norm-matched random direction from `jspace.intervention`. The positive control regenerates the question with the lean prompt removed. Flip rates are paired with exact McNemar, Wilson intervals, and Cohen's h from `jspace.stats`.
+- `panel.py` builds the alternatives panel. The case for the option that was not recommended is a rerun under the opposite-lean prompt. C0 is the recommendation alone, C1 always adds the other case, C2 adds it only when the detector score crosses a threshold chosen on the dev split, and C3 is a disclosure line.
+- `simulate.py` is the Tier A pre-test. Analyst agents get a prior and see C0–C3. The agent is an `LLMClient`. CPU runs use `OfflineFakeAnalyst`. `DeepSeekFlashClient` refuses instead of placing a request. Every simulation report is labelled `pre-test, not evidence about people`.
+
+CPU tests, with no GPU and no model download:
+
+```bash
+python -m pytest tests/test_leanscope_causal.py tests/test_leanscope_panel_sim.py -q
+```
+
+Smoke entry points on the same test double:
+
+```bash
+python scripts/lean_04_causal.py --smoke-fake --out /tmp/leanscope-causal
+python scripts/lean_05_panel_sim.py --smoke-fake --out /tmp/leanscope-panel
+```
+
+A Qwen3.5-4B run of those scripts is documented in their docstrings. It is not part of the CPU tests.
+
 ## Citations (required)
 
 Liquid AI Antidoom (Jul 2026); Anthropic J-lens `arXiv:2607.15495`; Lazaridis et al. `arXiv:2606.13705`; Silent Alarm / JADR `arXiv:2607.12792`; Elie Bakouch open-jlens-data; related loop papers in PROJECT_SPEC §14.
