@@ -1,0 +1,1 @@
+auditor,trace_id,source_path,char_len,sampler_hit,exhaustive_hit,human_is_loop,human_notes,disagreement_reason
