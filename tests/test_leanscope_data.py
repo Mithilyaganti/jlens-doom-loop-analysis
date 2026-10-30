@@ -190,7 +190,8 @@ def test_seed_pool_validator_accepts_the_hand_written_set():
     seeds = load_seeds(SEED_PATH)
     validate_seed_pool(seeds)
     counts = Counter(seed.family for seed in seeds)
-    assert set(counts) == {"analysis", "product", "advice"}
+    assert len(seeds) == 100
+    assert dict(counts) == {"analysis": 34, "product": 33, "advice": 33}
     assert max(counts.values()) - min(counts.values()) <= 2
     for seed in seeds:
         assert tuple(p.paraphrase_id for p in seed.paraphrases) == PARAPHRASE_IDS
@@ -708,8 +709,150 @@ def test_end_to_end_with_a_fake_model():
             again, _, _ = generate_records(done, stack, GenerateConfig(max_new_tokens=16))
             assert stack.model.calls == calls_after_first
             assert again[0].output_text == done[0].output_text
+            # A preset passes only some item ids, so the other none rows stay unsampled.
+            calls_before_subset = stack.model.calls
+            none_id = next(row.item_id for row in done if row.condition.kind == "none")
+            _, _, only = generate_records(
+                done,
+                stack,
+                GenerateConfig(
+                    max_new_tokens=16,
+                    natural_samples=1,
+                    natural_item_ids={none_id},
+                ),
+            )
+            assert [row["item_id"] for row in only] == [none_id]
+            assert stack.model.calls == calls_before_subset + 1
     finally:
         deepseek._http_post = original
+
+
+def test_presets_subset_full_records_and_keep_splits_and_leans():
+    from leanscope.presets import (
+        FULL,
+        MAIN,
+        PILOT,
+        apply_preset,
+        estimate_run,
+        format_estimate,
+        natural_sample_ids,
+        optional_full_natural_line,
+    )
+
+    seeds = load_seeds(SEED_PATH)
+    lock = load_lock(DEFAULT_LOCK_PATH)
+    full = build_records(seeds, lock["assignments"], lean_seed=42)
+    pilot = apply_preset(full, PILOT)
+    main = apply_preset(full, MAIN)
+    again = apply_preset(full, FULL)
+    full_ids = {row.item_id for row in full}
+    pilot_ids = {row.item_id for row in pilot}
+    main_ids = {row.item_id for row in main}
+    assert len(full) == 100 * 5 * 2 * 14
+    assert again_ids_match(again, full)
+    assert pilot_ids < main_ids < full_ids
+    assert len(pilot) == 40 * 2 * 2 * 5
+    assert len(main) == 100 * 3 * 2 * 10
+
+    by_id = {row.item_id: row for row in full}
+    for row in pilot + main:
+        original = by_id[row.item_id]
+        assert row.split == original.split == lock["assignments"][row.scenario.scenario_id]
+        assert row.condition.lean == original.condition.lean
+        assert row.condition.system_prompt == original.condition.system_prompt
+        if row.condition.kind in ("assigned", "conceal"):
+            assert row.condition.lean == coin_flip_lean(row.scenario.scenario_id, seed=42)
+
+    pilot_scenarios = {row.scenario.scenario_id for row in pilot}
+    assert len(pilot_scenarios) == 40
+    assert Counter(lock["assignments"][sid] for sid in pilot_scenarios) == Counter(
+        {"train": 24, "dev": 6, "test": 10}
+    )
+    families = Counter(
+        next(row.scenario.family for row in pilot if row.scenario.scenario_id == sid)
+        for sid in pilot_scenarios
+    )
+    assert set(families) == {"analysis", "product", "advice"}
+    assert max(families.values()) - min(families.values()) <= 2
+    for sid in pilot_scenarios:
+        rows = [row for row in pilot if row.scenario.scenario_id == sid]
+        assert {row.scenario.paraphrase_id for row in rows} == {"p0", "p1"}
+        assert {row.scenario.order for row in rows} == {"AB", "BA"}
+        assert Counter((row.condition.kind, row.condition.strength) for row in rows) == Counter(
+            {
+                ("none", None): 4,
+                ("assigned", "explicit"): 4,
+                ("assigned", "soft"): 4,
+                ("neutral_matched", "explicit"): 4,
+                ("neutral_matched", "soft"): 4,
+            }
+        )
+
+    main_scenarios = {row.scenario.scenario_id for row in main}
+    assert main_scenarios == {seed.scenario_id for seed in seeds}
+    assert {row.scenario.paraphrase_id for row in main} == {"p0", "p1", "p2"}
+    assert {row.condition.kind for row in main} == {"none", "trait", "assigned", "neutral_matched"}
+    assert {row.condition.strength for row in main if row.condition.kind == "assigned"} == set(STRENGTHS)
+
+    dev_ids = {sid for sid, split in lock["assignments"].items() if split == "dev"}
+    sampled = natural_sample_ids(main, MAIN)
+    assert {item.split("|", 1)[0] for item in sampled} == dev_ids
+    assert {by_id[item].condition.kind for item in sampled} == {"none", "trait"}
+    assert len(sampled) == 15 * 3 * 2 * 2
+    pilot_sampled = natural_sample_ids(pilot, PILOT)
+    assert len(pilot_sampled) == 40 * 2 * 2
+    assert {by_id[item].condition.kind for item in pilot_sampled} == {"none"}
+
+    pilot_est = estimate_run(pilot, PILOT)
+    main_est = estimate_run(main, MAIN)
+    full_est = estimate_run(full, FULL)
+    optional = estimate_run(full, FULL, natural_samples=20)
+    assert 4 <= float(pilot_est["total_hours"]) <= 6
+    assert 15 <= float(main_est["total_hours"]) <= 20
+    assert round(float(pilot_est["total_hours"]), 1) == 4.7
+    assert round(float(main_est["total_hours"]), 1) == 18.0
+    assert round(float(full_est["total_hours"]), 1) == 35.0
+    assert float(full_est["natural_generations"]) == 0
+    assert round(float(optional["total_hours"]), 1) == 101.7
+    assert "records=800" in format_estimate(pilot_est)
+    assert "estimated_l4_hours=4.7" in format_estimate(pilot_est)
+    assert "records=6000" in format_estimate(main_est)
+    assert "estimated_l4_hours=18.0" in format_estimate(main_est)
+    assert "14000" in optional_full_natural_line(full) or "101.7" in optional_full_natural_line(full)
+
+
+def again_ids_match(left, right) -> bool:
+    return [row.item_id for row in left] == [row.item_id for row in right]
+
+
+def test_build_script_preset_does_not_rewrite_the_lock(capsys):
+    import importlib.util
+
+    path = ROOT / "scripts" / "lean_00_build_items.py"
+    spec = importlib.util.spec_from_file_location("lean_00_build_items_preset", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    before = DEFAULT_LOCK_PATH.read_bytes()
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "records.jsonl"
+        code = module.main(
+            ["--preset", "pilot", "--out", str(out), "--lock", str(DEFAULT_LOCK_PATH), "--seed", str(SEED_PATH)]
+        )
+        assert code == 0
+        rows = read_jsonl(out)
+        assert len(rows) == 800
+        summary = json.loads(out.with_suffix(".manifest.json").read_text(encoding="utf-8"))
+        assert summary["preset"] == "pilot"
+        assert summary["n_records"] == 800
+        assert round(summary["estimate"]["total_hours"], 1) == 4.7
+    printed = capsys.readouterr().out
+    assert "preset=pilot records=800" in printed
+    assert "estimated_l4_hours=4.7" in printed
+    assert "preset=main records=6000" in printed
+    assert "estimated_l4_hours=18.0" in printed
+    assert "preset=full records=14000" in printed
+    assert "estimated_l4_hours=35.0" in printed
+    assert DEFAULT_LOCK_PATH.read_bytes() == before
 
 
 def test_build_script_writes_records():

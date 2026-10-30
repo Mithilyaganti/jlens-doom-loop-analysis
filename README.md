@@ -113,10 +113,11 @@ Hidden-lean items for a follow-up study on Qwen3.5-4B. The package is `leanscope
 | `leanscope/conditions.py` | No prompt, assigned lean at four strengths, structure-matched neutral, trait, conceal |
 | `leanscope/splits.py` | Hash-locked train/dev/test by `scenario_id`, same write-once rule as `jspace/eval_sets.py` |
 | `leanscope/labels.py` | Greedy recommendation, natural-lean majority and agreement, voiced/silent judge, hand-label check |
-| `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL |
-| `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading` |
+| `leanscope/presets.py` | `pilot`, `main`, and `full` subsets of the same locked splits and coin flips |
+| `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL, with `--preset` |
+| `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading`, with `--preset` |
 
-The hand-written seed is `data/leanscope/seed_scenarios.jsonl`. The frozen split file is `data/leanscope/split_lock.json`. Assigned leans are a seeded coin flip on `scenario_id` (seed 42). Counts and the GPU command order are in `docs/leanscope_gpu_runbook.md`. The shell list is `scripts/lean_run_all.sh` (do not run it on CPU).
+The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (100 scenarios: 34 analysis, 33 product, 33 advice). The frozen split file is `data/leanscope/split_lock.json`, a 60/15/25 rank cut by scenario (60 train, 15 dev, 25 test). Assigned leans are a seeded coin flip on `scenario_id` (seed 42). Expanding the seed gives 14,000 records (100 scenarios x 5 paraphrases x 2 orders x 14 conditions). That full file is unchanged. `--preset pilot` and `--preset main` only drop rows from it. A kept scenario keeps its locked split and its coin-flip lean.
 
 CPU tests, no model download and no API call. `tests/test_leanscope_e2e.py` runs data, recording, D1, the J-lens steer, and the score-triggered panel:
 
@@ -124,7 +125,15 @@ CPU tests, no model download and no API call. `tests/test_leanscope_e2e.py` runs
 python -m pytest tests -q
 ```
 
-The GPU order is `scripts/lean_run_all.sh`. Runtime estimates are in `docs/leanscope_gpu_runbook.md`. They are not measurements.
+GPU generation was not run here. The hour column is an estimate, not a measurement: 50 tokens/s of decode on an L4, 300 new tokens (6 seconds per generation). Activations add about half of that again on the greedy pass, so greedy hours are 1.5 times the decode hours. Natural-lean samples are decode only. Both build and generate print `records=` and `estimated_l4_hours=` for the preset they are about to run. The full command order, including detection, the D1 steer, and the panel, is `scripts/lean_run_all.sh` and `docs/leanscope_gpu_runbook.md`.
+
+| Preset | What it keeps | Records | Natural-lean samples | Estimated L4-hours |
+| --- | --- | --- | --- | --- |
+| `pilot` | 40 scenarios (24 train / 6 dev / 10 test, families kept even), paraphrases p0–p1, both orders, `none` plus explicit and soft assigned and neutral prompts | 800 | 10 on each kept `none` row (1,600 generations) | 4.7 |
+| `main` | all 100 scenarios, paraphrases p0–p2, both orders, `none`, `trait`, and all four assigned and neutral strengths | 6,000 | 10 on the locked dev split's `none` and `trait` rows (1,800 generations) | 18.0 |
+| `full` | every paraphrase, order, and condition | 14,000 | off unless you pass `--natural-samples 20` (40,000 generations, about 67 hours) | 35.0 with activations; about 101.7 with that natural-sample pass |
+
+Pass the same `--preset` to generate if the records file is the full 14,000-row build. The filter is the same subset either way.
 
 ## LeanScope detection
 
