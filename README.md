@@ -126,6 +126,17 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
 
+## CPU path: loop-detector audit
+
+No GPU and no model download. From the repo root:
+
+```bash
+python -m pytest tests/test_detector_audit.py -q
+python scripts/audit_loop_detector.py
+```
+
+The script compares the vendored fingerprint sampler with an exhaustive period scan on `tests/fixtures/detector_loops.jsonl`. Recall is reported only for those fixtures. Study-corpus recall is not measured: the checked-in generation logs are truncated previews. `audit/human_loop_audit_sheet.csv` is an empty template (header only).
+
 ## Citations (required)
 
 Liquid AI Antidoom (Jul 2026); Anthropic J-lens `arXiv:2607.15495`; Lazaridis et al. `arXiv:2606.13705`; Silent Alarm / JADR `arXiv:2607.12792`; Elie Bakouch open-jlens-data; related loop papers in PROJECT_SPEC §14.
