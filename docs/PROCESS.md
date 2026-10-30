@@ -75,3 +75,18 @@ The formulas above are the standard Holm step-down and BH step-up adjustments. N
 ## Not measured
 
 Adjusted p-values for the checked-in Exp3 contrasts. The script still reports the unadjusted exact McNemar p-value.
+
+## Done
+
+- `holm_adjust` and `benjamini_hochberg` are in `jspace/stats.py`.
+- Tests in `tests/test_stats.py` use the hand-derived values above.
+- `python tests/test_stats.py` printed `ALL PASS`. `python -m pytest tests/test_stats.py -q` printed `13 passed in 0.13s`.
+- `docs/ARCHITECTURE.md`, `docs/DESIGN_DECISIONS.md`, `docs/PROCESS.md`, and a README CPU section are on this branch.
+- Exp3 script and `results/` were not modified.
+
+## Remaining
+
+- These functions are not called from `scripts/05_exp3_causal.py`.
+- No adjusted p-value was computed for the checked-in Exp3 table.
+- Pre-registration file was not started.
+- `LICENSE` and `CITATION.cff` were not started.
