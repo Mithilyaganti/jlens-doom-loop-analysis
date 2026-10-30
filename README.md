@@ -116,15 +116,15 @@ Hidden-lean items for a follow-up study on Qwen3.5-4B. The package is `leanscope
 | `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL |
 | `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading` |
 
-The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (12 scenarios, 4 per family). The frozen split file is `data/leanscope/split_lock.json`. Assigned leans are a seeded coin flip on `scenario_id` (seed 42).
+The hand-written seed is `data/leanscope/seed_scenarios.jsonl`. The frozen split file is `data/leanscope/split_lock.json`. Assigned leans are a seeded coin flip on `scenario_id` (seed 42). Counts and the GPU command order are in `docs/leanscope_gpu_runbook.md`. The shell list is `scripts/lean_run_all.sh` (do not run it on CPU).
 
-CPU tests, no model download and no API call:
+CPU tests, no model download and no API call. `tests/test_leanscope_e2e.py` runs data, recording, D1, the J-lens steer, and the score-triggered panel:
 
 ```bash
-python -m pytest tests/test_leanscope_data.py -q
+python -m pytest tests -q
 ```
 
-GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 1680 greedy generations. Budget about 4 to 6 L4-hours with activations, and several more if you add `--natural-samples 20`. The full GPU order, including detection, the causal plug-in, and the panel, is `scripts/lean_run_all.sh` and `docs/leanscope_gpu_runbook.md`.
+The GPU order is `scripts/lean_run_all.sh`. Runtime estimates are in `docs/leanscope_gpu_runbook.md`. They are not measurements.
 
 ## LeanScope detection
 
@@ -163,8 +163,8 @@ After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit);
 
 `leanscope/` is the causal and intervention side of the hidden-lean study. It reads `Record` rows from `leanscope/schema.py` (scenario, lean condition, recommendation, split, optional activation path).
 
-- `causal.py` steers and ablates an option direction at P0 (last prompt token) and P1 (the token just before the first option word). The direction is a function with signature `(records, *, layer, position)`. The default is the difference of means, lean A minus lean B, so a detector can replace it. The control is a norm-matched random direction from `jspace.intervention`. The positive control regenerates the question with the lean prompt removed. Flip rates are paired with exact McNemar, Wilson intervals, and Cohen's h from `jspace.stats`.
-- `panel.py` builds the alternatives panel. The case for the option that was not recommended is a rerun under the opposite-lean prompt. C0 is the recommendation alone, C1 always adds the other case, C2 adds it only when the detector score crosses a threshold chosen on the dev split, and C3 is a disclosure line.
+- `causal.py` steers and ablates an option direction at P0 (last prompt token) and P1 (the token just before the first option word). `scripts/lean_04_causal.py --direction jlens` plugs in D1: the J-space direction of option A minus option B, one vector per item. `--direction diffmeans` keeps the train-split difference of means. The control is a norm-matched random direction. The positive control regenerates with the lean prompt removed. Flip rates use exact McNemar, Wilson intervals, and Cohen's h from `jspace.stats`.
+- `panel.py` builds the alternatives panel. C2 adds the other option's case only when the D1 score from `lean_03_detect.py --scores-out` crosses a threshold chosen on the dev split. C0 is the recommendation alone, C1 always adds the other case, and C3 is a disclosure line.
 - `simulate.py` is the Tier A pre-test. Analyst agents get a prior and see C0–C3. The agent is an `LLMClient`. CPU runs use `OfflineFakeAnalyst`. `DeepSeekFlashClient` refuses instead of placing a request. Every simulation report is labelled `pre-test, not evidence about people`.
 
 CPU tests, with no GPU and no model download:

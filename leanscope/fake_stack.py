@@ -267,19 +267,38 @@ class _FakeModel(nn.Module):
         self.text_module.embed_tokens = self.embed
         self.plant = plant
         self.orth = orth
+        # Set by the strength-scaled recorder. None keeps the prompt cue at full scale.
+        self.override_sign: float | None = None
+        self._last_hidden: torch.Tensor | None = None
 
-    def forward(self, input_ids, use_cache=False, attention_mask=None):
-        del use_cache, attention_mask
-        self.forwards += 1
+    def _execute(self, input_ids) -> torch.Tensor:
+        """Run the layers. Hooks fire. Does not increment ``forwards``.
+
+        Recording counts the residual capture only. ``generate`` uses this
+        same pass so a causal hook on P0 can change the answer without
+        adding a second counted forward.
+        """
         ids = [int(tok) for tok in input_ids[0].tolist()]
         sign = lean_sign_from_ids(ids, self.tok)
+        if self.override_sign is not None:
+            sign = float(self.override_sign)
         seed = _stable_seed(ids)
         hidden = self.embed(input_ids)
         for layer in self.layers:
             layer.sign = sign
             layer.seed = seed
             hidden = layer(hidden)
+        self._last_hidden = hidden
+        return hidden
+
+    def forward(self, input_ids, use_cache=False, attention_mask=None):
+        del use_cache, attention_mask
+        self.forwards += 1
+        hidden = self._execute(input_ids)
         return types.SimpleNamespace(logits=self.lm_head(hidden))
+
+    def _n_inject(self) -> int:
+        return sum(1 for layer in self.layers if layer.inject)
 
     def generate(self, input_ids=None, attention_mask=None, max_new_tokens=32, **kwargs):
         del attention_mask, kwargs
@@ -287,8 +306,22 @@ class _FakeModel(nn.Module):
             raise ValueError("input_ids is required")
         ids = [int(tok) for tok in input_ids[0].tolist()]
         tok = self.tok
-        sign = lean_sign_from_ids(ids, tok)
-        conceal = tok.word_to_id["not"] in ids and tok.word_to_id["mention"] in ids
+        token_sign = lean_sign_from_ids(ids, tok)
+        planted = float(self.override_sign) if self.override_sign is not None else token_sign
+        # One full-prompt pass so a causal hook on P0 is visible in the residual.
+        self._execute(input_ids)
+        hidden = self._last_hidden
+        proj = float(hidden[0, -1, 0].detach()) if hidden is not None else planted
+        expected = self._n_inject() * planted
+        # Unhooked noise stays well under this gap. A steer of several units along
+        # e_0 crosses it and the edited residual, not the prompt cue, picks the answer.
+        hooked = abs(proj - expected) > 2.0
+        if hooked:
+            sign = 1.0 if proj > 0.25 else -1.0 if proj < -0.25 else 0.0
+            conceal = False
+        else:
+            sign = token_sign
+            conceal = tok.word_to_id["not"] in ids and tok.word_to_id["mention"] in ids
         extra: list[int] = []
         if tok.word_to_id["think"] in ids:
             extra.append(tok.word_to_id["</think>"])
@@ -501,6 +534,33 @@ def recommendation_from_prompt(full_ids: Sequence[int], record: Record, tokenize
     return None
 
 
+# Residual scale used when ``strength_scaled`` is on. Explicit is a full plant,
+# indirect is a small fraction of the noise, neutral and none plant nothing.
+STRENGTH_PLANT = {
+    "explicit": 1.0,
+    "soft": 0.45,
+    "indirect": 0.08,
+    "conflicting": 0.55,
+}
+
+
+def condition_plant_sign(record: Record) -> float:
+    """Signed plant for one record. Positive favours option A.
+
+    ``neutral_matched`` and ``none`` are 0. Assigned and conceal scale with
+    ``condition.strength``. A trait row uses a mid scale when it carries a
+    behavioural lean label.
+    """
+    condition = record.condition
+    if condition.kind in ("none", "neutral_matched") or condition.lean not in ("A", "B"):
+        return 0.0
+    if condition.kind == "trait":
+        scale = 0.5
+    else:
+        scale = STRENGTH_PLANT.get(condition.strength or "explicit", 1.0)
+    return scale if condition.lean == "A" else -scale
+
+
 def record_corpus(
     stack: FakeLeanStack,
     records: list[Record],
@@ -509,6 +569,7 @@ def record_corpus(
     record_p2: bool = False,
     layers: Sequence[int] | None = None,
     max_new_tokens: int = 32,
+    strength_scaled: bool = False,
 ) -> list[Record]:
     """Record every row. Installs the jlens stub first so the import cannot clone."""
     install_cpu_jlens_stub()
@@ -522,16 +583,21 @@ def record_corpus(
 
     recorded = []
     for record in records:
-        recorded.append(
-            record_item(
-                stack,
-                record,
-                activations_dir=activations_dir,
-                workspace_layers=stack.workspace_layers,
-                layers=use_layers,
-                record_p2=record_p2,
-                max_new_tokens=max_new_tokens,
-                recommendation_fn=_recommend,
+        if strength_scaled:
+            stack.model.override_sign = condition_plant_sign(record)
+        try:
+            recorded.append(
+                record_item(
+                    stack,
+                    record,
+                    activations_dir=activations_dir,
+                    workspace_layers=stack.workspace_layers,
+                    layers=use_layers,
+                    record_p2=record_p2,
+                    max_new_tokens=max_new_tokens,
+                    recommendation_fn=_recommend,
+                )
             )
-        )
+        finally:
+            stack.model.override_sign = None
     return recorded

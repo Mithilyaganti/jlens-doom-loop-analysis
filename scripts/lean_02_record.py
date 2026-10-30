@@ -41,6 +41,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Overwrite split from the scenario_id hash. The synthetic --fake bank keeps its balanced splits unless this is set.",
     )
+    parser.add_argument(
+        "--strength-scaled",
+        action="store_true",
+        help="Fake only. Plant a full residual for explicit leans, a weak one for indirect, and none for neutral.",
+    )
     return parser.parse_args()
 
 
@@ -76,6 +81,7 @@ def main() -> int:
             record_p2=args.record_p2,
             layers=list(range(stack.n_layers)),
             max_new_tokens=args.max_new_tokens,
+            strength_scaled=args.strength_scaled,
         )
         write_records(args.out, recorded)
         logger.info("Wrote %d fake records to %s", len(recorded), args.out)

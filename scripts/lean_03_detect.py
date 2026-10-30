@@ -45,6 +45,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--sample-temperature", type=float, default=0.7)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--scores-out",
+        type=Path,
+        help="JSON map of D1 P0 band scores (item_id -> A-minus-B). Input to lean_05_panel_sim.py.",
+    )
     return parser.parse_args()
 
 
@@ -89,6 +94,11 @@ def main() -> int:
         seed=args.seed,
     )
     write_results_csv(args.out, rows)
+    if args.scores_out:
+        from leanscope.detectors import write_panel_scores
+
+        n_scores = len(write_panel_scores(args.scores_out, scores))
+        logger.info("Wrote %d D1 scores to %s", n_scores, args.scores_out)
     markdown = args.markdown or args.out.with_suffix(".md")
     reliability = args.reliability or args.out.with_suffix(".reliability.json")
     write_results_markdown(markdown, rows, csv_name=args.out.name)

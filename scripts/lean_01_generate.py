@@ -16,13 +16,12 @@ Example (Qwen3.5-4B, bf16, after the records file exists):
         --activations-dir results/leanscope/activations \\
         --max-new-tokens 300
 
-The seed expansion is 12 scenarios x 5 paraphrases x 2 orders x 14 conditions
-= 1680 greedy generations. A rough estimate, not a measurement: at about 50
-tokens/s of decode on an L4, 300 new tokens is about 3 hours of decode, and
-recording activations adds another forward, so budget about 4 to 6 L4-hours.
+Record count is scenarios x 5 paraphrases x 2 orders x 14 conditions.
+The current seed size and the L4-hour arithmetic are in
+``docs/leanscope_gpu_runbook.md``. Those hours are estimates, not measurements.
 Add ``--natural-samples 20`` only on a second pass. That draws 20 samples for
-each none and trait row (4800 generations) and is several more L4-hours at the
-same rate. The script resumes from --out and from the natural-sample JSONL.
+each none and trait row. The script resumes from --out and from the
+natural-sample JSONL.
 """
 
 from __future__ import annotations

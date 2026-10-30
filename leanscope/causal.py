@@ -167,6 +167,7 @@ def load_residual(record: Record, *, position: str, layer: int) -> torch.Tensor:
 
     The file is a torch dict. Either ``payload[position]`` is ``[n_layers, d]``
     (or ``[d]`` for a single saved layer), or it is a dict keyed by layer.
+    Detection records nest that dict under ``payload["residuals"]``.
     """
     if not record.activations_path:
         raise ValueError(f"{record.item_id} has no activations_path")
@@ -174,9 +175,13 @@ def load_residual(record: Record, *, position: str, layer: int) -> torch.Tensor:
         payload = torch.load(record.activations_path, map_location="cpu", weights_only=True)
     except Exception:
         payload = torch.load(record.activations_path, map_location="cpu")
-    if position not in payload:
+    block = payload.get(position) if isinstance(payload, dict) else None
+    if block is None and isinstance(payload, dict):
+        nested = payload.get("residuals")
+        if isinstance(nested, dict):
+            block = nested.get(position)
+    if block is None:
         raise ValueError(f"{record.activations_path} has no {position} residual")
-    block = payload[position]
     if isinstance(block, dict):
         if layer in block:
             vec = block[layer]
@@ -575,13 +580,17 @@ def run_causal(
     tokenize: Callable[[str], torch.Tensor] | None = None,
     option_token_ids: Mapping[int, str] | None = None,
     neutral_system_prompt: str = "",
+    per_item_direction: bool = False,
+    direction_name: str | None = None,
 ) -> dict:
     """Run the paired causal conditions on records that carry an assigned lean.
 
     ``direction_fn(records, *, layer, position) -> Tensor`` is called once per
     layer and position, with the train records. The default is the difference
     of means on that split. Pass a function with the same signature to plug
-    in a detector direction.
+    in a detector direction. ``per_item_direction`` calls it on each eval
+    record alone, which is what the J-lens option direction needs when
+    scenarios do not share option text.
 
     ``backend="logits"`` re-forwards the whole sequence (CPU test double).
     ``backend="hf"`` calls ``jspace.generation.generate_greedy`` with
@@ -609,12 +618,16 @@ def run_causal(
     option_set = set(option_map)
     bound, bound_records = _bind_direction(direction_fn, direction_records)
 
-    directions: dict[tuple[int, str], torch.Tensor] = {}
-    for position in position_list:
-        for layer in layer_list:
-            directions[(layer, position)] = _call_direction(
-                bound, bound_records, layer=layer, position=position
-            )
+    def _directions_for(source: Sequence[Record]) -> dict[tuple[int, str], torch.Tensor]:
+        built: dict[tuple[int, str], torch.Tensor] = {}
+        for position in position_list:
+            for layer in layer_list:
+                built[(layer, position)] = _call_direction(
+                    bound, source, layer=layer, position=position
+                )
+        return built
+
+    shared_directions = None if per_item_direction else _directions_for(bound_records)
 
     def decode(prompt: str) -> DecodeResult:
         if backend == "hf":
@@ -633,6 +646,8 @@ def run_causal(
         lean = record.condition.lean
         if lean not in ("A", "B"):
             continue
+        directions = _directions_for([record]) if per_item_direction else shared_directions
+        assert directions is not None
         baseline_prompt = render_prompt(record.scenario, record.condition.system_prompt)
         baseline = decode(baseline_prompt)
         baseline_rec = _resolve_recommendation(baseline, record)
@@ -721,7 +736,13 @@ def run_causal(
             "steer adds the same |alpha| along either unit vector"
         ),
         "positive_control": POSITIVE_CONTROL,
-        "direction": "pluggable" if direction_fn is not None else "difference_of_means",
+        "direction": (
+            direction_name
+            if direction_name
+            else "pluggable"
+            if direction_fn is not None
+            else "difference_of_means"
+        ),
         "n_items": sum(1 for row in outcomes if row["key"] == BASELINE),
         "outcomes": outcomes,
         "contrasts": contrasts,

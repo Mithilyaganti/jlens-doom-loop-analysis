@@ -67,6 +67,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="CPU smoke on TinyFlipModel. Not a result about Qwen.",
     )
+    parser.add_argument(
+        "--direction",
+        choices=("diffmeans", "jlens"),
+        default="diffmeans",
+        help="diffmeans is D4 on the train split. jlens plugs in D1's option direction, one vector per item.",
+    )
     return parser.parse_args(argv)
 
 
@@ -200,10 +206,22 @@ def run_gpu(args: argparse.Namespace) -> dict:
     if not evaluation:
         raise SystemExit(f"no records in split {args.split}")
     stack = load_stack(require_lens=False, download_if_missing=False)
+    direction_fn = None
+    per_item = False
+    direction_name = None
+    if args.direction == "jlens":
+        from leanscope.detectors import make_jlens_direction_fn
+
+        direction_fn = make_jlens_direction_fn(stack)
+        per_item = True
+        direction_name = "D1_jlens"
     report = run_causal(
         stack,
         evaluation,
         direction_records=train,
+        direction_fn=direction_fn,
+        per_item_direction=per_item,
+        direction_name=direction_name,
         layers=_layers(args.layers),
         positions=_positions(args.positions),
         alpha=args.alpha,

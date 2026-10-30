@@ -35,6 +35,25 @@ from leanscope.simulate import (  # noqa: E402
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
+def _condition(kind: str, lean: str | None) -> LeanCondition:
+    """Match the shared schema: neutral carries a strength and a non-empty prompt."""
+    if kind == "neutral_matched":
+        return LeanCondition(
+            kind="neutral_matched",
+            strength="explicit",
+            lean=None,
+            system_prompt="Consider both options equally.",
+        )
+    if kind in ("none", "trait"):
+        return LeanCondition(kind=kind, strength=None, lean=None, system_prompt="")
+    return LeanCondition(
+        kind=kind,
+        strength="explicit",
+        lean=lean,
+        system_prompt="favour A" if lean == "A" else "favour B",
+    )
+
+
 def _record(
     item_id: str,
     *,
@@ -55,12 +74,7 @@ def _record(
             paraphrase_id="0",
             order=order,
         ),
-        condition=LeanCondition(
-            kind=kind,
-            strength="explicit" if lean else None,
-            lean=lean,
-            system_prompt="favour A" if lean == "A" else "",
-        ),
+        condition=_condition(kind, lean),
         output_text="Answer: A" if recommended == "A" else "Answer: B",
         recommended=recommended,
         voiced=bool(lean),

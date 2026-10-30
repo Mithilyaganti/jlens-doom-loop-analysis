@@ -22,9 +22,11 @@ token ``A`` or ``B`` when the name does not encode.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from collections import Counter
+from pathlib import Path
 from typing import Any, Sequence
 
 import numpy as np
@@ -843,3 +845,73 @@ def collect_scores(
     _emit_random(records, payloads, out, n_random=n_random, seed=seed)
     _emit_frequency_matched(stack, records, payloads, unigram, out, cache)
     return out
+
+
+def item_scores(
+    score_rows: Sequence[dict[str, Any]],
+    *,
+    detector: str = "D1_jlens",
+    position: str = "P0",
+    layer: str = "band",
+) -> dict[str, float]:
+    """One signed score per item. This is the map the alternatives panel reads."""
+    chosen: dict[str, float] = {}
+    for row in score_rows:
+        if row.get("detector") != detector:
+            continue
+        if row.get("position") != position:
+            continue
+        if str(row.get("layer")) != str(layer):
+            continue
+        chosen[str(row["item_id"])] = float(row["score"])
+    return chosen
+
+
+def write_panel_scores(
+    path: Path | str,
+    score_rows: Sequence[dict[str, Any]],
+    *,
+    detector: str = "D1_jlens",
+    position: str = "P0",
+    layer: str = "band",
+) -> dict[str, float]:
+    """Write ``{scores: {item_id: score}}`` for ``scripts/lean_05_panel_sim.py``."""
+    scores = item_scores(score_rows, detector=detector, position=position, layer=layer)
+    dest = Path(path)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "detector": detector,
+        "position": position,
+        "layer": layer,
+        "scores": scores,
+    }
+    dest.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return scores
+
+
+def make_jlens_direction_fn(stack: Any):
+    """D1 concept direction: J-space of option A minus J-space of option B.
+
+    The callable matches ``leanscope.causal.run_causal``:
+    ``direction_fn(records, *, layer, position) -> Tensor``. ``position`` does
+    not change the concept direction. Use ``per_item_direction=True`` when
+    scenarios do not share option text; a shared call uses the first record.
+    """
+    cache: dict = {}
+
+    def direction_fn(records, *, layer: int, position: str) -> torch.Tensor:
+        del position
+        if not records:
+            raise ValueError("J-lens option direction needs at least one record")
+        record = records[0]
+        from leanscope.positions import resolve_option_token_ids
+
+        ids_a, _fb_a = resolve_option_token_ids(stack.tokenizer, record.scenario.option_a, "A")
+        ids_b, _fb_b = resolve_option_token_ids(stack.tokenizer, record.scenario.option_b, "B")
+        if not ids_a or not ids_b:
+            raise ValueError(f"{record.item_id} has no option token ids")
+        dir_a = _direction(stack, ids_a, int(layer), "j", cache)
+        dir_b = _direction(stack, ids_b, int(layer), "j", cache)
+        return torch.tensor(np.asarray(dir_a) - np.asarray(dir_b), dtype=torch.float32)
+
+    return direction_fn
