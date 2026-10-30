@@ -16,13 +16,22 @@ Example (Qwen3.5-4B, bf16, after the records file exists):
         --activations-dir results/leanscope/activations \\
         --max-new-tokens 300
 
-The seed expansion is 100 scenarios x 5 paraphrases x 2 orders x 14 conditions
+``--preset`` filters the records file down to a budget subset. ``full`` keeps
+every row in the file. ``pilot`` and ``main`` drop rows only; splits and
+coin-flip leans on the rows that remain are whatever the file already stored.
+The script prints the record count and the estimated L4-hours before it loads
+a model.
+
+The full expansion is 100 scenarios x 5 paraphrases x 2 orders x 14 conditions
 = 14000 greedy generations. A rough estimate, not a measurement: at about 50
 tokens/s of decode on an L4, 300 new tokens is about 23 hours of decode, and
-recording activations adds another forward, so budget about 30 to 40 L4-hours.
-Add ``--natural-samples 20`` only on a second pass. That draws 20 samples for
-each none and trait row (40000 generations) and is about 67 hours of decode at
-the same rate. The script resumes from --out and from the natural-sample JSONL.
+recording activations adds another forward, so budget about 35 L4-hours (the
+30-to-40 band). Add ``--natural-samples 20`` only on a second pass over the
+full file. That draws 20 samples for each none and trait row (40000
+generations, about 67 hours of decode) and brings the total to about 102
+L4-hours. ``--preset pilot`` is about 5 L4-hours and ``--preset main`` is
+about 18, including their natural-lean samples. The script resumes from --out
+and from the natural-sample JSONL.
 """
 
 from __future__ import annotations
@@ -41,6 +50,15 @@ from leanscope.pipeline import (  # noqa: E402
     GenerateConfig,
     generate_records,
     merge_existing,
+)
+from leanscope.presets import (  # noqa: E402
+    PRESET_NAMES,
+    apply_preset,
+    estimate_run,
+    format_estimate,
+    get_preset,
+    natural_sample_ids,
+    optional_full_natural_line,
 )
 from leanscope.schema import read_jsonl  # noqa: E402
 
@@ -71,29 +89,49 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--activations-dir", type=Path, default=None)
     parser.add_argument("--max-new-tokens", type=int, default=300)
     parser.add_argument("--temperature", type=float, default=0.0)
-    parser.add_argument("--natural-samples", type=int, default=0)
+    parser.add_argument(
+        "--preset",
+        choices=PRESET_NAMES,
+        default="full",
+        help="full keeps every record in the file. pilot and main subset it.",
+    )
+    parser.add_argument(
+        "--natural-samples",
+        type=int,
+        default=None,
+        help="Override the preset's natural-lean sample count. The default follows the preset.",
+    )
     parser.add_argument("--sample-temperature", type=float, default=0.7)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--checkpoint-every", type=int, default=20)
     args = parser.parse_args(argv)
 
-    from jspace.loading import load_stack
-
-    fresh = read_jsonl(args.records)
+    preset = get_preset(args.preset)
+    fresh = apply_preset(read_jsonl(args.records), preset)
     if args.out.is_file() and args.out.resolve() != args.records.resolve():
         fresh = merge_existing(fresh, read_jsonl(args.out))
-    elif args.out.is_file():
-        fresh = read_jsonl(args.out)
+    elif args.out.is_file() and args.out.resolve() == args.records.resolve():
+        fresh = apply_preset(read_jsonl(args.out), preset)
+
+    natural_samples = preset.natural_samples if args.natural_samples is None else args.natural_samples
+    sample_ids = set(natural_sample_ids(fresh, preset)) if natural_samples else set()
+    estimate = estimate_run(fresh, preset, natural_samples=natural_samples)
+    print(format_estimate(estimate))
+    if preset.name == "full" and natural_samples == 0:
+        print(optional_full_natural_line(fresh))
 
     natural_path = args.out.with_suffix(".natural.jsonl")
     report_path = args.out.with_suffix(".natural_report.json")
     already = _load_sample_ids(natural_path)
 
+    from jspace.loading import load_stack
+
     stack = load_stack()
     config = GenerateConfig(
         max_new_tokens=args.max_new_tokens,
         temperature=args.temperature,
-        natural_samples=args.natural_samples,
+        natural_samples=natural_samples,
+        natural_item_ids=None if natural_samples == 0 else sample_ids,
         sample_temperature=args.sample_temperature,
         activations_dir=args.activations_dir,
         limit=args.limit,

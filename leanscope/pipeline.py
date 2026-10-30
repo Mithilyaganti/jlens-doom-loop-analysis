@@ -112,6 +112,9 @@ class GenerateConfig:
     sample_temperature: float = 0.7
     activations_dir: Path | None = None
     limit: int | None = None
+    # None samples every none and trait row. A set samples only those item ids,
+    # which is how a preset keeps natural-lean draws on a scenario subset.
+    natural_item_ids: set[str] | None = None
 
 
 def merge_existing(fresh: Sequence[Record], existing: Sequence[Record]) -> list[Record]:
@@ -206,7 +209,12 @@ def generate_records(
             record.output_text = str(generated.get("generated_text", ""))
             record.recommended = parse_recommendation(record.output_text, record.scenario)
 
-        if config.natural_samples > 0 and record.condition.kind in ("none", "trait"):
+        sample_this = (
+            config.natural_samples > 0
+            and record.condition.kind in ("none", "trait")
+            and (config.natural_item_ids is None or record.item_id in config.natural_item_ids)
+        )
+        if sample_this:
             if record.item_id in already_sampled:
                 continue
             samples: list[str] = []
