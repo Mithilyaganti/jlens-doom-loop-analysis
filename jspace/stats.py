@@ -10,6 +10,7 @@ Typical use:
     point, lo, hi = bootstrap_ci(trigger_alignments, n_boot=2000, seed=0)
     p = permutation_test(loop_occupancies, nonloop_occupancies, n_perm=10000)
     res = mcnemar_exact(b=2, c=9)  # discordant pairs of a paired 2x2 table
+    adjusted = holm_adjust([res["p_exact"]])
 """
 
 from __future__ import annotations
@@ -28,6 +29,8 @@ __all__ = [
     "wilson_ci",
     "mcnemar_power",
     "mcnemar_sample_size",
+    "holm_adjust",
+    "benjamini_hochberg",
 ]
 
 StatSpec = Union[None, str, Callable[[np.ndarray], float]]
@@ -271,3 +274,68 @@ def mcnemar_sample_size(
         else:
             lo = mid + 1
     return int(lo)
+
+
+def holm_adjust(p_values: Sequence[float]) -> np.ndarray:
+    """Holm step-down adjusted p-values, in the input order.
+
+    For finite p-values sorted so that p_(1) <= ... <= p_(m):
+
+        a_(i) = min(1, max_{j<=i} (m - j + 1) * p_(j))
+
+    with i, j counted from 1. Non-finite inputs stay NaN and are not in m.
+    This does not choose which contrasts belong in the family.
+    """
+    p = np.asarray(list(p_values), dtype=float).ravel()
+    out = np.full(p.shape, np.nan, dtype=float)
+    finite_idx = np.flatnonzero(np.isfinite(p))
+    if finite_idx.size == 0:
+        return out
+    raw = p[finite_idx]
+    order = np.argsort(raw, kind="mergesort")
+    ranked = raw[order]
+    m = int(ranked.size)
+    adjusted = np.empty(m, dtype=float)
+    running = 0.0
+    for i in range(m):
+        # i is 0-based; the Holm multiplier is m - i.
+        scaled = min(1.0, (m - i) * float(ranked[i]))
+        running = max(running, scaled)
+        adjusted[i] = running
+    unsorted = np.empty(m, dtype=float)
+    unsorted[order] = adjusted
+    out[finite_idx] = unsorted
+    return out
+
+
+def benjamini_hochberg(p_values: Sequence[float]) -> np.ndarray:
+    """Benjamini-Hochberg adjusted p-values, in the input order.
+
+    For finite p-values sorted so that p_(1) <= ... <= p_(m), with ranks
+    starting at 1:
+
+        raw_(i) = min(1, (m / i) * p_(i))
+        a_(i) = min(a_(i+1), raw_(i))    with a_(m) = raw_(m)
+
+    Non-finite inputs stay NaN and are not in m.
+    """
+    p = np.asarray(list(p_values), dtype=float).ravel()
+    out = np.full(p.shape, np.nan, dtype=float)
+    finite_idx = np.flatnonzero(np.isfinite(p))
+    if finite_idx.size == 0:
+        return out
+    raw = p[finite_idx]
+    order = np.argsort(raw, kind="mergesort")
+    ranked = raw[order]
+    m = int(ranked.size)
+    adjusted = np.empty(m, dtype=float)
+    ceiling = 1.0
+    for i in range(m - 1, -1, -1):
+        rank = i + 1
+        scaled = min(1.0, (m / rank) * float(ranked[i]))
+        ceiling = min(ceiling, scaled)
+        adjusted[i] = ceiling
+    unsorted = np.empty(m, dtype=float)
+    unsorted[order] = adjusted
+    out[finite_idx] = unsorted
+    return out
