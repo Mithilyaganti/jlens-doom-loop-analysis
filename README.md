@@ -126,6 +126,16 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
 
+## CPU path: Exp3 decoding baselines
+
+Two Hugging Face decoding arms sit next to the anti-doom sidecar in draft PR #2. They are not that sidecar. They stay off unless you set `JLENS_EXP3_DECODING_BASELINES=1` before `scripts/05_exp3_causal.py`. No GPU run is required to check the wiring:
+
+```bash
+python -m pytest tests/test_decoding_baselines.py -q
+```
+
+The penalty (`1.2`) and n-gram size (`4`) are fixed untuned settings. This checkout has no generation metric for either arm.
+
 ## Citations (required)
 
 Liquid AI Antidoom (Jul 2026); Anthropic J-lens `arXiv:2607.15495`; Lazaridis et al. `arXiv:2606.13705`; Silent Alarm / JADR `arXiv:2607.12792`; Elie Bakouch open-jlens-data; related loop papers in PROJECT_SPEC §14.
