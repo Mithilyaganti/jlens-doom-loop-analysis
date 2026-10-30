@@ -1,0 +1,8 @@
+# Optional. The unit tests of the pure functions need only the standard library
+# and the repo's jspace package (imported, not modified).
+#
+# Rebuild the corpus: pyarrow, huggingface_hub
+# Re-measure the offset bug: tokenizers
+pyarrow>=14
+huggingface_hub>=0.28
+tokenizers>=0.20
