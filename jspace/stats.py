@@ -5,9 +5,10 @@ the Windows laptop, in Colab, and inside CPU-only unit tests (no torch, no
 scipy dependency).
 
 Typical use:
-    from jspace.stats import bootstrap_ci, permutation_test, mcnemar_exact
+    from jspace.stats import bootstrap_ci, clustered_bootstrap_ci, permutation_test, mcnemar_exact
 
     point, lo, hi = bootstrap_ci(trigger_alignments, n_boot=2000, seed=0)
+    ci = clustered_bootstrap_ci(scenario_ids, auroc_on_indices, n_boot=2000, seed=0)
     p = permutation_test(loop_occupancies, nonloop_occupancies, n_perm=10000)
     res = mcnemar_exact(b=2, c=9)  # discordant pairs of a paired 2x2 table
 """
@@ -21,6 +22,7 @@ import numpy as np
 
 __all__ = [
     "bootstrap_ci",
+    "clustered_bootstrap_ci",
     "permutation_test",
     "paired_permutation_test",
     "mcnemar_exact",
@@ -108,6 +110,71 @@ def bootstrap_ci(
     alpha = (100.0 - ci) / 2.0
     lo, hi = np.percentile(reps, [alpha, 100.0 - alpha])
     return (point, float(lo), float(hi))
+
+
+def clustered_bootstrap_ci(
+    cluster_ids: Sequence,
+    stat_fn: Callable[[np.ndarray], float],
+    n_boot: int = 2000,
+    ci: float = 95.0,
+    seed: int = 0,
+) -> dict:
+    """Bootstrap that resamples clusters and keeps every row of a drawn cluster.
+
+    A cluster drawn twice contributes its rows twice. ``stat_fn`` receives the
+    integer positions into the original rows (duplicates included). Non-finite
+    replicates are dropped before the percentile interval. Returns a dict with
+    ``point``, ``lo``, ``hi``, ``n_boot_finite``, ``n_boot`` and ``ci``.
+
+    LeanScope passes ``scenario_id`` as ``cluster_ids`` so paraphrases and
+    option orders of one scenario stay together. This is the same resampling
+    scheme as the forecasting branch's prompt-clustered bootstrap (that module
+    is not on this branch); the implementation here stays numpy-only, like the
+    rest of ``jspace.stats``.
+    """
+    cluster_ids = np.asarray(cluster_ids)
+    empty = {
+        "point": float("nan"),
+        "lo": float("nan"),
+        "hi": float("nan"),
+        "n_boot_finite": 0,
+        "n_boot": int(n_boot),
+        "ci": float(ci),
+    }
+    if cluster_ids.size == 0:
+        return empty
+    _uniq, inverse = np.unique(cluster_ids, return_inverse=True)
+    groups = [np.flatnonzero(inverse == i) for i in range(int(_uniq.size))]
+
+    def _call(idx: np.ndarray) -> float:
+        try:
+            return float(stat_fn(np.asarray(idx, dtype=int)))
+        except Exception:
+            return float("nan")
+
+    point = _call(np.arange(cluster_ids.size))
+    rng = np.random.default_rng(seed)
+    n_u = len(groups)
+    reps = np.empty(int(n_boot), dtype=float)
+    draws = rng.integers(0, n_u, size=(int(n_boot), n_u))
+    for b in range(int(n_boot)):
+        idx = np.concatenate([groups[int(j)] for j in draws[b]])
+        reps[b] = _call(idx)
+    finite = reps[np.isfinite(reps)]
+    if finite.size == 0 or not np.isfinite(point):
+        lo = hi = float("nan")
+    else:
+        alpha = (100.0 - float(ci)) / 2.0
+        lo_v, hi_v = np.percentile(finite, [alpha, 100.0 - alpha])
+        lo, hi = float(lo_v), float(hi_v)
+    return {
+        "point": point if np.isfinite(point) else float("nan"),
+        "lo": lo,
+        "hi": hi,
+        "n_boot_finite": int(finite.size),
+        "n_boot": int(n_boot),
+        "ci": float(ci),
+    }
 
 
 def permutation_test(

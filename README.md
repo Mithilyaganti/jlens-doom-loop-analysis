@@ -102,6 +102,48 @@ vendor/            # open-jlens-data, antidoom
 lenses/            # pre-fitted .pt
 ```
 
+## LeanScope (paper 2 data)
+
+Hidden-lean items for a follow-up study on Qwen3.5-4B. The package is `leanscope/`. Letters are canonical: `A` is `option_a` and `B` is `option_b` under both presentation orders. `order=BA` only prints option B first.
+
+| Module | Role |
+| --- | --- |
+| `leanscope/schema.py` | `Scenario`, `LeanCondition`, `Record`, JSONL read/write |
+| `leanscope/scenarios.py` | Three families, five paraphrases, both orders, DeepSeek V4.1 Flash drafter plus an offline fake |
+| `leanscope/conditions.py` | No prompt, assigned lean at four strengths, structure-matched neutral, trait, conceal |
+| `leanscope/splits.py` | Hash-locked train/dev/test by `scenario_id`, same write-once rule as `jspace/eval_sets.py` |
+| `leanscope/labels.py` | Greedy recommendation, natural-lean majority and agreement, voiced/silent judge, hand-label check |
+| `leanscope/presets.py` | `pilot`, `main`, and `full` subsets of the same locked splits and coin flips |
+| `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL, with `--preset` |
+| `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading`, with `--preset` |
+
+The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (100 scenarios: 34 analysis, 33 product, 33 advice). The frozen split file is `data/leanscope/split_lock.json`, a 60/15/25 rank cut by scenario (60 train, 15 dev, 25 test). Assigned leans are a seeded coin flip on `scenario_id` (seed 42). Expanding the seed gives 14,000 records (100 scenarios x 5 paraphrases x 2 orders x 14 conditions). That full file is unchanged. `--preset pilot` and `--preset main` only drop rows from it. A kept scenario keeps its locked split and its coin-flip lean.
+
+CPU tests, no model download and no API call. `tests/test_leanscope_e2e.py` runs data, recording, D1, the J-lens steer, and the score-triggered panel:
+
+```bash
+python -m pytest tests -q
+```
+
+GPU generation was not run here. The hour column is an estimate, not a measurement: 50 tokens/s of decode on an L4, 300 new tokens (6 seconds per generation). Activations add about half of that again on the greedy pass, so greedy hours are 1.5 times the decode hours. Natural-lean samples are decode only. Both build and generate print `records=` and `estimated_l4_hours=` for the preset they are about to run. The full command order, including detection, the D1 steer, and the panel, is `scripts/lean_run_all.sh` and `docs/leanscope_gpu_runbook.md`.
+
+| Preset | What it keeps | Records | Natural-lean samples | Estimated L4-hours |
+| --- | --- | --- | --- | --- |
+| `pilot` | 40 scenarios (24 train / 6 dev / 10 test, families kept even), paraphrases p0–p1, both orders, `none` plus explicit and soft assigned and neutral prompts | 800 | 10 on each kept `none` row (1,600 generations) | 4.7 |
+| `main` | all 100 scenarios, paraphrases p0–p2, both orders, `none`, `trait`, and all four assigned and neutral strengths | 6,000 | 10 on the locked dev split's `none` and `trait` rows (1,800 generations) | 18.0 |
+| `full` | every paraphrase, order, and condition | 14,000 | off unless you pass `--natural-samples 20` (40,000 generations, about 67 hours) | 35.0 with activations; about 101.7 with that natural-sample pass |
+
+Pass the same `--preset` to generate if the records file is the full 14,000-row build. The filter is the same subset either way.
+
+## LeanScope detection
+
+`leanscope/positions.py` records residuals at P0 (last prompt token), P1 (token before the first option word), and optional P2. `leanscope/detectors.py` is D1–D7. D1 is the J-lens concept readout (option A minus option B). `leanscope/metrics.py` reports lean-direction AUROC with scenario-clustered bootstrap intervals from `jspace.stats`.
+
+```bash
+python scripts/lean_02_record.py --fake --out results/leanscope/records.jsonl --activations-dir results/leanscope/activations
+python scripts/lean_03_detect.py --fake --records results/leanscope/records.jsonl --out results/leanscope/detection.csv --scores-out results/leanscope/d1_scores.json --samples 3 --n-boot 40
+```
+
 ## Caching (memory safety)
 
 Experiment 2 uses a **tiered cache** (PROJECT_SPEC §2.1):
@@ -125,6 +167,29 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 ## Phase 2 / 3 (not run by default)
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
+
+## LeanScope (paper 2) — causal test and alternatives panel
+
+`leanscope/` is the causal and intervention side of the hidden-lean study. It reads `Record` rows from `leanscope/schema.py` (scenario, lean condition, recommendation, split, optional activation path).
+
+- `causal.py` steers and ablates an option direction at P0 (last prompt token) and P1 (the token just before the first option word). `scripts/lean_04_causal.py --direction jlens` plugs in D1: the J-space direction of option A minus option B, one vector per item. `--direction diffmeans` keeps the train-split difference of means. The control is a norm-matched random direction. The positive control regenerates with the lean prompt removed. Flip rates use exact McNemar, Wilson intervals, and Cohen's h from `jspace.stats`.
+- `panel.py` builds the alternatives panel. C2 adds the other option's case only when the D1 score from `lean_03_detect.py --scores-out` crosses a threshold chosen on the dev split. C0 is the recommendation alone, C1 always adds the other case, and C3 is a disclosure line.
+- `simulate.py` is the Tier A pre-test. Analyst agents get a prior and see C0–C3. The agent is an `LLMClient`. CPU runs use `OfflineFakeAnalyst`. `DeepSeekFlashClient` refuses instead of placing a request. Every simulation report is labelled `pre-test, not evidence about people`.
+
+CPU tests, with no GPU and no model download:
+
+```bash
+python -m pytest tests/test_leanscope_causal.py tests/test_leanscope_panel_sim.py -q
+```
+
+Smoke entry points on the same test double:
+
+```bash
+python scripts/lean_04_causal.py --smoke-fake --out /tmp/leanscope-causal
+python scripts/lean_05_panel_sim.py --smoke-fake --out /tmp/leanscope-panel
+```
+
+A Qwen3.5-4B run of those scripts is documented in their docstrings. It is not part of the CPU tests.
 
 ## Citations (required)
 

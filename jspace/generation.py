@@ -491,3 +491,89 @@ def save_trace(out_dir: Path, trace: dict[str, Any], meta: dict[str, Any]) -> No
         if trace.get("full_ids") is not None:
             payload["full_ids"] = trace["full_ids"]
         torch.save(payload, out_dir / "tokens.pt")
+
+
+@torch.no_grad()
+def capture_residuals_one_pass(
+    stack: Any,
+    input_ids: torch.Tensor,
+    *,
+    layers: Sequence[int] | None = None,
+    token_positions: Sequence[int] | None = None,
+) -> dict[int, torch.Tensor]:
+    """One forward; hooks on ``stack.layers`` offload residuals to CPU.
+
+    Same hook strategy as the onepass branch of
+    ``cache_jlens_readouts_for_sequence``: register one forward hook per
+    requested layer, run ``stack.model`` a single time, copy only the requested
+    token positions to CPU inside the hook, then remove every hook.
+
+    Parameters
+    ----------
+    input_ids:
+        ``[seq]`` or ``[1, seq]`` token ids.
+    layers:
+        Decoder-layer indices to hook. Default: every ``stack.layers`` index.
+    token_positions:
+        Positions to keep, in this order. Default: the full sequence.
+
+    Returns
+    -------
+    ``{layer: float32 CPU tensor [n_pos, d_model]}``. Row ``i`` is
+    ``token_positions[i]``.
+    """
+    if input_ids.dim() == 1:
+        input_ids = input_ids.unsqueeze(0)
+    if input_ids.shape[0] != 1:
+        raise ValueError("capture_residuals_one_pass expects a batch of 1")
+    device = getattr(stack, "device", input_ids.device)
+    input_ids = input_ids.to(device)
+    n_layers = len(stack.layers)
+    if layers is None:
+        layer_ids = list(range(n_layers))
+    else:
+        layer_ids = []
+        for layer in layers:
+            idx = int(layer)
+            if 0 <= idx < n_layers and idx not in layer_ids:
+                layer_ids.append(idx)
+    if not layer_ids:
+        raise ValueError("no layers to capture")
+    seq_len = int(input_ids.shape[1])
+    if token_positions is None:
+        keep = list(range(seq_len))
+    else:
+        keep = []
+        for pos in token_positions:
+            idx = int(pos)
+            if 0 <= idx < seq_len:
+                keep.append(idx)
+    if not keep:
+        raise ValueError("no token positions in range")
+
+    captured: dict[int, torch.Tensor] = {}
+    index = torch.tensor(keep, dtype=torch.long)
+
+    def _hook(layer_idx: int):
+        def hook(module: Any, inputs: Any, output: Any) -> None:
+            tensor = output if torch.is_tensor(output) else output[0]
+            if tensor.dim() == 3:
+                tensor = tensor[0]
+            captured[layer_idx] = (
+                tensor.index_select(0, index.to(tensor.device))
+                .detach()
+                .to("cpu", dtype=torch.float32)
+            )
+
+        return hook
+
+    handles = [stack.layers[layer].register_forward_hook(_hook(layer)) for layer in layer_ids]
+    try:
+        stack.model(input_ids=input_ids, use_cache=False)
+    finally:
+        for handle in handles:
+            handle.remove()
+    missing = [layer for layer in layer_ids if layer not in captured]
+    if missing:
+        raise RuntimeError(f"forward hooks did not fire for layers {missing}")
+    return captured
