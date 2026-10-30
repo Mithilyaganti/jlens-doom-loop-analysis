@@ -2,7 +2,7 @@
 
 ## What you are running
 
-**A1 only:** 200 prompts (seed=42), `max_new_tokens=4000`, `temperature=0.01`, official `Qwen/Qwen3.5-4B`, **vLLM bfloat16** on T4.
+**A1 only:** 200 prompts (seed=42), `max_new_tokens=4000`, greedy (`temperature=0`), official `Qwen/Qwen3.5-4B`, **vLLM bfloat16** on T4.
 
 Not Exp1/2/3. Not nerfed.
 
@@ -48,4 +48,11 @@ New runtime → Cells **1–5** → **Cell 7** again. Completed prompts are skip
 
 ## Time honesty
 
-T4 + 4000 tokens: **4–5 hours may be partial**. Local checkpoint every prompt; Drive sync every **10** prompts (+ start/final). Resume next session until `n_completed=200`.
+T4 + 4000 tokens can still take hours. Two speedups keep the cap at 4000:
+
+- **vLLM** submits chunks of 4 (`JLENS_BASELINE_BATCH_SIZE`, `JLENS_VLLM_MAX_NUM_SEQS`). A disconnect loses at most the in-flight chunk. Set the batch size to `all` only if you want the old single call.
+- **HF fallback** (the usual T4 path when vLLM cannot import) stops a trace once the character detector has already confirmed a loop (`JLENS_BASELINE_EARLY_STOP=1`, checked every 32 new tokens). Non-looping traces still run to EOS or 4000, so a loop label cannot flip off. SDPA is requested via `JLENS_HF_ATTN=sdpa`.
+
+`JLENS_ANTIDOOM_SIDECAR` stays **0** in this notebook. Turning it on forces the HF backend and blocks the token that would extend a repeated n-gram. That run is an intervention, not the unsteered baseline, and the summary says so.
+
+Local checkpoint every prompt; Drive sync every **10** prompts (+ start/final). Resume next session until `n_completed=200`.

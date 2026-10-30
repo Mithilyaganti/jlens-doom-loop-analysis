@@ -120,22 +120,27 @@ def generate_greedy(
     vllm_generator: Any = None,
     prompt_id: int | None = None,
     logits_processor: Sequence[Any] | None = None,
+    early_stop: bool = False,
 ) -> dict[str, Any]:
     """Generate completion (greedy by default; seeded sampling at T>0).
 
     Uses vLLM if generator provided. torch.manual_seed is set from the
     per-prompt seed before every generate call. ``logits_processor`` applies
-    to the HF path only (e.g. the Exp3 logit-suppression positive control).
+    to the HF path only (e.g. the Exp3 logit-suppression positive control,
+    or the anti-doom sidecar). ``early_stop`` attaches the loop-confirmed
+    stopping criterion on the HF path only; vLLM uses chunked batches instead.
     """
     plan = sampling_plan(prompt_id, temperature=temperature)
     if vllm_generator is not None:
-        return vllm_generator.generate(
+        out = vllm_generator.generate(
             prompt_text,
             max_new_tokens=max_new_tokens,
             temperature=plan["temperature"],
             seed=plan["seed"],
             tokenizer=stack.tokenizer,
         )
+        out["early_stopped"] = False
+        return out
 
     tokenizer = stack.tokenizer
     model = stack.model
@@ -153,6 +158,14 @@ def generate_greedy(
     )
     if logits_processor:
         gen_kwargs["logits_processor"] = list(logits_processor)
+    stop_criteria = None
+    if early_stop:
+        from jspace.baseline_speed import LoopConfirmedStoppingCriteria, early_stop_every
+
+        stop_criteria = LoopConfirmedStoppingCriteria(
+            tokenizer, prompt_len, check_every=early_stop_every()
+        )
+        gen_kwargs["stopping_criteria"] = [stop_criteria]
     out = model.generate(input_ids=input_ids, attention_mask=attention_mask, **gen_kwargs)
     gen_ids = out[0, prompt_len:].tolist()
     gen_text = tokenizer.decode(gen_ids, skip_special_tokens=True)
@@ -166,6 +179,7 @@ def generate_greedy(
         "seed": plan["seed"],
         "temperature": plan["temperature"],
         "greedy": plan["greedy"],
+        "early_stopped": bool(stop_criteria.stopped) if stop_criteria is not None else False,
     }
 
 
@@ -181,10 +195,13 @@ def generate_with_tiered_cache(
     cache_tier3: bool = False,
     vllm_generator: Any = None,
     prompt_id: int | None = None,
+    logits_processor: Sequence[Any] | None = None,
+    early_stop: bool = False,
 ) -> dict[str, Any]:
     """Generate with Tier-1 readouts (+ Tier-2 workspace residuals).
 
     If stack.lens is None, still generates + detects loops but skips J-lens caches.
+    ``logits_processor`` and ``early_stop`` are forwarded to the HF generate call.
     """
     gen = generate_greedy(
         stack,
@@ -193,6 +210,8 @@ def generate_with_tiered_cache(
         temperature=temperature,
         vllm_generator=vllm_generator,
         prompt_id=prompt_id,
+        logits_processor=logits_processor,
+        early_stop=early_stop,
     )
     gen_ids = gen["generated_ids"]
     loop = detect_loop(
@@ -457,7 +476,13 @@ def loop_result_to_meta(loop: Any, gen: dict[str, Any], prompt_id: Any = None) -
         "seed": gen.get("seed"),
         "temperature": gen.get("temperature"),
         "greedy": gen.get("greedy"),
+        "early_stopped": bool(gen.get("early_stopped", False)),
+        "sidecar_enabled": bool(gen.get("sidecar_enabled", False)),
+        "sidecar_suppressed_steps": int(gen.get("sidecar_suppressed_steps") or 0),
     }
+    blocked = gen.get("sidecar_blocked_token_ids")
+    if blocked:
+        meta["sidecar_blocked_token_ids"] = [int(t) for t in list(blocked)[:16]]
     if meta["is_loop"]:
         # Best effort: detector fields may be absent on unusual hits.
         trig_id = getattr(loop, "trigger_token_id", None)
