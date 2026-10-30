@@ -1,7 +1,11 @@
-"""LeanScope data layer: scenarios, lean conditions, locked splits, labels.
+"""LeanScope: hidden-lean detection with a J-lens (paper 2).
 
-Paper 2 on the shared J-lens probe library. This package builds the items and
-reads the behavioural labels. It does not train detectors.
+The package is the shared study code, not part of paper 1. Records use one
+schema (:class:`leanscope.schema.Record`). Data builds the items, detection
+reads residuals at P0 and P1, and the causal and panel modules steer that
+detector direction and open an alternatives panel when its score fires.
+
+CPU tests use a fake model. Nothing here downloads Qwen or calls a paid API.
 """
 
 from leanscope.schema import LeanCondition, Record, Scenario

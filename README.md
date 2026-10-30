@@ -124,7 +124,16 @@ CPU tests, no model download and no API call:
 python -m pytest tests/test_leanscope_data.py -q
 ```
 
-GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 1680 greedy generations. Budget about 4 to 6 L4-hours with activations, and several more if you add `--natural-samples 20`.
+GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 1680 greedy generations. Budget about 4 to 6 L4-hours with activations, and several more if you add `--natural-samples 20`. The full GPU order, including detection, the causal plug-in, and the panel, is `scripts/lean_run_all.sh` and `docs/leanscope_gpu_runbook.md`.
+
+## LeanScope detection
+
+`leanscope/positions.py` records residuals at P0 (last prompt token), P1 (token before the first option word), and optional P2. `leanscope/detectors.py` is D1–D7. D1 is the J-lens concept readout (option A minus option B). `leanscope/metrics.py` reports lean-direction AUROC with scenario-clustered bootstrap intervals from `jspace.stats`.
+
+```bash
+python scripts/lean_02_record.py --fake --out results/leanscope/records.jsonl --activations-dir results/leanscope/activations
+python scripts/lean_03_detect.py --fake --records results/leanscope/records.jsonl --out results/leanscope/detection.csv --scores-out results/leanscope/d1_scores.json --samples 3 --n-boot 40
+```
 
 ## Caching (memory safety)
 

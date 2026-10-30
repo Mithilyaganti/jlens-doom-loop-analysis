@@ -86,6 +86,7 @@ class Scenario:
     order: Order
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "paraphrase_id", str(self.paraphrase_id))
         if not str(self.scenario_id).strip():
             raise ValueError("scenario_id is empty")
         _one_of(self.family, FAMILIES, "family")
@@ -104,7 +105,10 @@ class Scenario:
 class LeanCondition:
     """One lean installation, including the exact system prompt that carries it.
 
-    ``strength`` and ``lean`` are None for ``none`` and ``trait``.
+    ``none`` has no strength, no lean, and an empty prompt.
+    ``trait`` is the same no-prompt condition. ``lean`` stays None until a
+    behavioural natural-lean label is stored; detectors read that label from
+    ``lean``. The prompt stays empty either way.
     ``neutral_matched`` keeps the strength it is matched to and has ``lean`` None.
     ``assigned`` and ``conceal`` have both a strength and a canonical lean.
     """
@@ -122,11 +126,16 @@ class LeanCondition:
             _one_of(self.lean, SIDES, "lean")
         if not isinstance(self.system_prompt, str):
             raise ValueError("system_prompt must be a string")
-        if self.kind in ("none", "trait"):
+        if self.kind == "none":
             if self.strength is not None or self.lean is not None:
-                raise ValueError(f"{self.kind} conditions have no strength and no lean")
+                raise ValueError("none conditions have no strength and no lean")
             if self.system_prompt != "":
-                raise ValueError(f"{self.kind} is the no-prompt condition")
+                raise ValueError("none is the no-prompt condition")
+        elif self.kind == "trait":
+            if self.strength is not None:
+                raise ValueError("trait conditions have no strength")
+            if self.system_prompt != "":
+                raise ValueError("trait is the no-prompt condition")
         elif self.kind == "neutral_matched":
             if self.strength is None or self.lean is not None:
                 raise ValueError("neutral_matched needs a strength and lean=None")
@@ -257,3 +266,13 @@ def iter_jsonl(path: Path | str) -> Iterator[Record]:
                 yield record_from_dict(payload)
             except (TypeError, ValueError) as exc:
                 raise ValueError(f"{path}:{line_no}: {exc}") from exc
+
+
+def read_records(path: Path | str) -> list[Record]:
+    """Alias of :func:`read_jsonl` used by the detection scripts."""
+    return read_jsonl(path)
+
+
+def write_records(path: Path | str, records: Iterable[Record]) -> int:
+    """Alias of :func:`write_jsonl` used by the detection scripts."""
+    return write_jsonl(path, records)
