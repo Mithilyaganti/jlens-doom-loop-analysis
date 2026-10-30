@@ -126,6 +126,20 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
 
+## CPU path: tests and notebook lint
+
+GitHub Actions workflow `.github/workflows/cpu-tests.yml` runs on `ubuntu-latest`. It does not use a GPU runner. Locally:
+
+```bash
+python -m pip install "numpy==1.26.4" "pytest==8.3.5"
+python -m pytest tests/test_stats.py tests/test_notebook_lint.py -q
+python scripts/lint_notebooks.py
+```
+
+The notebook lint parses each code cell after stripping only column-0 `!` and `%` magics. An indented magic is a SyntaxError, which is what Colab reports when it does not rewrite that line. Shell steps in the notebooks that used to sit inside `if` / `try` now call `subprocess`.
+
+Torch-dependent tests (`tests/test_generation_logic.py`, `tests/test_intervention.py`, `tests/test_analysis_stats.py`) are not in this workflow. This environment has no torch, so they were not run here.
+
 ## Citations (required)
 
 Liquid AI Antidoom (Jul 2026); Anthropic J-lens `arXiv:2607.15495`; Lazaridis et al. `arXiv:2606.13705`; Silent Alarm / JADR `arXiv:2607.12792`; Elie Bakouch open-jlens-data; related loop papers in PROJECT_SPEC §14.
