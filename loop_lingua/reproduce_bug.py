@@ -75,7 +75,7 @@ def run() -> dict[str, object]:
         }
     return {
         "tokenizer": TOKENIZER_REPO,
-        "tokenizer_json": str(path),
+        "tokenizer_revision": TOKENIZER_REVISION,
         "dataset": "MGSM",
         "definition": (
             "A text mismatches when jspace.detection.TokenState's per-token "

@@ -1,0 +1,708 @@
+{
+  "status": "placeholder",
+  "n_slots": 100,
+  "hand_edited": 0,
+  "note": "Hand-edit code-mixed Telugu-English (Tenglish) prompts. Do not fill these with machine translations or automatic code-mixing. Each slot points at a matched item so the edit can stay parallel.",
+  "slots": [
+    {
+      "slot": 0,
+      "item_id": "mmlu-prox-lite-198",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 1,
+      "item_id": "mmlu-prox-lite-101",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 2,
+      "item_id": "mmlu-prox-lite-234",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 3,
+      "item_id": "mmlu-prox-lite-566",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 4,
+      "item_id": "mmlu-prox-lite-390",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 5,
+      "item_id": "mmlu-prox-lite-610",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 6,
+      "item_id": "mmlu-prox-lite-355",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 7,
+      "item_id": "mmlu-prox-lite-290",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 8,
+      "item_id": "mmlu-prox-lite-110",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 9,
+      "item_id": "mmlu-prox-lite-434",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 10,
+      "item_id": "mmlu-prox-lite-309",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 11,
+      "item_id": "mmlu-prox-lite-585",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 12,
+      "item_id": "mmlu-prox-lite-501",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 13,
+      "item_id": "mmlu-prox-lite-158",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 14,
+      "item_id": "mmlu-prox-lite-199",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 15,
+      "item_id": "mmlu-prox-lite-103",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 16,
+      "item_id": "mmlu-prox-lite-235",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 17,
+      "item_id": "mmlu-prox-lite-569",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 18,
+      "item_id": "mmlu-prox-lite-391",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 19,
+      "item_id": "mmlu-prox-lite-611",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 20,
+      "item_id": "mmlu-prox-lite-356",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 21,
+      "item_id": "mmlu-prox-lite-292",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 22,
+      "item_id": "mmlu-prox-lite-112",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 23,
+      "item_id": "mmlu-prox-lite-437",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 24,
+      "item_id": "mmlu-prox-lite-311",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 25,
+      "item_id": "mmlu-prox-lite-586",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 26,
+      "item_id": "mmlu-prox-lite-503",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 27,
+      "item_id": "mmlu-prox-lite-160",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 28,
+      "item_id": "mmlu-prox-lite-203",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 29,
+      "item_id": "mmlu-prox-lite-107",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 30,
+      "item_id": "mmlu-prox-lite-237",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 31,
+      "item_id": "mmlu-prox-lite-571",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 32,
+      "item_id": "mmlu-prox-lite-397",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 33,
+      "item_id": "mmlu-prox-lite-613",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 34,
+      "item_id": "mmlu-prox-lite-357",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 35,
+      "item_id": "mmlu-prox-lite-293",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 36,
+      "item_id": "mmlu-prox-lite-114",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 37,
+      "item_id": "mmlu-prox-lite-439",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 38,
+      "item_id": "mmlu-prox-lite-313",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 39,
+      "item_id": "mmlu-prox-lite-587",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 40,
+      "item_id": "mmlu-prox-lite-504",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 41,
+      "item_id": "mmlu-prox-lite-161",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 42,
+      "item_id": "mmlu-prox-lite-204",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 43,
+      "item_id": "mmlu-prox-lite-70",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 44,
+      "item_id": "mmlu-prox-lite-241",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 45,
+      "item_id": "mmlu-prox-lite-572",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 46,
+      "item_id": "mmlu-prox-lite-398",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 47,
+      "item_id": "mmlu-prox-lite-616",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 48,
+      "item_id": "mmlu-prox-lite-359",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 49,
+      "item_id": "mmlu-prox-lite-294",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 50,
+      "item_id": "mmlu-prox-lite-115",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 51,
+      "item_id": "mmlu-prox-lite-442",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 52,
+      "item_id": "mmlu-prox-lite-314",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 53,
+      "item_id": "mmlu-prox-lite-590",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 54,
+      "item_id": "mmlu-prox-lite-507",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 55,
+      "item_id": "mmlu-prox-lite-166",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 56,
+      "item_id": "mmlu-prox-lite-205",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 57,
+      "item_id": "mmlu-prox-lite-72",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 58,
+      "item_id": "mmlu-prox-lite-242",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 59,
+      "item_id": "mmlu-prox-lite-575",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 60,
+      "item_id": "mmlu-prox-lite-399",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 61,
+      "item_id": "mmlu-prox-lite-619",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 62,
+      "item_id": "mmlu-prox-lite-361",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 63,
+      "item_id": "mmlu-prox-lite-296",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 64,
+      "item_id": "mmlu-prox-lite-117",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 65,
+      "item_id": "mmlu-prox-lite-446",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 66,
+      "item_id": "mmlu-prox-lite-322",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 67,
+      "item_id": "mmlu-prox-lite-596",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 68,
+      "item_id": "mmlu-prox-lite-512",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 69,
+      "item_id": "mmlu-prox-lite-168",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 70,
+      "item_id": "mmlu-prox-lite-209",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 71,
+      "item_id": "mmlu-prox-lite-73",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 72,
+      "item_id": "mmlu-prox-lite-245",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 73,
+      "item_id": "mmlu-prox-lite-576",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 74,
+      "item_id": "mmlu-prox-lite-400",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 75,
+      "item_id": "mmlu-prox-lite-620",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 76,
+      "item_id": "mmlu-prox-lite-362",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 77,
+      "item_id": "mmlu-prox-lite-297",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 78,
+      "item_id": "mmlu-prox-lite-118",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 79,
+      "item_id": "mmlu-prox-lite-449",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 80,
+      "item_id": "mmlu-prox-lite-324",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 81,
+      "item_id": "mmlu-prox-lite-597",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 82,
+      "item_id": "mmlu-prox-lite-513",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 83,
+      "item_id": "mmlu-prox-lite-169",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 84,
+      "item_id": "mmlu-prox-lite-210",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 85,
+      "item_id": "mmlu-prox-lite-74",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 86,
+      "item_id": "mmlu-prox-lite-249",
+      "category": "chemistry",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 87,
+      "item_id": "mmlu-prox-lite-577",
+      "category": "computer science",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 88,
+      "item_id": "mmlu-prox-lite-401",
+      "category": "economics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 89,
+      "item_id": "mmlu-prox-lite-622",
+      "category": "engineering",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 90,
+      "item_id": "mmlu-prox-lite-363",
+      "category": "health",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 91,
+      "item_id": "mmlu-prox-lite-298",
+      "category": "history",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 92,
+      "item_id": "mmlu-prox-lite-120",
+      "category": "law",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 93,
+      "item_id": "mmlu-prox-lite-450",
+      "category": "math",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 94,
+      "item_id": "mmlu-prox-lite-325",
+      "category": "other",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 95,
+      "item_id": "mmlu-prox-lite-600",
+      "category": "philosophy",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 96,
+      "item_id": "mmlu-prox-lite-514",
+      "category": "physics",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 97,
+      "item_id": "mmlu-prox-lite-172",
+      "category": "psychology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 98,
+      "item_id": "mmlu-prox-lite-213",
+      "category": "biology",
+      "prompt": null,
+      "edited": false
+    },
+    {
+      "slot": 99,
+      "item_id": "mmlu-prox-lite-76",
+      "category": "business",
+      "prompt": null,
+      "edited": false
+    }
+  ]
+}

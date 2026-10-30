@@ -1,0 +1,18 @@
+{
+  "tokenizer": "Qwen/Qwen3.5-4B",
+  "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "dataset": "MGSM",
+  "definition": "A text mismatches when jspace.detection.TokenState's per-token decode is not the tokenizer's full-sequence decode.",
+  "languages": {
+    "en": {
+      "n_texts": 250,
+      "n_length_mismatches": 0,
+      "n_offset_mismatches": 0
+    },
+    "te": {
+      "n_texts": 250,
+      "n_length_mismatches": 149,
+      "n_offset_mismatches": 149
+    }
+  }
+}
