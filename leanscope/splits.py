@@ -5,10 +5,11 @@ drawn once from a fixed rule, written to a JSON file, and that file is the
 source of truth afterwards. Paraphrase id and option order are not inputs, so
 every surface of a scenario stays in one split.
 
-The first lock rank-cuts SHA-256(salt || scenario_id) into 60/20/20. That cut
-is a pure function of the id set and the salt, so it is fixed before any model
-output. Ids added later are appended with a per-id hash bucket and do not move
-ids already in the file.
+The lock rank-cuts SHA-256(salt || scenario_id) into 60/15/25 (train/dev/test).
+That cut is a pure function of the id set and the salt, so it is fixed before
+any model output. The pool was re-cut at these ratios when the hand-written
+scenarios grew, still before any model output. Ids added later are appended
+with a per-id hash bucket and do not move ids already in the file.
 """
 
 from __future__ import annotations
@@ -26,7 +27,7 @@ DEFAULT_LOCK_PATH = ROOT / "data" / "leanscope" / "split_lock.json"
 
 SPLIT_SALT = "leanscope-split-v1"
 # train, dev, test. Largest-remainder rounding, ties broken toward the later split.
-SPLIT_RATIOS: tuple[float, float, float] = (0.6, 0.2, 0.2)
+SPLIT_RATIOS: tuple[float, float, float] = (0.6, 0.15, 0.25)
 
 
 def scenario_hash(scenario_id: str, *, salt: str = SPLIT_SALT) -> str:
@@ -76,7 +77,7 @@ def rank_cut(
 
 
 def hash_bucket(scenario_id: str, *, salt: str = SPLIT_SALT) -> SplitName:
-    """Per-id bucket in ``[0, 1)`` cut at 0.60 and 0.80. Does not depend on other ids."""
+    """Per-id bucket in ``[0, 1)`` cut at 0.60 and 0.75. Does not depend on other ids."""
     unit = int(scenario_hash(scenario_id, salt=salt)[:8], 16) / 0x100000000
     if unit < SPLIT_RATIOS[0]:
         return "train"

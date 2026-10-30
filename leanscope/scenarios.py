@@ -34,6 +34,19 @@ DEFAULT_SEED_PATH = ROOT / "data" / "leanscope" / "seed_scenarios.jsonl"
 PARAPHRASE_IDS: tuple[str, ...] = ("p0", "p1", "p2", "p3", "p4")
 N_PARAPHRASES = len(PARAPHRASE_IDS)
 
+# Longer option / shorter option. The hand-written pool stays under this.
+MAX_OPTION_LENGTH_RATIO = 1.5
+# Family counts may differ by this many scenarios (34/33/33 passes).
+MAX_FAMILY_COUNT_GAP = 2
+
+_SUPERIORITY = re.compile(
+    r"\b(obviously|no-brainer|strictly better|clearly better|"
+    r"the correct (?:option|choice)|the right (?:option|choice))\b",
+    re.IGNORECASE,
+)
+_VALENCE_WORDS = ("best", "worst", "superior", "inferior", "terrible", "perfect", "ideal")
+_MATCH_CUES = ("same", "match", "identical", "equal", "do not differ")
+
 _FENCE = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL | re.IGNORECASE)
 
 
@@ -73,6 +86,83 @@ class ScenarioSeed:
             raise ValueError(f"{self.scenario_id}: a paraphrase question is empty")
         if len(set(questions)) != len(questions):
             raise ValueError(f"{self.scenario_id}: paraphrases are not distinct")
+
+
+def _valence(text: str) -> set[str]:
+    folded = text.casefold()
+    return {word for word in _VALENCE_WORDS if re.search(rf"\b{word}\b", folded)}
+
+
+def validate_seed_pool(seeds: list[ScenarioSeed]) -> None:
+    """Reject a pool that is duplicated, unbalanced, or lopsided in wording.
+
+    Checks, in order:
+
+    - scenario ids are unique
+    - the three families are present and their counts differ by at most
+      ``MAX_FAMILY_COUNT_GAP`` (the balance check)
+    - no question text is repeated anywhere in the pool
+    - ``option_a`` and ``option_b`` have similar length
+    - questions do not call one side obviously correct, and the two option
+      labels do not carry different praise or blame words
+    - each product scenario's canonical question states that the specs match
+    """
+    problems: list[str] = []
+    ids = [seed.scenario_id for seed in seeds]
+    if len(ids) != len(set(ids)):
+        dupes = sorted({sid for sid in ids if ids.count(sid) > 1})
+        problems.append(f"duplicate scenario ids: {dupes}")
+
+    families = {}
+    for seed in seeds:
+        families[seed.family] = families.get(seed.family, 0) + 1
+    missing = [name for name in FAMILIES if name not in families]
+    if missing:
+        problems.append(f"missing families: {missing}")
+    elif max(families.values()) - min(families.values()) > MAX_FAMILY_COUNT_GAP:
+        problems.append(f"family counts are unbalanced: {families}")
+
+    seen_questions: dict[str, str] = {}
+    for seed in seeds:
+        length_a = len(seed.option_a.strip())
+        length_b = len(seed.option_b.strip())
+        short = min(length_a, length_b)
+        long = max(length_a, length_b)
+        if short == 0 or long / short > MAX_OPTION_LENGTH_RATIO:
+            problems.append(
+                f"{seed.scenario_id}: option lengths {length_a} and {length_b} "
+                f"exceed ratio {MAX_OPTION_LENGTH_RATIO}"
+            )
+        if _valence(seed.option_a) != _valence(seed.option_b):
+            problems.append(
+                f"{seed.scenario_id}: option labels carry different valence words"
+            )
+        if seed.family == "product":
+            canonical = seed.paraphrases[0].question.casefold()
+            if not any(cue in canonical for cue in _MATCH_CUES):
+                problems.append(
+                    f"{seed.scenario_id}: product question does not state matched specs"
+                )
+        for paraphrase in seed.paraphrases:
+            if _SUPERIORITY.search(paraphrase.question):
+                problems.append(
+                    f"{seed.scenario_id}/{paraphrase.paraphrase_id}: "
+                    "question marks one side as obviously correct"
+                )
+            key = " ".join(paraphrase.question.casefold().split())
+            previous = seen_questions.get(key)
+            if previous is not None:
+                problems.append(
+                    f"duplicate question in {seed.scenario_id}/{paraphrase.paraphrase_id} "
+                    f"and {previous}"
+                )
+            else:
+                seen_questions[key] = f"{seed.scenario_id}/{paraphrase.paraphrase_id}"
+
+    if problems:
+        preview = "\n".join(problems[:30])
+        extra = f"\n... and {len(problems) - 30} more" if len(problems) > 30 else ""
+        raise ValueError(f"seed pool failed validation ({len(problems)}):\n{preview}{extra}")
 
 
 def expand_seed(seed: ScenarioSeed) -> list[Scenario]:

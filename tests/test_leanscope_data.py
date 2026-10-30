@@ -75,10 +75,13 @@ from leanscope.scenarios import (  # noqa: E402
     PARAPHRASE_IDS,
     DeepSeekScenarioDrafter,
     FakeScenarioDrafter,
+    Paraphrase,
+    ScenarioSeed,
     expand_seed,
     extract_json_object,
     load_seeds,
     render_user_prompt,
+    validate_seed_pool,
     write_seeds,
 )
 from leanscope.schema import (  # noqa: E402
@@ -169,11 +172,26 @@ def test_schema_rejects_unknown_fields():
         raise AssertionError("unknown field was accepted")
 
 
-def test_seed_has_twelve_scenarios_across_three_families():
+def _tiny_seed(scenario_id: str, family: str, option_a: str, option_b: str, questions: list[str]) -> ScenarioSeed:
+    return ScenarioSeed(
+        scenario_id=scenario_id,
+        family=family,  # type: ignore[arg-type]
+        option_a=option_a,
+        option_b=option_b,
+        paraphrases=tuple(
+            Paraphrase(paraphrase_id=pid, question=question)
+            for pid, question in zip(PARAPHRASE_IDS, questions)
+        ),
+        topic="unit",
+    )
+
+
+def test_seed_pool_validator_accepts_the_hand_written_set():
     seeds = load_seeds(SEED_PATH)
-    assert len(seeds) == 12
+    validate_seed_pool(seeds)
     counts = Counter(seed.family for seed in seeds)
-    assert counts == {"analysis": 4, "product": 4, "advice": 4}
+    assert set(counts) == {"analysis", "product", "advice"}
+    assert max(counts.values()) - min(counts.values()) <= 2
     for seed in seeds:
         assert tuple(p.paraphrase_id for p in seed.paraphrases) == PARAPHRASE_IDS
         assert len({p.question for p in seed.paraphrases}) == 5
@@ -183,6 +201,55 @@ def test_seed_has_twelve_scenarios_across_three_families():
         assert {row.option_a for row in surfaces} == {seed.option_a}
         assert {row.option_b for row in surfaces} == {seed.option_b}
         assert {row.scenario_id for row in surfaces} == {seed.scenario_id}
+
+
+def test_validator_rejects_duplicates_imbalance_and_lopsided_options():
+    questions = [f"Shared wording {i}. Which do you recommend?" for i in range(5)]
+    balanced = [
+        _tiny_seed("analysis-ok", "analysis", "Keep the raw score", "Use the log score", [f"Analysis fact {i}." for i in range(5)]),
+        _tiny_seed("product-ok", "product", "Harbor Lamp", "Kelso Lamp", [
+            "The two lamps have the same brightness and the same price. Which do you recommend?",
+            *[f"Product fact {i}. Specs match." for i in range(1, 5)],
+        ]),
+        _tiny_seed("advice-ok", "advice", "Take the early shift", "Take the late shift", [f"Advice fact {i}." for i in range(5)]),
+    ]
+    validate_seed_pool(balanced)
+
+    duplicated = [
+        balanced[0],
+        _tiny_seed("analysis-ok", "analysis", "Keep the raw score", "Use the log score", [f"Other fact {i}." for i in range(5)]),
+        balanced[2],
+    ]
+    try:
+        validate_seed_pool(duplicated)
+    except ValueError as exc:
+        assert "duplicate scenario ids" in str(exc)
+    else:
+        raise AssertionError("duplicate ids were accepted")
+
+    copied = [
+        balanced[0],
+        _tiny_seed("product-copy", "product", "Harbor Lamp", "Kelso Lamp", questions),
+        _tiny_seed("advice-copy", "advice", "Take the early shift", "Take the late shift", list(questions)),
+    ]
+    try:
+        validate_seed_pool(copied)
+    except ValueError as exc:
+        assert "duplicate question" in str(exc)
+    else:
+        raise AssertionError("duplicate questions were accepted")
+
+    lopsided = [
+        _tiny_seed("analysis-long", "analysis", "A", "A much longer option label than its pair", [f"Lone fact {i}." for i in range(5)]),
+        balanced[1],
+        balanced[2],
+    ]
+    try:
+        validate_seed_pool(lopsided)
+    except ValueError as exc:
+        assert "option lengths" in str(exc)
+    else:
+        raise AssertionError("lopsided options were accepted")
 
 
 def test_option_order_swaps_position_and_keeps_letters():
@@ -254,7 +321,10 @@ def test_split_lock_matches_rank_cut_and_groups_by_scenario():
     fresh = rank_cut(ids)
     assert lock["assignments"] == fresh
     counts = Counter(lock["assignments"].values())
-    assert counts == {"train": 7, "dev": 2, "test": 3}
+    assert counts == Counter(fresh.values())
+    assert lock["ratios"] == {"train": 0.6, "dev": 0.15, "test": 0.25}
+    if len(ids) == 100:
+        assert dict(counts) == {"train": 60, "dev": 15, "test": 25}
     assert lock["grouped_by"] == "scenario_id"
     for seed in seeds:
         assert split_for(seed.scenario_id, lock) == fresh[seed.scenario_id]
@@ -279,11 +349,14 @@ def test_records_share_lean_and_split_inside_a_scenario():
     seeds = load_seeds(SEED_PATH)
     lock = load_lock(DEFAULT_LOCK_PATH)
     records = build_records(seeds, lock["assignments"], lean_seed=42)
-    assert len(records) == 12 * 5 * 2 * 14
+    per_scenario = 5 * 2 * 14
+    n = len(seeds)
+    assert len(records) == n * per_scenario
     summary = manifest(records, lean_seed=42)
-    assert summary["n_scenarios"] == 12
-    assert summary["by_split"] == {"train": 7 * 140, "dev": 2 * 140, "test": 3 * 140}
-    assert summary["by_order"] == {"AB": 12 * 5 * 14, "BA": 12 * 5 * 14}
+    assert summary["n_scenarios"] == n
+    split_counts = Counter(lock["assignments"][seed.scenario_id] for seed in seeds)
+    assert summary["by_split"] == {name: count * per_scenario for name, count in split_counts.items()}
+    assert summary["by_order"] == {"AB": n * 5 * 14, "BA": n * 5 * 14}
     by_scenario: dict[str, list] = {}
     for row in records:
         by_scenario.setdefault(row.scenario.scenario_id, []).append(row)
@@ -651,10 +724,11 @@ def test_build_script_writes_records():
         code = module.main(["--out", str(out), "--lock", str(DEFAULT_LOCK_PATH), "--seed", str(SEED_PATH)])
         assert code == 0
         rows = read_jsonl(out)
-        assert len(rows) == 1680
+        expected = len(load_seeds(SEED_PATH)) * 5 * 2 * 14
+        assert len(rows) == expected
         manifest_path = Path(tmp) / "records.manifest.json"
         summary = json.loads(manifest_path.read_text(encoding="utf-8"))
-        assert summary["n_records"] == 1680
+        assert summary["n_records"] == expected
 
 
 def test_condition_set_covers_the_design():
