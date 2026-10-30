@@ -8,8 +8,10 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from jspace.stats import (  # noqa: E402
+    benjamini_hochberg,
     bootstrap_ci,
     cohens_h,
+    holm_adjust,
     mcnemar_exact,
     mcnemar_power,
     mcnemar_sample_size,
@@ -103,6 +105,50 @@ def test_mcnemar_sample_size_roundtrip():
     assert mcnemar_power(0.3, 0.1, n - 1) < 0.8
     # Impossibly weak effect -> None.
     assert mcnemar_sample_size(0.02, 0.018, power_target=0.8, n_max=200) is None
+
+
+def test_holm_and_bh_hand_derived_triple() -> None:
+    # p = [0.01, 0.04, 0.03], m = 3.
+    # Sorted: 0.01 (idx 0), 0.03 (idx 2), 0.04 (idx 1).
+    # Holm multipliers 3, 2, 1:
+    #   3*0.01 = 0.03
+    #   2*0.03 = 0.06
+    #   1*0.04 = 0.04
+    #   cumulative max: 0.03, 0.06, 0.06
+    #   back to input order: [0.03, 0.06, 0.06]
+    # BH raw (m/i)*p_(i):
+    #   (3/1)*0.01 = 0.03
+    #   (3/2)*0.03 = 0.045
+    #   (3/3)*0.04 = 0.04
+    #   enforce from the right: 0.04, min(0.04, 0.045)=0.04, min(0.04, 0.03)=0.03
+    #   back to input order: [0.03, 0.04, 0.04]
+    p = [0.01, 0.04, 0.03]
+    holm = holm_adjust(p)
+    bh = benjamini_hochberg(p)
+    assert np.allclose(holm, [0.03, 0.06, 0.06])
+    assert np.allclose(bh, [0.03, 0.04, 0.04])
+
+
+def test_holm_and_bh_nan_is_outside_the_family() -> None:
+    # Finite family is [0.01, 0.04], m = 2.
+    # Holm: 2*0.01 = 0.02; max(0.02, 1*0.04) = 0.04 → [0.02, nan, 0.04]
+    # BH: (2/1)*0.01 = 0.02; (2/2)*0.04 = 0.04; from the right min keeps both.
+    p = [0.01, float("nan"), 0.04]
+    assert np.allclose(holm_adjust(p), [0.02, np.nan, 0.04], equal_nan=True)
+    assert np.allclose(benjamini_hochberg(p), [0.02, np.nan, 0.04], equal_nan=True)
+
+
+def test_holm_and_bh_clip_at_one_and_identity_for_one_test() -> None:
+    # One test: multiplier 1, so the adjusted value equals the raw value.
+    assert holm_adjust([0.2]).item() == 0.2
+    assert benjamini_hochberg([0.2]).item() == 0.2
+    # Two equal 0.6. Holm: 2*0.6 = 1.2, clipped to 1; cumulative max stays 1.
+    assert np.allclose(holm_adjust([0.6, 0.6]), [1.0, 1.0])
+    # BH from the large end: (2/2)*0.6 = 0.6, then min(0.6, min(1, (2/1)*0.6)) = 0.6.
+    assert np.allclose(benjamini_hochberg([0.6, 0.6]), [0.6, 0.6])
+    assert holm_adjust([]).size == 0
+    assert benjamini_hochberg([float("nan")]).shape == (1,)
+    assert np.isnan(benjamini_hochberg([float("nan")])[0])
 
 
 if __name__ == "__main__":

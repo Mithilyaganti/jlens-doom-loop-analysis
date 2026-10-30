@@ -126,6 +126,17 @@ Never cache full residuals for all prompts — that OOMs 8 GB + 16 GB RAM.
 
 After Phase 1 validates: Gemma-4 Edge models + Qwen base (needs cloud lens fit); Liquid LFM2.5 hybrid fitter is stretch.
 
+## CPU path: Holm and Benjamini-Hochberg
+
+`jspace.stats.holm_adjust` and `jspace.stats.benjamini_hochberg` adjust a list of p-values. They do not read `results/` and they are not called by the Exp3 script, so checked-in statistics are unchanged.
+
+```bash
+python tests/test_stats.py
+python -m pytest tests/test_stats.py -q
+```
+
+Needs numpy. No GPU. The expected adjusted values are derived in `docs/PROCESS.md`.
+
 ## Citations (required)
 
 Liquid AI Antidoom (Jul 2026); Anthropic J-lens `arXiv:2607.15495`; Lazaridis et al. `arXiv:2606.13705`; Silent Alarm / JADR `arXiv:2607.12792`; Elie Bakouch open-jlens-data; related loop papers in PROJECT_SPEC §14.
