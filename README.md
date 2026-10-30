@@ -116,7 +116,7 @@ Hidden-lean items for a follow-up study on Qwen3.5-4B. The package is `leanscope
 | `scripts/lean_00_build_items.py` | Seed JSONL to records JSONL |
 | `scripts/lean_01_generate.py` | Generation via `jspace.generation` and `jspace.loading` |
 
-The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (12 scenarios, 4 per family). The frozen split file is `data/leanscope/split_lock.json`. Assigned leans are a seeded coin flip on `scenario_id` (seed 42).
+The hand-written seed is `data/leanscope/seed_scenarios.jsonl` (100 scenarios: 34 analysis, 33 product, 33 advice). The frozen split file is `data/leanscope/split_lock.json`, a 60/15/25 rank cut by scenario (60 train, 15 dev, 25 test). Assigned leans are a seeded coin flip on `scenario_id` (seed 42). Expanding the seed gives 14,000 records (100 scenarios x 5 paraphrases x 2 orders x 14 conditions).
 
 CPU tests, no model download and no API call:
 
@@ -124,7 +124,7 @@ CPU tests, no model download and no API call:
 python -m pytest tests/test_leanscope_data.py -q
 ```
 
-GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 1680 greedy generations. Budget about 4 to 6 L4-hours with activations, and several more if you add `--natural-samples 20`.
+GPU generation (not run here; rough estimate, not a measurement) is in the docstring of `scripts/lean_01_generate.py`. The seed expansion is 14,000 greedy generations. At about 50 tokens/s of decode on an L4 and 300 new tokens, that is about 23 hours of decode. Budget about 30 to 40 L4-hours once activations are recorded. Adding `--natural-samples 20` draws 40,000 further generations on the none and trait rows, about 67 hours of decode at the same rate.
 
 ## Caching (memory safety)
 

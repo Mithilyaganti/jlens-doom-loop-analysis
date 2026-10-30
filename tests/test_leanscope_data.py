@@ -190,7 +190,8 @@ def test_seed_pool_validator_accepts_the_hand_written_set():
     seeds = load_seeds(SEED_PATH)
     validate_seed_pool(seeds)
     counts = Counter(seed.family for seed in seeds)
-    assert set(counts) == {"analysis", "product", "advice"}
+    assert len(seeds) == 100
+    assert dict(counts) == {"analysis": 34, "product": 33, "advice": 33}
     assert max(counts.values()) - min(counts.values()) <= 2
     for seed in seeds:
         assert tuple(p.paraphrase_id for p in seed.paraphrases) == PARAPHRASE_IDS
