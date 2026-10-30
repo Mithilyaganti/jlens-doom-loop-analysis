@@ -52,3 +52,19 @@ Colab is what surfaced the error. This change did not open a Colab session. The 
 ## Not run
 
 The GitHub Actions workflow itself (no `workflow_dispatch` from this environment). Torch tests. Any notebook execution.
+
+## Done
+
+- Lint found five indented-magic SyntaxErrors, then those notebook calls were changed to `subprocess.run`.
+- After the edit, `python scripts/lint_notebooks.py` printed `ok: 4 notebooks`.
+- `python -m pytest tests/test_notebook_lint.py tests/test_stats.py -q` printed `15 passed in 0.14s`.
+- `.github/workflows/cpu-tests.yml` is `ubuntu-latest` only.
+- `docs/ARCHITECTURE.md`, `docs/DESIGN_DECISIONS.md`, `docs/PROCESS.md`, and a README CPU section are on this branch.
+- Experiment scripts and `results/` were not edited.
+
+## Remaining
+
+- The GitHub Actions workflow was not executed from this environment.
+- Torch tests were not run. This environment has no torch, and the workflow does not install it.
+- A live Colab session was not opened. The SyntaxError text is from CPython `ast.parse` on the notebook source.
+- Pre-registration, LICENSE, and CITATION were not part of this branch.
