@@ -45,3 +45,20 @@ The published sweep cell on the 8 fixtures was `n_exhaustive_positive` 6, `n_sam
 ## Not measured
 
 Study-corpus recall. The generation logs do not contain full strings. No loop rate was recomputed.
+
+## Done
+
+- `jspace/detector_audit.py`, fixtures, `scripts/audit_loop_detector.py`, and `tests/test_detector_audit.py` are on this branch.
+- `python -m pytest tests/test_detector_audit.py -q` printed `7 passed in 0.14s`.
+- Fixture recall at the published rule, from `python scripts/audit_loop_detector.py`: short 1/4 = 0.25, tail 1/2 = 0.5.
+- Corpus recall status in that JSON: `not_measured`.
+- Checked-in HTML example: 12681 characters, exhaustive true, sampler true. One example, not a corpus rate.
+- `audit/human_loop_audit_sheet.csv` is a header-only template.
+- `docs/ARCHITECTURE.md`, `docs/DESIGN_DECISIONS.md`, `docs/PROCESS.md`, and a README CPU section are on this branch.
+
+## Remaining
+
+- Study-corpus recall was not measured. Generation logs are truncated previews.
+- The human-audit sheet has no judgments.
+- The sampler in `jspace/detection.py` was not changed.
+- Pre-registration, LICENSE, and CITATION were not part of this branch.
