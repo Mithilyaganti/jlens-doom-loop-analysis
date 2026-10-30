@@ -41,3 +41,19 @@ The tests check:
 ## Not measured
 
 Any loop rate, length, or GSM8K accuracy under either arm. No GPU generation was run.
+
+## Done
+
+- `jspace/decoding_baselines.py` adds opt-in `repetition_penalty` (1.2) and `no_repeat_ngram` (`no_repeat_ngram_size=4`).
+- Arms append only when `JLENS_EXP3_DECODING_BASELINES=1`. The locked `ANALYSIS_PLAN` text does not name them.
+- `python -m pytest tests/test_decoding_baselines.py -q` printed `8 passed in 0.02s`.
+- `python -m py_compile` on `scripts/05_exp3_causal.py`, `jspace/decoding_baselines.py`, and `jspace/generation.py` exited 0.
+- `docs/ARCHITECTURE.md`, `docs/DESIGN_DECISIONS.md`, `docs/PROCESS.md`, and a README CPU section are on this branch.
+- PR #2's sidecar file was not copied.
+
+## Remaining
+
+- `scripts/05_exp3_causal.py` was not executed. No loop rate, length, or GSM8K number exists for either arm.
+- The constants 1.2 and 4 were not tuned.
+- This branch does not contain the PR #2 sidecar.
+- Pre-registration, LICENSE, and CITATION were not part of this branch.
