@@ -43,6 +43,19 @@ MAIN_CONDITIONS = [
 ]
 GSM8K_CONDITIONS = ["baseline_rerun", "ablate_trigger_ws", "logit_suppress_trigger"]
 
+
+def active_main_conditions() -> list[str]:
+    """Locked v2 conditions, plus opt-in HF decoding baselines.
+
+    ``JLENS_EXP3_DECODING_BASELINES=1`` appends ``repetition_penalty`` and
+    ``no_repeat_ngram``. The default is off, so a rerun of the locked
+    protocol keeps the same condition list. Those arms are not in
+    ``ANALYSIS_PLAN`` and have no measured loop rate in this checkout.
+    """
+    from jspace.decoding_baselines import extend_condition_names
+
+    return extend_condition_names(list(MAIN_CONDITIONS))
+
 ANALYSIS_PLAN = """# Exp 3 Analysis Plan (pre-registered, fixed protocol v2)
 
 1. Design: TWO-PASS. Pass 1 regenerates each baseline-looping prompt
@@ -232,6 +245,7 @@ def main() -> int:
     from jspace.checkpoint import save_checkpoint, load_checkpoint
 
     suppress_k = suppress_k_from_env()
+    conditions = active_main_conditions()
     gsm8k_n = gsm8k_n_from_env()
     logger.info(
         "Exp3 knobs: max_new_tokens=%d timing_n=%d dose_n=%d gsm8k_n=%d suppress_k=%d gsm8k_start_pos=%d",
@@ -299,11 +313,11 @@ def main() -> int:
         raise RuntimeError("sensory/motor bands empty — band comparison conditions undefined")
 
     prompts = load_looping_prompts()
-    logger.info("Exp3: %d looping prompts, %d main conditions", len(prompts), len(MAIN_CONDITIONS))
+    logger.info("Exp3: %d looping prompts, %d main conditions", len(prompts), len(conditions))
     if not prompts:
         stats = {
             "protocol": "exp3_fixed_protocol_v2",
-            "loop_rates": {c: 0.0 for c in MAIN_CONDITIONS},
+            "loop_rates": {c: 0.0 for c in conditions},
             "note": "No looping prompts in baseline pass — causal interventions skipped (null by design).",
         }
         save_json(stats, out / "stats.json")
@@ -333,7 +347,7 @@ def main() -> int:
         )
 
     def n_done_pairs() -> int:
-        return sum(sum(1 for c in v if c in MAIN_CONDITIONS) for v in per_prompt.values())
+        return sum(sum(1 for c in v if c in conditions) for v in per_prompt.values())
 
     def persist_ckpt(status: str = "running") -> None:
         save_checkpoint(
@@ -344,11 +358,11 @@ def main() -> int:
                 "model_id": cfg.model_id,
                 "max_new_tokens": MAX_NEW_TOKENS,
                 "per_prompt": per_prompt,
-                "conditions": list(MAIN_CONDITIONS),
+                "conditions": list(conditions),
                 "legacy_conditions": legacy_conditions,
                 "n_looping_prompts": len(prompts),
                 "n_done_pairs": n_done_pairs(),
-                "n_total_pairs": len(prompts) * len(MAIN_CONDITIONS),
+                "n_total_pairs": len(prompts) * len(conditions),
                 "workspace_layers": ws_layers,
                 "sensory_layers": sensory,
                 "motor_layers": motor,
@@ -387,7 +401,21 @@ def main() -> int:
             start = max(0, int(onset["onset_pos"]) + offset)
         trig_tid = int(onset["trigger_token_id"])
 
-        if cond == "logit_suppress_trigger":
+        from jspace.decoding_baselines import hf_overrides_for_condition
+
+        decoding_overrides = hf_overrides_for_condition(cond)
+        if decoding_overrides is not None:
+            penalty = decoding_overrides.get("repetition_penalty")
+            ngram = decoding_overrides.get("no_repeat_ngram_size")
+            gen = generate_greedy(
+                stack,
+                chat,
+                max_new_tokens=MAX_NEW_TOKENS,
+                temperature=0.0,
+                repetition_penalty=None if penalty is None else float(penalty),
+                no_repeat_ngram_size=None if ngram is None else int(ngram),
+            )
+        elif cond == "logit_suppress_trigger":
             proc = TriggerSuppressLogitsProcessor(
                 trig_tid, start_pos=start, k_steps=suppress_k, prompt_len=plen
             )
@@ -437,6 +465,9 @@ def main() -> int:
         if cond == "logit_suppress_trigger":
             result["suppressed_steps"] = int(proc.n_suppressed_steps)
             result["suppress_window"] = list(proc.window())
+        if decoding_overrides is not None:
+            result["decoding_overrides"] = dict(decoding_overrides)
+            result["decoding_backend"] = "hf"
         return result
 
     for i, p in enumerate(prompts):
@@ -500,7 +531,7 @@ def main() -> int:
         # ---- pass 2: main conditions ----
         chat = apply_chat_template(stack.tokenizer, p["text"])
         plen = tokenized_len(stack.tokenizer, chat)
-        for cond in MAIN_CONDITIONS:
+        for cond in conditions:
             if cond in ("baseline_rerun",) or cond in entry:
                 continue
             try:
@@ -513,7 +544,7 @@ def main() -> int:
             logger.info(
                 "  %s pid=%s loop=%s tokens=%d (pairs %d/%d)",
                 cond, pid, entry[cond]["is_loop"], entry[cond]["n_tokens"],
-                n_done_pairs(), len(prompts) * len(MAIN_CONDITIONS),
+                n_done_pairs(), len(prompts) * len(conditions),
             )
             clear_cuda()
 
@@ -666,7 +697,7 @@ def main() -> int:
 
     # per-prompt CSV
     csv_cols = ["prompt_id", "pass1_loop", "onset_source", "onset_pos", "trigger_token_id", "trigger_token_str"]
-    for cname in MAIN_CONDITIONS + timing_cond_names + dose_cond_names:
+    for cname in conditions + timing_cond_names + dose_cond_names:
         csv_cols += [f"{cname}_loop", f"{cname}_gen_length"]
     rows = []
     for pid in sorted({int(p["prompt_id"]) for p in prompts} | set(per_prompt)):
@@ -680,7 +711,7 @@ def main() -> int:
             "trigger_token_id": onset.get("trigger_token_id"),
             "trigger_token_str": onset.get("trigger_token_str"),
         }
-        for cname in MAIN_CONDITIONS:
+        for cname in conditions:
             r = entry.get(cname)
             row[f"{cname}_loop"] = int(r["is_loop"]) if r else None
             row[f"{cname}_gen_length"] = r["n_tokens"] if r else None
@@ -696,7 +727,7 @@ def main() -> int:
 
     # rates / CIs / lengths for every reported condition
     reported: list[tuple[str, dict[int, dict]]] = [
-        (c, cond_results(per_prompt, c)) for c in MAIN_CONDITIONS
+        (c, cond_results(per_prompt, c)) for c in conditions
     ] + [
         (c, cond_results(timing, c)) for c in timing_cond_names
     ] + [
@@ -799,7 +830,7 @@ def main() -> int:
             gsm8k_summary["mean_gen_length"][cond] = float(np.mean(gstate.get("n_tokens", [])))
 
     # ---- plots ----
-    main_names = [c for c in MAIN_CONDITIONS if c in rates]
+    main_names = [c for c in conditions if c in rates]
     plot_bar_with_ci(
         main_names,
         [rates[c] for c in main_names],
@@ -840,7 +871,7 @@ def main() -> int:
         out_path=out / "loop_rate_vs_ablation_strength.png",
         color="seagreen",
     )
-    len_names = [c for c in MAIN_CONDITIONS if c in lengths]
+    len_names = [c for c in conditions if c in lengths]
     plot_bar_with_ci(
         len_names,
         [lengths[c] for c in len_names],
@@ -919,7 +950,7 @@ def main() -> int:
         "workspace_layers": ws_layers,
         "sensory_layers": sensory,
         "motor_layers": motor,
-        "conditions": list(MAIN_CONDITIONS),
+        "conditions": list(conditions),
         "timing_offsets": list(TIMING_OFFSETS),
         "timing_n": len(timing_pids),
         "dose_ns": list(DOSE_NS),
@@ -999,11 +1030,11 @@ Both positive and negative results are publishable per PROJECT_SPEC §11.6.
             "model_id": cfg.model_id,
             "max_new_tokens": MAX_NEW_TOKENS,
             "per_prompt": per_prompt,
-            "conditions": list(MAIN_CONDITIONS),
+            "conditions": list(conditions),
             "legacy_conditions": legacy_conditions,
             "n_looping_prompts": len(prompts),
             "n_done_pairs": n_done_pairs(),
-            "n_total_pairs": len(prompts) * len(MAIN_CONDITIONS),
+            "n_total_pairs": len(prompts) * len(conditions),
             "workspace_layers": ws_layers,
             "sensory_layers": sensory,
             "motor_layers": motor,

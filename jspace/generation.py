@@ -75,8 +75,14 @@ def build_hf_gen_kwargs(
     temperature: float,
     pad_token_id: int | None,
     eos_token_id: int | None,
+    repetition_penalty: float | None = None,
+    no_repeat_ngram_size: int | None = None,
 ) -> dict[str, Any]:
-    """HF model.generate kwargs: exact greedy at T<=eps, seeded sampling above."""
+    """HF model.generate kwargs: exact greedy at T<=eps, seeded sampling above.
+
+    ``repetition_penalty`` and ``no_repeat_ngram_size`` are optional decoding
+    baselines. Omitted means the key is absent, which is the unsteered path.
+    """
     kwargs: dict[str, Any] = dict(
         max_new_tokens=max_new_tokens,
         do_sample=not is_greedy_temperature(temperature),
@@ -86,6 +92,10 @@ def build_hf_gen_kwargs(
     )
     if not is_greedy_temperature(temperature):
         kwargs["temperature"] = max(float(temperature), GREEDY_EPS)
+    if repetition_penalty is not None:
+        kwargs["repetition_penalty"] = float(repetition_penalty)
+    if no_repeat_ngram_size is not None:
+        kwargs["no_repeat_ngram_size"] = int(no_repeat_ngram_size)
     return kwargs
 
 
@@ -120,14 +130,24 @@ def generate_greedy(
     vllm_generator: Any = None,
     prompt_id: int | None = None,
     logits_processor: Sequence[Any] | None = None,
+    repetition_penalty: float | None = None,
+    no_repeat_ngram_size: int | None = None,
 ) -> dict[str, Any]:
     """Generate completion (greedy by default; seeded sampling at T>0).
 
     Uses vLLM if generator provided. torch.manual_seed is set from the
     per-prompt seed before every generate call. ``logits_processor`` applies
     to the HF path only (e.g. the Exp3 logit-suppression positive control).
+    Repetition penalty and no-repeat n-gram are HF-only decoding baselines.
+    They are refused on the vLLM path so a run cannot claim they were applied.
     """
     plan = sampling_plan(prompt_id, temperature=temperature)
+    decoding_constraints = repetition_penalty is not None or no_repeat_ngram_size is not None
+    if vllm_generator is not None and decoding_constraints:
+        raise RuntimeError(
+            "repetition_penalty and no_repeat_ngram_size are HF decoding baselines; "
+            "refusing to drop them on the vLLM path"
+        )
     if vllm_generator is not None:
         return vllm_generator.generate(
             prompt_text,
@@ -150,13 +170,15 @@ def generate_greedy(
         temperature=plan["temperature"],
         pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
         eos_token_id=tokenizer.eos_token_id,
+        repetition_penalty=repetition_penalty,
+        no_repeat_ngram_size=no_repeat_ngram_size,
     )
     if logits_processor:
         gen_kwargs["logits_processor"] = list(logits_processor)
     out = model.generate(input_ids=input_ids, attention_mask=attention_mask, **gen_kwargs)
     gen_ids = out[0, prompt_len:].tolist()
     gen_text = tokenizer.decode(gen_ids, skip_special_tokens=True)
-    return {
+    result = {
         "prompt_text": prompt_text,
         "generated_ids": gen_ids,
         "generated_text": gen_text,
@@ -167,6 +189,11 @@ def generate_greedy(
         "temperature": plan["temperature"],
         "greedy": plan["greedy"],
     }
+    if repetition_penalty is not None:
+        result["repetition_penalty"] = float(repetition_penalty)
+    if no_repeat_ngram_size is not None:
+        result["no_repeat_ngram_size"] = int(no_repeat_ngram_size)
+    return result
 
 
 @torch.no_grad()
