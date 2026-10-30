@@ -1,0 +1,154 @@
+{
+  "question": "does the J-lens workspace announce a doom loop before it starts, and how far ahead?",
+  "model_slug": "lfm2-2.6b",
+  "load": {
+    "searched_roots": [
+      "results/exp2_lfm2-2.6b",
+      "results/exp2"
+    ],
+    "root_note": "no per-trace meta.json files in the slug-scoped or legacy exp2 trees",
+    "n_trace_dirs": 0,
+    "n_with_token_ids": 0,
+    "n_with_complete_text": 0,
+    "n_preview_rows": 3,
+    "preview_rows_are_not_traces": true,
+    "preview_prompt_ids": [
+      289217,
+      172911,
+      101896
+    ],
+    "token_read_warnings": []
+  },
+  "recorded": {
+    "baseline_summary_legacy": {
+      "path": "results/baseline_pass_summary.json",
+      "model_id": "LiquidAI/LFM2-2.6B",
+      "status": null,
+      "n_prompts": 200,
+      "n_completed": 200,
+      "n_loop": 11,
+      "n_non": null,
+      "loop_rate": 0.055,
+      "looping_prompt_ids": [
+        86352,
+        96637,
+        120702,
+        123613,
+        133187,
+        179962,
+        199303,
+        290449,
+        340846,
+        346805,
+        422988
+      ],
+      "n_completed_ids_listed": null
+    },
+    "baseline_checkpoint_legacy": {
+      "path": "results/checkpoints/baseline_pass.json",
+      "model_id": null,
+      "status": null,
+      "n_prompts": null,
+      "n_completed": 3,
+      "n_loop": null,
+      "n_non": null,
+      "loop_rate": null,
+      "looping_prompt_ids": null,
+      "n_completed_ids_listed": 3
+    },
+    "exp2_checkpoint": {
+      "path": "results/checkpoints/exp2_gen_lfm2-2.6b.json",
+      "model_id": "LiquidAI/LFM2-2.6B",
+      "status": "complete",
+      "n_prompts": 200,
+      "n_completed": 200,
+      "n_loop": 5,
+      "n_non": 195,
+      "loop_rate": null,
+      "looping_prompt_ids": null,
+      "n_completed_ids_listed": 200
+    }
+  },
+  "prompt_sample": {
+    "path": "results/prompt_sample_ids.json",
+    "n_prompts": 200,
+    "seed": 42,
+    "by_split": {
+      "train": 121,
+      "dev": 39,
+      "test": 40
+    },
+    "recorded_baseline_loops_by_split": {
+      "train": 8,
+      "dev": 1,
+      "test": 2
+    },
+    "recorded_baseline_loops_missing_from_sample": []
+  },
+  "horizons": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "window_len": 64,
+  "far_budget": 0.05,
+  "min_repeats": 4,
+  "min_total_repeated_chars": 60,
+  "split": {
+    "salt": "jspace-forecast-v1",
+    "train_fraction": 0.6,
+    "dev_fraction": 0.2,
+    "test_fraction": 0.2,
+    "counts": {
+      "train": 0,
+      "train_loops": 0,
+      "train_controls": 0,
+      "dev": 0,
+      "dev_loops": 0,
+      "dev_controls": 0,
+      "test": 0,
+      "test_loops": 0,
+      "test_controls": 0
+    }
+  },
+  "labelling": {
+    "n_input": 0,
+    "n_usable": 0,
+    "n_skipped": 0,
+    "skip_reasons": {},
+    "n_loop": 0,
+    "n_loop_with_onset": 0,
+    "n_control": 0,
+    "n_disagreement_with_stored_flag": 0,
+    "n_onset_index_mismatch": 0,
+    "onset_sources": {},
+    "ineligible_by_horizon": {
+      "32": 0,
+      "64": 0,
+      "128": 0,
+      "256": 0
+    },
+    "unmatched_positives": 0,
+    "examples_by_horizon": {},
+    "antidoom_confirmation_lag_tokens": {
+      "n": 0,
+      "median": null,
+      "note": "confirmation token minus onset token, on usable loops whose text aligns with token strings. Positive means the character rule fires after onset."
+    }
+  },
+  "data_status": "insufficient",
+  "underpowered": true,
+  "metrics_computed": false,
+  "detectors": null,
+  "feature_sets": null,
+  "extra_feature_sets": [],
+  "notes": [
+    "No forecasting metrics were computed. No usable trace was available: a usable trace needs the full generated text and the token ids from the baseline pass.",
+    "The checkout has no per-trace generations. Baseline traces live under results/exp2_{slug}/{looping,nonlooping}/p*/ (meta.json + tokens.pt) and are gitignored. Onset token indices cannot be recomputed from the summary files.",
+    "The generation log has 3 preview rows (generated_preview is truncated to 500 characters). Those rows were not labelled.",
+    "results/checkpoints/baseline_pass.json lists 3 completed ids, which does not match results/baseline_pass_summary.json (200 completed, 11 loops). The summary counts were not recomputed.",
+    "The Exp2 checkpoint records 200 completed hooked traces and 5 loops, but those trace directories are not in the checkout.",
+    "Hash-locked split of the recorded baseline looping prompt ids (train 8, dev 1, test 2). A test fold that small cannot carry a four-horizon forecast even after the traces are present. These ids were not re-labelled; the onset detector did not see their text."
+  ]
+}
