@@ -1,0 +1,838 @@
+{"item_id": "mmlu-prox-lite-70", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-71", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-72", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-73", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-74", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-75", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-76", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-77", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-78", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-79", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-80", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-81", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-82", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-83", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-84", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-85", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-86", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-87", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-88", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-89", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-90", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-91", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-92", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-93", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-94", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-95", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-96", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-97", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-98", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-99", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-100", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-101", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-102", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-103", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-104", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-105", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-106", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-107", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-108", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-109", "source": "mmlu-prox-lite", "category": "business", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-110", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-111", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-112", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-113", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-114", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-115", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-116", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-117", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-118", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-119", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-120", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-121", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-122", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-123", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-124", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-125", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-126", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-127", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-128", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-129", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-130", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-131", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-132", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-133", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-134", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-135", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-136", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-137", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-138", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-139", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-140", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-141", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-142", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-143", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-144", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-145", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-146", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-147", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-148", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-149", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-150", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-151", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-152", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-153", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-154", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-155", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-156", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-157", "source": "mmlu-prox-lite", "category": "law", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-158", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-159", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-160", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-161", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-162", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-163", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-164", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-165", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-166", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-167", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-168", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-169", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-170", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-171", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-172", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-173", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-174", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-175", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-176", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-177", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-178", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-179", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-180", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-181", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-182", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-183", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-184", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-185", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-186", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-187", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-188", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-189", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-190", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-191", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-192", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-193", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-194", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-195", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-196", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-197", "source": "mmlu-prox-lite", "category": "psychology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-198", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-199", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-200", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-201", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-202", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-203", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-204", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-205", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-206", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-207", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-208", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-209", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-210", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-211", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-212", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-213", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-214", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-215", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-216", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-217", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-218", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-219", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-220", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-221", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-222", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-223", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-224", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-225", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-226", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-227", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-228", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-229", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-230", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-231", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-232", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-233", "source": "mmlu-prox-lite", "category": "biology", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-234", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-235", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-236", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-237", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-238", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-239", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-240", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-241", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-242", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-243", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-244", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-245", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-246", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-247", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-248", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-249", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-250", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-251", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-252", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-253", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-254", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-255", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-256", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-257", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-258", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-259", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-260", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-261", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-262", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-263", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-264", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-265", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-266", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-267", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-268", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-269", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-270", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-271", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-272", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-273", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-274", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-275", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-276", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-277", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-278", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-279", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-280", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-281", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-282", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-283", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-284", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-285", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-286", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-287", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-288", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-289", "source": "mmlu-prox-lite", "category": "chemistry", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-290", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-291", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-292", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-293", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-294", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-295", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-296", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-297", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-298", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-299", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-300", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-301", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-302", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-303", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-304", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-305", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-306", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-307", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-308", "source": "mmlu-prox-lite", "category": "history", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-309", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-310", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-311", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-312", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-313", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-314", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-315", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-316", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-317", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-318", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-319", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-320", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-321", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-322", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-323", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-324", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-325", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-326", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-327", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-328", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-329", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-330", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-331", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-332", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-333", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-334", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-335", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-336", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-337", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-338", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-339", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-340", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-341", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-342", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-343", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-344", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-345", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-346", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-347", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-348", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-349", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-350", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-351", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-352", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-353", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-354", "source": "mmlu-prox-lite", "category": "other", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-355", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-356", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-357", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-358", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-359", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-360", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-361", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-362", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-363", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-364", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-365", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-366", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-367", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-368", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-369", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-370", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-371", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-372", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-373", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-374", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-375", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-376", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-377", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-378", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-379", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-380", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-381", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-382", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-383", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-384", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-385", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-386", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-387", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-388", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-389", "source": "mmlu-prox-lite", "category": "health", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-390", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-391", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-392", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-393", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-394", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-395", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-396", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-397", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-398", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-399", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-400", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-401", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-402", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-403", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-404", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-405", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-406", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-407", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-408", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-409", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-410", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-411", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-412", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-413", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-414", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-415", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-416", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-417", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-418", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-419", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-420", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-421", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-422", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-423", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-424", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-425", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-426", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-427", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-428", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-429", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-430", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-431", "source": "mmlu-prox-lite", "category": "economics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-432", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-433", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-434", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-435", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-436", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-437", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-438", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-439", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-440", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-441", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-442", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-443", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-444", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-445", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-446", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-447", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-448", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-449", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-450", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-451", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-452", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-453", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-454", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-455", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-456", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-457", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-458", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-459", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-460", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-461", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-462", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-463", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-464", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-465", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-466", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-467", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-468", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-469", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-470", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-471", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-472", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-473", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-474", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-475", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-476", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-477", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-478", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-479", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-480", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-481", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-482", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-483", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-484", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-485", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-486", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-487", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-488", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-489", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-490", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-491", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-492", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-493", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-494", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-495", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-496", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-497", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-498", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-499", "source": "mmlu-prox-lite", "category": "math", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-500", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-501", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-502", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-503", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-504", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-505", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-506", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-507", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-508", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-509", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-510", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-511", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-512", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-513", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-514", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-515", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-516", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-517", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-518", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-519", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-520", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-521", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-522", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-523", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-524", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-525", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-526", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-527", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-528", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-529", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-530", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-531", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-532", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-533", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-534", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-535", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-536", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-537", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-538", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-539", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-540", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-541", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-542", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-543", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-544", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-545", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-546", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-547", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-548", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-549", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-550", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-551", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-552", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-553", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-554", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-555", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-556", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-557", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-558", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-559", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-560", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-561", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-562", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-563", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-564", "source": "mmlu-prox-lite", "category": "physics", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-565", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-566", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-567", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-568", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-569", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-570", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-571", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-572", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-573", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-574", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-575", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-576", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-577", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-578", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-579", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-580", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-581", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-582", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-583", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-584", "source": "mmlu-prox-lite", "category": "computer science", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-585", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-586", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-587", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-588", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-589", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-590", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-591", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-592", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-593", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-594", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-595", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-596", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-597", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-598", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-599", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-600", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-601", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-602", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-603", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-604", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-605", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-606", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-607", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-608", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-609", "source": "mmlu-prox-lite", "category": "philosophy", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-610", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-611", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-612", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-613", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-614", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-615", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-616", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-617", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-618", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-619", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-620", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-621", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-622", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-623", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-624", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-625", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-626", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-627", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-628", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-629", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-630", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-631", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-632", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-633", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-634", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-635", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-636", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-637", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-638", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-639", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-640", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-641", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-642", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-643", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-644", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-645", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-646", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-647", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-648", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-649", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-650", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-651", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-652", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-653", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-654", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-655", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-656", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mmlu-prox-lite-657", "source": "mmlu-prox-lite", "category": "engineering", "languages": ["en", "hi", "te"]}
+{"item_id": "mgsm-000", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-001", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-002", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-003", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-004", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-005", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-006", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-007", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-008", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-009", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-010", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-011", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-012", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-013", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-014", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-015", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-016", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-017", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-018", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-019", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-020", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-021", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-022", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-023", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-024", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-025", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-026", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-027", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-028", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-029", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-030", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-031", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-032", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-033", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-034", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-035", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-036", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-037", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-038", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-039", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-040", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-041", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-042", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-043", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-044", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-045", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-046", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-047", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-048", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-049", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-050", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-051", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-052", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-053", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-054", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-055", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-056", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-057", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-058", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-059", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-060", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-061", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-062", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-063", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-064", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-065", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-066", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-067", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-068", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-069", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-070", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-071", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-072", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-073", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-074", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-075", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-076", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-077", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-078", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-079", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-080", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-081", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-082", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-083", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-084", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-085", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-086", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-087", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-088", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-089", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-090", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-091", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-092", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-093", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-094", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-095", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-096", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-097", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-098", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-099", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-100", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-101", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-102", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-103", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-104", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-105", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-106", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-107", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-108", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-109", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-110", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-111", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-112", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-113", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-114", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-115", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-116", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-117", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-118", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-119", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-120", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-121", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-122", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-123", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-124", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-125", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-126", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-127", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-128", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-129", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-130", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-131", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-132", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-133", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-134", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-135", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-136", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-137", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-138", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-139", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-140", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-141", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-142", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-143", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-144", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-145", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-146", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-147", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-148", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-149", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-150", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-151", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-152", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-153", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-154", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-155", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-156", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-157", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-158", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-159", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-160", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-161", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-162", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-163", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-164", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-165", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-166", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-167", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-168", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-169", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-170", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-171", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-172", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-173", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-174", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-175", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-176", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-177", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-178", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-179", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-180", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-181", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-182", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-183", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-184", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-185", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-186", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-187", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-188", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-189", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-190", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-191", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-192", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-193", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-194", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-195", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-196", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-197", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-198", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-199", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-200", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-201", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-202", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-203", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-204", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-205", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-206", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-207", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-208", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-209", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-210", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-211", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-212", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-213", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-214", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-215", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-216", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-217", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-218", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-219", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-220", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-221", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-222", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-223", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-224", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-225", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-226", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-227", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-228", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-229", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-230", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-231", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-232", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-233", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-234", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-235", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-236", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-237", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-238", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-239", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-240", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-241", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-242", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-243", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-244", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-245", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-246", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-247", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-248", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
+{"item_id": "mgsm-249", "source": "mgsm", "category": "grade_school_math", "languages": ["en", "te"]}
