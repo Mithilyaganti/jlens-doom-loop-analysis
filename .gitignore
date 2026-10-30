@@ -19,6 +19,12 @@ artifacts/archive/
 !artifacts/archive/README.md
 data/*
 !data/gsm8k_eval.json
+!data/leanscope/
+!data/leanscope/seed_scenarios.jsonl
+!data/leanscope/split_lock.json
+data/leanscope/*
+!data/leanscope/seed_scenarios.jsonl
+!data/leanscope/split_lock.json
 .cache/
 huggingface/
 *.log
